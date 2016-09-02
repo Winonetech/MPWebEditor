@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  xmlns:ct="editor.controls.*"
+		  verticalAlign="middle" height="23">
+	
+	<s:states>
+		<s:State name="text"/>
+		<s:State name="bool"/>
+		<s:State name="color"/>
+		<s:State name="link"/>
+		<s:State name="button"/>
+		<s:State name="combobox"/>
+
+	</s:states>
+
+	<s:Label paddingTop="3" styleName="property" text="{label}"/>
+	
+	<ct:MDTextInput id="input" width="100%" includeIn="text" verticalCenter="-2"
+					styleName="normal" text="{value}" restrict="{restrict}"
+					enter="text_changeHandler(event)"
+					focusOut="text_changeHandler(event)"/>
+	
+	
+	<s:CheckBox id="check" includeIn="bool"
+				selected="{value}" verticalCenter="-2"
+				skinClass="editor.skins.EditorCheckBoxSkin"
+				change="check_changeHandler(event)"/>
+	
+	<s:ComboBox id="combo" includeIn="combobox" width="100%"
+				dataProvider="{TRANSITION_ARGS}" verticalCenter="-2"
+				selectedIndex="{(value == 'leftRight' || !value) ? 0 : 1}"
+				skinClass="editor.skins.EditorComboBoxSkin"
+				change="cb_changeHandler(event)"/>
+	
+	<mx:ColorPicker id="picker" includeIn="color" verticalCenter="-2"
+					selectedColor="{ColorUtil.colorString2uint(value as String)}"
+					change="picker_changeHandler(event)"/>
+	
+	<s:Button includeIn="link" verticalCenter="-2"
+			  label="{value ? value.label : '选择页面'}"
+			  skinClass="editor.skins.ButtonNormalSkin"
+			  click="page_selectHandler(event)"/>
+	
+	<s:Button verticalCenter="-2" includeIn="link"
+			  label="清除" visible="{Boolean(value)}"
+			  skinClass="editor.skins.ButtonNormalSkin"
+			  click="page_clearHandler(event)"/>
+	
+	
+	<s:Button includeIn="button" label="设为首页" verticalCenter="-2"
+			  skinClass="editor.skins.ButtonNormalSkin"
+			  click="page_btnHandler(event)"/>
+	
+	
+	<fx:Metadata>
+		[Event(name="change", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import cn.mvc.utils.ColorUtil;
+			
+			import editor.utils.ComponentUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.ColorPickerEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			/**
+			 * 
+			 * 改变值。
+			 * 
+			 */
+			
+			public function changeValue($value:Object, $dispatch:Boolean = true):void
+			{
+				if (value != $value)
+				{
+					value = $value;
+					
+					if ($dispatch) dispatchEvent(new Event(Event.CHANGE));
+				}
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function text_changeHandler($e:Event):void
+			{
+				if (String(value) != input.text)
+				{
+					value = input.text;
+					
+					dispatchEvent(new Event(Event.CHANGE));
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function check_changeHandler($e:Event):void
+			{
+				if (Boolean(value) != check.selected)
+				{
+					value = check.selected;
+					
+					dispatchEvent($e.clone());
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function picker_changeHandler(event:ColorPickerEvent):void
+			{
+				if (String(value) != ColorUtil.colorUint2String(picker.selectedColor))
+				{
+					value = ColorUtil.colorUint2String(picker.selectedColor);
+					
+					dispatchEvent(new Event(Event.CHANGE));
+				}
+			}
+			/**
+			 * @private
+			 */
+			private function cb_changeHandler(event:IndexChangeEvent):void
+			{
+				value = combo.selectedIndex == 0 ? "leftRight" : "upDown";
+				
+				dispatchEvent(new Event(Event.CHANGE));
+			}
+			
+			/**
+			 * @private
+			 */
+			private function page_selectHandler(event:MouseEvent):void
+			{
+				ComponentUtil.showPageSelector(this);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function page_clearHandler(event:MouseEvent):void
+			{
+				if (value)
+				{
+					value = null;
+					dispatchEvent(new Event(Event.CHANGE));
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function page_btnHandler($e:Event):void
+			{
+				value = true;
+				dispatchEvent(new Event(Event.CHANGE));
+			}
+			
+			/**
+			 * 
+			 * 字符输入限制。
+			 * 
+			 */
+			[Bindable]
+			public var restrict:String;
+			
+			
+			/**
+			 * 
+			 * 标签。
+			 * 
+			 */
+			
+			[Bindable]
+			public var label:String;
+			
+			
+			/**
+			 * 
+			 * 要修改的属性名。
+			 * 
+			 */
+			
+			[Bindable]
+			public var property:String;
+			
+			
+			/**
+			 * 
+			 * 值。
+			 * 
+			 */
+			
+			[Bindable]
+			public var value:Object;
+			
+			
+			/**
+			 * 
+			 * 宿主。
+			 * 
+			 */
+			
+			public var host:Object;
+			
+			
+			/**
+			 * @private
+			 */
+			private static const TRANSITION_ARGS:ArrayCollection = new ArrayCollection(['左右滑动', '上下滑动']);
+		]]>
+	</fx:Script>
+	
+</s:HGroup>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s ="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx"
+				   xmlns:sh="editor.views.sheets.*"
+				   mouseEnabled="false" backgroundAlpha="0"
+				   borderVisible="false">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.core.ed;
+			import editor.vos.Sheet;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.events.DragEvent;
+			
+			
+			/**
+			 * @inheritDoc
+			 */
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				
+				addElement(background);
+				background.setStyle("backgroundColor", 0x000000);
+				background.height = 30;
+				background.percentWidth = 100;
+				background.mouseChildren = false;
+				background.setStyle("cornerRadius", 3);
+				background.setStyle("borderVisible", false);
+				
+				background.addEventListener(MouseEvent.CLICK     , item_defaultHandler);
+				background.addEventListener(MouseEvent.MOUSE_DOWN, item_mouseHandler);
+				background.addEventListener(MouseEvent.MOUSE_OVER, item_interactHandler);
+				background.addEventListener(MouseEvent.MOUSE_OUT , item_interactHandler);
+				background.addEventListener(MouseEvent.MOUSE_UP  , item_mouseHandler);
+				background.addEventListener(DragEvent.DRAG_ENTER , item_defaultHandler);
+				background.addEventListener(DragEvent.DRAG_DROP  , item_defaultHandler);
+				
+				BindingUtils.bindProperty(this, "selected", sheet, "selected");
+				
+				updateBackgroundAlpha();
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function updateBackgroundAlpha($state:String = null):void
+			{
+				if ($state) state = $state;
+				
+				background.setStyle("backgroundAlpha", interactiveAlphas[state][uint(selected)]);
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function item_interactHandler(event:MouseEvent):void
+			{
+				updateBackgroundAlpha(event.type);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function item_mouseHandler(event:MouseEvent):void
+			{
+				updateBackgroundAlpha(event.type);
+				
+				event.stopImmediatePropagation();
+				dispatchEvent(event.clone());
+			}
+			
+			/**
+			 * @private
+			 */
+			private function item_defaultHandler(event:MouseEvent):void
+			{
+				event.stopImmediatePropagation();
+				dispatchEvent(event.clone());
+			}
+			
+			
+			/**
+			 * 
+			 * 是否被选择。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get selected():Boolean
+			{
+				return ed::selected as Boolean;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set selected($value:Boolean):void
+			{
+				if (selectable)
+				{
+					ed::selected = $value;
+					
+					updateBackgroundAlpha();
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 版面数据。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get sheet():Sheet
+			{
+				return ed::sheet;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set sheet($value:Sheet):void
+			{
+				ed::sheet = $value;
+				selected = $value.selected;
+			}
+			
+			
+			/**
+			 * 
+			 * ICON。
+			 * 
+			 */
+			
+			[Bindable]
+			public var icon:String;
+			
+			
+			/**
+			 * 
+			 * 能否被选中
+			 * 
+			 */
+			
+			[Bindable]
+			public var selectable:Boolean = true;
+			
+			
+			/**
+			 * @private
+			 */
+			protected var background:BorderContainer = new BorderContainer;
+			
+			
+			/**
+			 * @private
+			 */
+			private const interactiveAlphas:Object = {
+				mouseUp  : [.1, .6], 
+				mouseDown: [.2, .7], 
+				mouseOver: [.1, .6], 
+				mouseOut : [ 0, .5]
+			};
+			
+			
+			/**
+			 * @private
+			 */
+			private var state:String = "mouseOut";
+			
+			
+			/**
+			 * @private
+			 */
+			ed var selected:Boolean;
+			
+			/**
+			 * @private
+			 */
+			ed var sheet:Sheet;
+			
+		]]>
+	</fx:Script>
+	
+</s:BorderContainer>

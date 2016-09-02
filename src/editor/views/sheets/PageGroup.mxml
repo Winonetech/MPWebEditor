@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s ="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  gap="0">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.commands.AltPageCommand;
+			import editor.core.MDPresenter;
+			import editor.core.ed;
+			import editor.vos.Page;
+			
+			import mx.core.UIComponent;
+			import mx.events.DragEvent;
+			import mx.managers.DragManager;
+			
+			
+			/**
+			 * 
+			 * 更新视图。
+			 * 
+			 */
+			
+			public function update():void
+			{
+				removeAllElements();
+				
+				for each (var item:Page in dataProvider)
+				{
+					var pageItem:PageItem = new PageItem;
+					pageItem.selectable = selectable;
+					pageItem.forceExpand = forceExpand;
+					pageItem.sheet = item;
+					addElement(pageItem);
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 数据源
+			 * 
+			 */
+			
+			public function get dataProvider():Object
+			{
+				return ed::dataProvider;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set dataProvider($value:Object):void
+			{
+				ed::dataProvider = $value;
+				
+				update();
+			}
+			
+			
+			/**
+			 * 
+			 * 子项能否被选中。
+			 * 
+			 */
+			
+			public var selectable:Boolean = true;
+			
+			
+			/**
+			 * 
+			 * 强制展开子项。
+			 * 
+			 */
+			
+			public var forceExpand:Boolean;
+			
+			
+			/**
+			 * @private
+			 */
+			private var presenter:MDPresenter = MDPresenter.instance;
+			
+			
+			/**
+			 * @private
+			 */
+			ed var dataProvider:Object;
+			
+		]]>
+	</fx:Script>
+	
+</s:VGroup>

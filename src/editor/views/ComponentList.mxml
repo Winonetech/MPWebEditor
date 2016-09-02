@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vw:_InternalView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				  xmlns:s ="library://ns.adobe.com/flex/spark" 
+				  xmlns:mx="library://ns.adobe.com/flex/mx"
+				  xmlns:vw="editor.views.*"
+				  width="100%" height="300" mouseEnabled="false">
+	
+	<s:BorderContainer left="0" right="0" top="0" bottom="0"
+					   backgroundAlpha="0" mouseEnabled="false"
+					   mouseChildren="{!config.dragOnly}">
+
+		<s:layout>
+			<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5"/>
+		</s:layout>
+		
+		<s:HGroup width="100%" verticalAlign="middle" mouseEnabled="false">
+		
+		     <s:Label paddingLeft="10" paddingTop="5" styleName="title" text="组件"
+				      mouseEnabled="false" mouseChildren="false"/>
+		
+		     <s:HGroup width="100%" mouseEnabled="false"
+				       horizontalAlign="right" verticalAlign="middle">
+		
+		     <s:Button width="22" styleName="title" label="-" toolTip="删除组件"
+				       skinClass="editor.skins.ButtonNormalSkin"
+				       click="del_clickHandler(event)"/>
+			
+		     </s:HGroup>
+			
+		</s:HGroup>
+		<mx:HRule width="100%" height="1" mouseEnabled="false" mouseChildren="false"/>
+		
+		<s:Scroller width="100%" height="100%" id="scroller"
+					horizontalScrollPolicy="off">
+			
+			<s:VGroup width="100%" id="container"
+					  mouseEnabled="false" gap="0"
+					  mouseDown="group_mouseDownHandler(event)"
+					  click="item_clickHandler(event)"/>
+			
+		</s:Scroller>
+		
+	</s:BorderContainer>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.controls.Virtual;
+			import editor.core.ed;
+			import editor.utils.CommandUtil;
+			import editor.views.canvas.Viewer;
+			import editor.views.components.ComponentListItem;
+			import editor.vos.Component;
+			import editor.vos.Sheet;
+			
+			import mx.core.DragSource;
+			import mx.managers.DragManager;
+			
+			
+			/**
+			 * @inherotDoc
+			 */
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				
+				scrollerTimer.addEventListener(TimerEvent.TIMER, timer_scrollerHandler);
+			}
+			
+			
+			/**
+			 * 
+			 * 更新视图。
+			 * 
+			 */
+			
+			public function update():void
+			{
+				container.removeAllElements();
+				var i:int;
+				var arrLength:int =sheet.componentsArr.length;
+				for (i = arrLength - 1; i >= 0; i--)
+				{
+					var item:ComponentListItem = new ComponentListItem;
+					item.component = sheet.componentsArr[i];
+					container.addElement(item);
+				}
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function updateScrollDelta():void
+			{
+				if (scroller.mouseY < 15)
+					scrollY =-5 / (scroller.height / container.height);
+				else if (scroller.mouseY > scroller.height - 15)
+					scrollY = 5 / (scroller.height / container.height);
+				else
+					scrollY = 0;
+				
+			}
+			
+			/**
+			 * @private
+			 */
+			private function startScroll():void
+			{
+				if(!scrollerTimer.running) scrollerTimer.start();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function stopScroll():void
+			{
+				if (scrollerTimer.running) scrollerTimer.stop();
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function del_clickHandler(event:MouseEvent):void
+			{
+				CommandUtil.delComponent(config.selectedComponent);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function itemDispatchDown($e:MouseEvent):void
+			{
+				if(!dragStarted)
+				{
+					dragStarted = true;
+					item.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, false, 
+						true, $e.localX, $e.localY, null, false, false, false, $e.buttonDown));
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function item_clickHandler($e:MouseEvent):void
+			{
+				var item:ComponentListItem = $e.target as ComponentListItem;
+				config.selectedSheet = null;
+				if (item) config.selectedComponent = item.component;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function group_mouseDownHandler($e:MouseEvent):void
+			{
+				if ($e.target is ComponentListItem)
+				{
+					mouseMoved = dragStarted = false;
+					
+					item = $e.target as ComponentListItem;
+					down = new Point(mouseX, mouseY)
+					
+					stage.addEventListener(MouseEvent.MOUSE_MOVE, group_mouseMoveHandler);
+					stage.addEventListener(MouseEvent.MOUSE_UP, group_mouseUpHandler);
+					
+					item.addEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function group_mouseMoveHandler($e:MouseEvent):void
+			{
+				if (Point.distance(new Point(mouseX, mouseY), down) > 5)
+				{
+					mouseMoved = true;
+					
+					startScroll();
+					
+					itemDispatchDown($e);
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function group_mouseUpHandler($e:MouseEvent):void
+			{
+				stopScroll();
+				
+				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
+				
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, group_mouseMoveHandler);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, group_mouseUpHandler);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function item_mouseDownHandler($e:MouseEvent):void
+			{
+				item.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, false));
+				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
+				
+				var source:DragSource = new DragSource;
+				source.addData(item.component, "component");
+				
+				var virtual:Virtual = new Virtual;
+				virtual.source = item;
+				
+				DragManager.doDrag(item, source, $e, virtual);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function timer_scrollerHandler(event:TimerEvent):void
+			{
+				updateScrollDelta();
+				
+				if (scroller && scroller.viewport) 
+					scroller.viewport.verticalScrollPosition += scrollY;
+			}
+			
+			
+			/**
+			 * 
+			 * 数据源。
+			 * 
+			 */
+			
+			public function get sheet():Sheet
+			{
+				return ed::sheet;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set sheet($value:Sheet):void
+			{
+				ed::sheet = $value;
+				
+				update();
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private var mouseMoved:Boolean;
+			
+			/**
+			 * @private
+			 */
+			private var dragStarted:Boolean;
+			
+			/**
+			 * @private
+			 */
+			private var item:ComponentListItem;
+			
+			/**
+			 * @private
+			 */
+			private var down:Point;
+			
+			/**
+			 * @private
+			 */
+			private var scrollerTimer:Timer = new Timer(33);
+			
+			/**
+			 * @private
+			 */
+			private var scrollY:Number = 0;
+			
+			
+			/**
+			 * @private
+			 */
+			ed var sheet:Sheet;
+			
+		]]>
+	</fx:Script>
+	
+</vw:_InternalView>

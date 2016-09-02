@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s ="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 clipAndEnableScrolling="false"
+		 mouseEnabled="false" visible="false"
+		 width ="{canvasItem.width  * viewer.contentScale + 6}"
+		 height="{canvasItem.height * viewer.contentScale + 6}"
+		 x="{canvasItem.x * viewer.contentScale + viewer.contentX - 3}"
+		 y="{canvasItem.y * viewer.contentScale + viewer.contentY - 3}"
+		 addedToStage="callbackVisible()">
+	
+	<s:Rect id="border" width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0xCCCCCC" weight="1"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Button buttonMode="true" id="resizeLeft"
+			  width="10" height="10"
+			  verticalCenter="0" left="0"
+			  mouseDown="resize_mouseDownHandler(event)"/>
+	
+	<s:Button buttonMode="true" id="resizeRight"
+			  width="10" height="10"
+			  verticalCenter="0" right="0"
+			  mouseDown="resize_mouseDownHandler(event)"/>
+	
+	<s:Button buttonMode="true" id="resizeTop"
+			  width="10" height="10"
+			  horizontalCenter="0" top="0"
+			  mouseDown="resize_mouseDownHandler(event)"/>
+	
+	<s:Button buttonMode="true" id="resizeBottom"
+			  width="10" height="10"
+			  horizontalCenter="0" bottom="0"
+			  mouseDown="resize_mouseDownHandler(event)"/>
+	
+	<s:Button buttonMode="true" id="resizeRightBottom"
+			  width="10" height="10"
+			  right="0" bottom="0"
+			  mouseDown="resize_mouseDownHandler(event)"/>
+	
+	<s:BorderContainer horizontalCenter="0" verticalCenter="0"
+					   mouseChildren="false" mouseEnabled="false"
+					   id="btnsHodler" backgroundAlpha="0" alpha=".1">
+		
+		<s:layout>
+			<s:HorizontalLayout paddingLeft="2" paddingRight="2"
+								paddingTop="2" paddingBottom="2"/>
+		</s:layout>
+		
+		<s:Button width="25" height="25" label="↑"
+				  styleName="title" toolTip="上移一层"
+				  skinClass="editor.skins.ButtonNormalSkin"
+				  click="down_clickHandler(event)"/>
+		
+		<s:Button width="25" height="25" label="↓" 
+				  styleName="title" toolTip="下移一层"
+				  skinClass="editor.skins.ButtonNormalSkin"
+				  click="up_clickHandler(event)"/>
+		
+		<s:Button width="25" height="25" label="Ｘ"
+				  styleName="title" toolTip="删除组件"
+				  skinClass="editor.skins.ButtonNormalSkin"
+				  click="del_clickHandler(event)"/>
+	</s:BorderContainer>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.core.MDConfig;
+			import editor.core.MDProvider;
+			import editor.core.ed;
+			import editor.utils.CommandUtil;
+			import editor.utils.ComponentUtil;
+			import editor.views.CanvasContent;
+			import editor.views.components.CanvasItem;
+			
+			
+			/**
+			 * @private
+			 */
+			private function createTimer():void
+			{
+				if(!timer)
+				{
+					timer = new Timer(1000, 1);
+					timer.addEventListener(TimerEvent.TIMER_COMPLETE, btnsHodler_showHandler);
+					timer.start();
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function removeTimer():void
+			{
+				if (timer)
+				{
+					timer.stop();
+					timer.removeEventListener(TimerEvent.TIMER_COMPLETE, btnsHodler_showHandler);
+					timer = null;
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function showBtns():void
+			{
+				if(!btnsHodler.mouseEnabled)
+				{
+					btnsHodler.mouseEnabled = btnsHodler.mouseChildren = true;
+					btnsHodler.alpha = 1;
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function hideBtns():void
+			{
+				if (btnsHodler.mouseEnabled)
+				{
+					btnsHodler.mouseEnabled = btnsHodler.mouseChildren = false;
+					btnsHodler.alpha = .1;
+				}
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function resizeLeftHandler(plus:Point):void
+			{
+				var temp:Number = stat.x + plus.x / contentScale;
+				if (config.alignMode)
+				{
+					content.showLine(canvasItem, "left");
+					temp = content.autoCombine(canvasItem, new Point(temp, canvasItem.y), true, "left").x;
+				}
+				canvasItem.x = ComponentUtil.reviseComponent(temp, stat.right);
+				canvasItem.width = stat.right - canvasItem.x;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function resizeRightHandler(plus:Point):void
+			{
+				var temp:Number = stat.width + plus.x / contentScale;
+				if (config.alignMode)
+				{
+					content.showLine(canvasItem, "right");
+					temp = content.autoCombine(canvasItem, new Point(temp, canvasItem.y), false, "right")["tempW"];
+				}
+				canvasItem.width = ComponentUtil.reviseComponent(temp, contentW - stat.x);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function resizeTopHandler(plus:Point):void
+			{
+				var temp:Number = stat.y + plus.y / contentScale;
+				if (config.alignMode)
+				{
+					content.showLine(canvasItem, "top");
+					temp = content.autoCombine(canvasItem, new Point(canvasItem.x, temp), true, "top").y;
+				}	
+				canvasItem.y = ComponentUtil.reviseComponent(temp, stat.bottom);
+				canvasItem.height = stat.bottom - canvasItem.y;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function resizeBottomHandler(plus:Point):void
+			{
+				var temp:Number = stat.height + plus.y / contentScale;
+				if (config.alignMode)
+				{
+					content.showLine(canvasItem, "bottom");
+					temp = content.autoCombine(canvasItem, new Point(canvasItem.x, temp), false, "bottom")["tempH"];
+				}
+				canvasItem.height = ComponentUtil.reviseComponent(temp, contentH - stat.y);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function resizeRightBottomHandler(plus:Point):void
+			{
+				var ts:Number, fw:Number, fh:Number, bw:Number, bh:Number, tempW:Number, tempH:Number;
+				
+				ts = stat.width / stat.height;
+				tempW = Math.max(stat.width  + plus.x / contentScale, 0);
+				tempH = Math.max(stat.height + plus.y / contentScale, 0);
+				
+				if (tempW / tempH > ts)
+					bw = ts * (bh = Math.min(tempW / ts, contentH - stat.y));
+				else
+					bh = (bw = Math.min(tempH * ts, contentW - stat.x)) / ts;
+			
+				if (config.alignMode)
+				{
+					var changedW:Number = content.autoCombine(canvasItem, new Point(bw, canvasItem.y), false, "right")["tempW"];
+					var changedH:Number = content.autoCombine(canvasItem, new Point(canvasItem.x, bh), false, "bottom")["tempH"];
+					var subW:Number = changedW - bw;
+					var subH:Number = changedH - bh;
+					if (subW != 0)
+					{
+						bw = changedW;
+						bh = changedW / ts;
+					}
+					else if (subH != 0)
+					{
+						bh = changedH;
+						bw = changedH * ts;
+					}
+					content.showLine(canvasItem, []);
+				}
+				fw = ComponentUtil.reviseComponent(bw, contentW - stat.x);
+				fh = ComponentUtil.reviseComponent(bh, contentH - stat.y);
+				canvasItem.width  = fw;
+				canvasItem.height = fh;
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function resize_mouseDownHandler($e:MouseEvent):void
+			{
+				switch ($e.target)
+				{
+					case resizeLeft:
+						key = "resizeLeftHandler";
+						break;
+					case resizeRight:
+						key = "resizeRightHandler";
+						break;
+					case resizeTop:
+						key = "resizeTopHandler";
+						break;
+					case resizeBottom:
+						key = "resizeBottomHandler";
+						break;
+					case resizeRightBottom:
+						key = "resizeRightBottomHandler";
+						break;
+				}
+				down.x = stage.mouseX;
+				down.y = stage.mouseY;
+				stat.x = canvasItem.x;
+				stat.y = canvasItem.y;
+				stat.width  = canvasItem.width;
+				stat.height = canvasItem.height;
+				stage.addEventListener(MouseEvent.MOUSE_MOVE, resize_mouseMoveHandler);
+				stage.addEventListener(MouseEvent.MOUSE_UP, resize_mouseUpHandler);
+				
+			}
+			
+			/**
+			 * @private
+			 */
+			private function resize_mouseMoveHandler($e:MouseEvent):void
+			{
+				this[key](new Point(stage.mouseX, stage.mouseY).subtract(down)); 
+			}
+			
+			/**
+			 * @private
+			 */
+			private function resize_mouseUpHandler($e:MouseEvent):void
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, resize_mouseMoveHandler);
+				stage.removeEventListener(MouseEvent.MOUSE_UP, resize_mouseUpHandler);
+				CommandUtil.edtComponent(canvasItem.component, {
+					x: canvasItem.x,
+					y: canvasItem.y, 
+					width : canvasItem.width,
+					height: canvasItem.height
+				});
+				content.cleanLine();
+			}
+
+			
+			/**
+			 * @private
+			 */
+			private function tool_mouseOverHandler($e:MouseEvent):void
+			{
+				stage.addEventListener(MouseEvent.MOUSE_MOVE, tool_mouseMoveHandler);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function tool_mouseOutHandler($e:MouseEvent):void
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_MOVE, tool_mouseMoveHandler);
+				
+				hideBtns();
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function tool_mouseMoveHandler($e:MouseEvent):void
+			{
+				if (btnsHodler.mouseX > 0 && btnsHodler.mouseX < btnsHodler.width && 
+					btnsHodler.mouseY > 0 && btnsHodler.mouseY < btnsHodler.height)
+				{
+					if(!btnsHodler.mouseEnabled) createTimer();
+				}
+				else
+				{
+					removeTimer();
+					
+					hideBtns();
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function btnsHodler_showHandler($e:TimerEvent):void
+			{
+				removeTimer();
+				
+				showBtns();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function del_clickHandler($e:MouseEvent):void
+			{
+				CommandUtil.delComponent(canvasItem.component);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function down_clickHandler($e:MouseEvent):void
+			{
+				CommandUtil.ordComponent(canvasItem.component, canvasItem.component.order + 1);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function up_clickHandler($e:MouseEvent):void
+			{
+				CommandUtil.ordComponent(canvasItem.component, canvasItem.component.order - 1);
+			}
+			
+			
+			/**
+			 * @inheritDoc
+			 */
+			
+			override public function set visible(value:Boolean):void
+			{
+				super.visible = value;
+				
+				callbackVisible();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function callbackVisible():Boolean
+			{
+				if (stage)
+				{
+					if (visible)
+					{
+						if(!stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+							stage.addEventListener(MouseEvent.MOUSE_MOVE, tool_mouseMoveHandler);
+					}
+					else
+					{
+						if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+							stage.removeEventListener(MouseEvent.MOUSE_MOVE, tool_mouseMoveHandler);
+					}
+				}
+				return Boolean(stage);
+			}
+			
+			
+			/**
+			 * 
+			 * 编辑的元素视图。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get canvasItem():CanvasItem
+			{
+				return ed::canvasItem;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set canvasItem($value:CanvasItem):void
+			{
+				ed::canvasItem = $value;
+				visible = Boolean(canvasItem);
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function get contentScale():Number
+			{
+				return viewer ? viewer.contentScale : 1;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function get contentW():Number
+			{
+				return content ? content.width : provider.defaultWidth;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function get contentH():Number
+			{
+				return content ? content.height : provider.defaultHeight;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function get content():CanvasContent
+			{
+				return viewer.content as CanvasContent;
+			}
+			
+			
+			/**
+			 * 
+			 * 画布内容。
+			 * 
+			 */
+			
+			[Bindable]
+			public var viewer:Viewer;
+			
+			
+			/**
+			 * @private
+			 */
+			private var key:String;
+			
+			/**
+			 * @private
+			 */
+			private var down:Point = new Point;
+			
+			/**
+			 * @private
+			 */
+			private var stat:Rectangle = new Rectangle;
+			
+			/**
+			 * @private
+			 */
+			private var provider:MDProvider = MDProvider.instance;
+			
+			/**
+			 * @private
+			 */
+			private var config:MDConfig = MDConfig.instance;
+			
+			/**
+			 * @private
+			 */
+			private var timer:Timer;
+			
+			/**
+			 * @private
+			 */
+			private var value:int;
+			
+			/**
+			 * @private
+			 */
+			ed var canvasItem:CanvasItem;
+			
+		]]>
+	</fx:Script>
+	
+</s:Group>

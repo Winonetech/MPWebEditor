@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="cn.mvc.interfaces.ISource">
+	
+	<s:SWFLoader id="loader" width="100%" height="100%" autoLoad="false"
+				 verticalAlign="middle" horizontalAlign="center"
+				 scaleContent="true" maintainAspectRatio="true"
+				 source="{source}"  mask="{cover}"
+				 smoothBitmapContent="true"
+				 complete="loader_completeHandler(event)"/>
+	
+	<s:Graphic id="cover" width="{scaledWidth}" height="{scaledHeight}"
+			   horizontalCenter="0" verticalCenter="0">
+		<s:Rect width="{scaledWidth}" height="{scaledHeight}">
+			<s:fill>
+				<s:SolidColor color="0"/>
+			</s:fill>
+		</s:Rect>
+	</s:Graphic>
+	
+	<fx:Script>
+		<![CDATA[
+			import editor.core.ed;
+			
+			/**
+			 * @private
+			 */
+			private function analyzeContent():void
+			{
+				var cw:Number = loader.content.loaderInfo.width;
+				var ch:Number = loader.content.loaderInfo.height;
+				var pw:Number = width;
+				var ph:Number = height;
+				var cs:Number =(cw / ch < pw / ph) ? ph / ch : pw / cw;
+				scaledWidth  = cs * cw;
+				scaledHeight = cs * ch;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function loader_completeHandler(event:Event):void
+			{
+				analyzeContent();
+			}
+			
+			
+			/**
+			 * 
+			 * 资源路径。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get source():Object
+			{
+				return ed::source;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set source($value:Object):void
+			{
+				ed::source = $value;
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			[Bindable]
+			private var scaledWidth:Number = 0;
+			
+			/**
+			 * @private
+			 */
+			[Bindable]
+			private var scaledHeight:Number = 0;
+			
+			
+			/**
+			 * @private
+			 */
+			ed var source:Object;
+		]]>
+	</fx:Script>
+</s:Group>

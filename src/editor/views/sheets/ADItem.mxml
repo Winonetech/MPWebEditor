@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sh:SheetItem xmlns:fx="http://ns.adobe.com/mxml/2009"
+			  xmlns:s ="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:sh="editor.views.sheets.*" icon="AD"
+			  creationComplete="changeBackgroundIndex(event)"
+			  selected="{sheet.selected}">
+	
+	<sh:SheetIcon  left="15" label="{icon}" color="0xCC00FF"/>
+	
+	<sh:SheetLabel left="40" maxWidth="88" label="{sheet.label}"
+				   color="{sheet.editing ? 0xFF0000 : 0xFFFFFF}"/>
+	
+	<fx:Script>
+		<![CDATA[
+			import editor.vos.AD;
+			import editor.vos.Sheet;
+			
+			import mx.events.FlexEvent;
+			
+			/**
+			 * @private
+			 */
+			private function changeBackgroundIndex(event:FlexEvent):void
+			{
+				this.setElementIndex(background, 0);
+			}
+			
+			/**
+			 * @inheritDoc
+			 */
+			
+			override public function set sheet($value:Sheet):void
+			{
+				super.sheet = $value;
+				ad = sheet as AD;
+			}
+
+			/**
+			 * @private
+			 */
+			[Bindable]
+			private var ad:AD;
+			
+			
+		]]>
+	</fx:Script>
+	
+</sh:SheetItem>

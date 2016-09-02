@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sh:SheetItem xmlns:fx="http://ns.adobe.com/mxml/2009"
+			  xmlns:s ="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:sh="editor.views.sheets.*"
+			  icon="PG" selected="{sheet.selected}"
+			  creationComplete="changeBackgroundIndex(event)"
+			  click="expand_clickHandler(event)">
+	
+	<sh:states>
+		
+		<s:State name="packup"/>
+		
+		<s:State name="expand"/>
+		
+	</sh:states>
+	
+	<mx:HRule y="0" height="1" width="100%" id="topRule" visible="false"/>
+	
+	<mx:HRule y="30" height="1" width="100%" id="bottomRule" visible="false"/>
+	
+	
+	<s:Label id="label" left="3" top="2" height="28"
+			 textAlign="center" verticalAlign="middle"
+			 text.expand="－" text.packup="＋"
+			 styleName="expand" visible="{expandable &amp;&amp; !forceExpand}"
+			 mouseChildren="false" mouseEnabled="false"/>
+	
+	<sh:SheetIcon left="15" label="{icon}" color="{page.home ? 0xFF0000 : 0xFFFFFF}"/>
+	
+	<sh:SheetLabel id="sheetLabel" left="40" maxWidth="88" label="{sheet.label}"
+				   color="{sheet.editing ? 0xFF0000 : 0xFFFFFF}"/>
+	
+	<sh:PageGroup left="25" top="30" includeIn="expand"
+				  selectable="{selectable}"
+				  forceExpand="{forceExpand}"
+				  dataProvider="{page.pagesArr}"
+				  mouseEnabled="false"/>
+	
+	<fx:Script>
+		<![CDATA[
+			import editor.core.ed;
+			import editor.utils.CommandUtil;
+			import editor.vos.Page;
+			import editor.vos.Sheet;
+			
+			import mx.core.UIComponent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
+			
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				
+				if (selectable)
+				{
+					addEventListener(DragEvent.DRAG_ENTER, item_dragEnterHandler);
+					addEventListener(DragEvent.DRAG_DROP, item_dragDropHandler);
+				}
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function expand_clickHandler(event:MouseEvent):void
+			{
+				if (expandable && mouseX < 15) 
+				{
+					expand = !expand;
+					event.stopImmediatePropagation();
+				}
+				trace(currentState);
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function item_dragEnterHandler($e:DragEvent):void
+			{
+				var c:Page = $e.dragSource.dataForFormat("page") as Page;
+				var f:Page =($e.target as PageItem).sheet as Page;
+				if (c && f && c != f) 
+				{
+					DragManager.acceptDragDrop($e.currentTarget as UIComponent);
+					background.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OVER));
+					stager = stage;
+					stager.addEventListener(MouseEvent.MOUSE_MOVE, item_mouseMoveHandler);
+				}
+				$e.stopImmediatePropagation();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function item_dragDropHandler($e:DragEvent):void
+			{
+				var source:Page = $e.dragSource.dataForFormat("page") as Page;
+				var target:Page = $e.target.sheet as Page;
+
+				var down2up:Boolean = source.order > target.order;
+				if (source.parent == target.parent)
+				{
+					var tempOrder:uint = down2up ? target.order : target.order - 1;
+					topRule.visible ? CommandUtil.ordPage(source, tempOrder) :
+					(bottomRule.visible ? CommandUtil.ordPage(source, tempOrder + 1) : 
+						CommandUtil.altPage(source, uint.MAX_VALUE, target));
+				}
+				else
+				{
+ 					if (topRule.visible)
+					{
+						target.parent ? CommandUtil.altPage(source, target.order, target.parent) : CommandUtil.altPage(source, target.order);
+					}
+					else if (bottomRule.visible)
+					{
+						target.parent ? CommandUtil.altPage(source, target.order + 1, target.parent) : CommandUtil.altPage(source, target.order + 1);
+					}
+					else
+					{
+						CommandUtil.altPage(source, uint.MAX_VALUE, target)
+					}
+				}
+			}
+			/**
+			 * @private
+			 */
+			private function changeBackgroundIndex(event:FlexEvent):void
+			{
+				this.setElementIndex(background, 0);
+				flagT = topRule.visible;
+				
+				flagB = bottomRule.visible;
+			}
+			public var flagT:Boolean;
+			public var flagB:Boolean;
+			/**
+			 * @private
+			 */
+			private function item_mouseMoveHandler($e:MouseEvent):void
+			{
+				if (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height)
+				{
+					stager.removeEventListener(MouseEvent.MOUSE_MOVE, item_mouseMoveHandler);
+					stager = null;
+					bottomRule.visible = topRule.visible = false;
+					background.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT));
+				}
+				else
+				{
+					bottomRule.visible = (mouseY > 22.5 && mouseY < 30);
+					topRule.visible = (0 < mouseY && mouseY < 7.5);
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 展开。
+			 * 
+			 */
+
+			public function get expand():Boolean
+			{
+				return ed::expand as Boolean;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set expand($value:Boolean):void
+			{
+				if (expand != $value)
+				{
+					ed::expand = $value;
+					
+					currentState = expand ? "expand" : "packup";
+					
+					if (selectable) page.expand = $value;
+				}
+				
+			}
+			
+			
+			/**
+			 * 
+			 * 是否能够展开
+			 * 
+			 */
+			
+			[Bindable]
+			public function get expandable():Boolean
+			{
+				return page.expandable;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set expandable($value:Boolean):void
+			{
+				page.expandable = $value;
+			}
+			
+			
+			/**
+			 * @inheritDoc
+			 */
+			
+			override public function set sheet($value:Sheet):void
+			{
+				super.sheet = $value;
+				page = sheet as Page;
+				
+				page.expandable = page.pagesArr.length > 0;
+				
+				expand = forceExpand || page.expand;
+				
+				if (page.expandable) currentState = expand ? "expand" : "packup";
+			}
+			
+			
+			/**
+			 * 
+			 * 强制展开子项。
+			 * 
+			 */
+			
+			[Bindable]
+			public var forceExpand:Boolean;
+			
+			
+			/**
+			 * @private
+			 */
+			[Bindable]
+			private var page:Page;
+			
+			
+			/**
+			 * @private
+			 */
+			private var stager:Stage;
+			
+			
+			/**
+			 * @private
+			 */
+			ed var expandable:Boolean;
+			
+			/**
+			 * @private
+			 */
+			ed var expand:Boolean;
+
+		]]>
+	</fx:Script>
+</sh:SheetItem>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vw:_InternalView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				  xmlns:s ="library://ns.adobe.com/flex/spark" 
+				  xmlns:mx="library://ns.adobe.com/flex/mx"
+				  xmlns:pr="editor.views.properties.*"
+				  xmlns:vw="editor.views.*" width="100%">
+	
+	<vw:states>
+		<s:State name="comman"/>
+		<s:State name="button"/>
+	</vw:states>
+	
+	<s:BorderContainer width="100%" backgroundAlpha="0">
+		
+		<s:layout>
+			<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5"/>
+		</s:layout>
+		
+		<s:Label paddingLeft="10" paddingTop="5" styleName="title" text="组件属性"/>
+		
+		<mx:HRule width="100%" height="1"/>
+		
+		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" enabled="{Boolean(component)}">
+			
+			<!-- 版面名称 -->
+			<pr:PropertyItem width="100%" property="label"
+							 value="{component.label}" label="名称："
+							 change="property_changeHandler(event)"/>
+			
+			<!-- 版面布局 -->
+			<s:HGroup width="100%">
+				
+				<pr:PropertyItem width="50%" property="x"
+								 value="{component.x}" label="横轴："
+								 restrict="0-9"
+								 change="property_changeHandler(event)"/>
+				
+				<pr:PropertyItem width="50%" property="y"
+								 value="{component.y}" label="纵轴："
+								 restrict="0-9"
+								 change="property_changeHandler(event)"/>
+				
+			</s:HGroup>
+			
+			<s:HGroup width="100%">
+				
+				<pr:PropertyItem width="50%" property="width"
+								 value="{component.width}" label="宽度："
+								 restrict="0-9"
+								 change="property_changeHandler(event)"/>
+				
+				<pr:PropertyItem width="50%" property="height"
+								 value="{component.height}" label="高度："
+								 restrict="0-9"
+								 change="property_changeHandler(event)"/>
+				
+			</s:HGroup>
+			
+			<!-- 自定义 -->
+			<s:HGroup width="100%" gap="3">
+				<pr:PropertyItem width="25%" property="interactable" currentState="bool"
+								 value="{component.interactable}" label="允许交互："
+								 change="property_changeHandler(event)"/>
+				
+				<pr:PropertyItem width="75%" property="transition" currentState="combobox"
+						 		 value="{component.transition}" label="过渡效果" 								 
+						 		 change="property_changeHandler(event)"/>
+			</s:HGroup>
+	
+				<pr:PropertyItem property="link" currentState="link" host="{component}"
+								 value="{component.link}" label="绑定页面：" includeIn="button"
+								 change="property_changeHandler(event)"/>
+		</s:VGroup>
+			
+	</s:BorderContainer>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.consts.ComponentCodeConsts;
+			import editor.core.ed;
+			import editor.utils.CommandUtil;
+			import editor.utils.ComponentUtil;
+			import editor.vos.Component;
+			
+			
+			/**
+			 * @private
+			 */
+			private function property_changeHandler($e:Event):void
+			{
+				var item:PropertyItem = $e.target as PropertyItem;
+				if (item)
+				{
+					var prop:Object = {};
+					switch(item.property)
+					{
+						case "x":
+						{
+							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
+								config.editingSheet.width - config.selectedComponent.width);
+							break;
+						}
+						case "y":
+						{
+							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
+								config.editingSheet.height - config.selectedComponent.height);
+							break;
+						}
+						case "width":
+						{
+							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
+								config.editingSheet.width - config.selectedComponent.x);
+							break;
+						}
+						case "height":
+						{
+							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
+								config.editingSheet.height - config.selectedComponent.y);
+							break;
+						}
+						default:
+						{
+							prop[item.property] = item.value;
+							break;
+						}
+					}
+					item.value = prop[item.property];
+					CommandUtil.edtComponent(component, prop);
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 元素数据。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get component():Component
+			{
+				return ed::component;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set component($value:Component):void
+			{
+				ed::component = $value;
+				currentState = (component && 
+					(component.componentTypeCode == ComponentCodeConsts.CLICK || 
+					(component.componentTypeCode == ComponentCodeConsts.MARQUEE)))
+						? "button" : "comman";
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			ed var component:Component;
+			
+		]]>
+	</fx:Script>
+	
+</vw:_InternalView>

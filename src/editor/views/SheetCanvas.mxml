@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vw:_InternalView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				  xmlns:s ="library://ns.adobe.com/flex/spark" 
+				  xmlns:mx="library://ns.adobe.com/flex/mx"
+				  xmlns:vw="editor.views.*"
+				  xmlns:cs="editor.views.canvas.*"
+				  width="100%" height="100%">
+	
+	<s:BorderContainer left="0" right="0" top="0" bottom="0" 
+					   backgroundAlpha="0">
+		
+		<s:Group left="5" right="5" top="5" bottom="5"
+				 clipAndEnableScrolling="true" id="container"
+				 resize="canvas_resizeHandler(event)">
+			 
+			<cs:Viewer id="viewer"
+					   alignMode="{config.alignMode}"
+					   dragOnly ="{config.dragOnly}"
+					   showGrid ="{config.showGrid}"/>
+			
+			<s:Group width ="{viewer.width}"
+					 height="{viewer.height}"
+					 x="{viewer.x}" 
+					 mouseEnabled="false"
+					 clipAndEnableScrolling="true">
+				
+				<cs:ToolSelect id="selector" viewer="{viewer}"
+							   visible   ="{selectedComponent}"
+							   canvasItem="{content.selectedItem}"/>
+				
+			</s:Group>
+			
+		</s:Group>
+		
+	</s:BorderContainer>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.core.ed;
+			import editor.views.components.CanvasItem;
+			import editor.vos.Component;
+			import editor.vos.Sheet;
+			
+			import mx.events.ResizeEvent;
+			
+			
+			/**
+			 * 
+			 * 更新视图。
+			 * 
+			 */
+			
+			public function update():void
+			{
+				resizeViewer();
+				
+				if (content)
+				{
+					if (content.sheet!= sheet)
+						content.sheet = sheet;
+					else
+						content.update();
+				}
+				else
+				{
+					content = new CanvasContent;
+					content.sheet = sheet;
+				}
+				
+				if (viewer)
+				{
+					if (viewer.content!= content)
+						viewer.content = content;
+					else
+						viewer.update();
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 更新单个元素。
+			 * 
+			 */
+			
+			public function updateComponent($component:Component, $type:uint = 0):CanvasItem
+			{
+				return content ? content.updateComponent($component, $type) : null;
+			}
+			
+			
+			/**
+			 * @inheritDoc
+			 */
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				
+				resizeViewer();
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function resizeViewer():void
+			{
+				if (container && viewer && sheet)
+				{
+					var ww:Number = container.width;
+					var wh:Number = container.height;
+					var cw:Number = sheet.width;
+					var ch:Number = sheet.height;
+					var ws:Number = ww / wh;
+					var cs:Number = cw / ch;
+					var ss:Number = ws < cs ? ww / cw : wh /ch;
+					
+					viewer.width  = ss * sheet.width;
+					viewer.height = ss * sheet.height;
+					viewer.x = .5 * (ww - viewer.width);
+					
+					viewer.update();
+				}
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function canvas_resizeHandler(event:ResizeEvent):void
+			{
+				resizeViewer();
+			}
+			
+			
+			/**
+			 * 
+			 * 选中的元素。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get selectedComponent():Component
+			{
+				return ed::selectedItem;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set selectedComponent($value:Component):void
+			{
+				ed::selectedItem = $value;
+				
+				if (content) 
+				{
+					content.selectedComponent = selectedComponent;
+					//if (selector) selector.canvasItem = content.selectedItem;
+				}
+				
+			}
+			
+			
+			/**
+			 * 
+			 * 版面数据。
+			 * 
+			 */
+			
+			public function get sheet():Sheet
+			{
+				return ed::sheet;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set sheet($value:Sheet):void
+			{
+				ed::sheet = $value;
+				
+				update();
+			}
+			
+			/**
+			 * @private
+			 */
+			[Bindable]
+			public var content:CanvasContent;
+			
+			
+			/**
+			 * @private
+			 */
+			ed var selectedItem:Component;
+			
+			/**
+			 * @private
+			 */
+			ed var sheet:Sheet;
+			
+		]]>
+	</fx:Script>
+	
+</vw:_InternalView>

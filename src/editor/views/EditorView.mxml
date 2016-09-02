@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vw:_InternalView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				  xmlns:s ="library://ns.adobe.com/flex/spark" 
+				  xmlns:mx="library://ns.adobe.com/flex/mx"
+				  xmlns:vw="editor.views.*"
+				  xmlns:cs="editor.views.canvas.*"
+				  currentState="{config.demo ? 'demo' : 'deft'}"
+				  width="100%" height="100%" mouseEnabled="false">
+	
+	<vw:layout>
+		<s:VerticalLayout paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10"/>
+	</vw:layout>
+	
+	<vw:states>
+		<s:State name="deft"/>
+		<s:State name="demo"/>
+	</vw:states>
+	
+	<!-- 顶部，工具栏 -->
+	
+	<vw:ToolBar id="toolBar" viewer="{canvas.viewer}"/>
+	
+	<!-- 中部，包含左侧，中间画布与右侧 -->
+	
+	<s:HGroup id="hg" width="100%" height="100%" mouseEnabled="false">
+		
+		<!-- 分离盒 -->
+		<mx:HDividedBox width="100%" height="100%">
+			
+			<!-- 左侧，包含页面树与组件列表 -->
+			<mx:VDividedBox  maxWidth="250" minWidth="150" width="100%" height="100%">
+				
+				<!-- 页面树 -->
+				<vw:SheetTree id="sheets" minHeight="50" currentState="{currentState}"/>
+				
+				<!-- 组件列表 -->
+				<vw:ComponentList id="components" sheet="{config.editingSheet}"/>
+				
+			</mx:VDividedBox>
+			<s:VGroup width="100%" height="100%" mouseEnabled="false" id="canvasGroup">
+				
+				<!-- 画布 -->
+				<vw:SheetCanvas id="canvas" sheet="{config.editingSheet}"
+								selectedComponent="{config.selectedComponent}"/>
+			</s:VGroup>
+		</mx:HDividedBox>	
+		<!-- 右侧，包含版面元素添加组，版面属性面板，元素属性面板 -->
+		
+		<s:Group width="250" height="100%" mouseEnabled="false">
+			
+			<s:Scroller width="100%" height="100%">
+				
+				<s:VGroup width="100%" mouseEnabled="false">
+					
+					<!-- 组件类型列表 -->
+					
+					<vw:ComponentsAddone id="addone"/>
+					
+					<!-- 页面属性面板 -->
+					
+					<vw:SheetProperty id="sheetProperty" sheet="{config.editingSheet}"/>
+					
+					<!-- 组件属性面板 -->
+					
+					<vw:ComponentProperty id="componentProperty" component="{config.selectedComponent}"/>
+					
+				</s:VGroup>
+				
+			</s:Scroller>
+			
+		</s:Group>
+		
+	</s:HGroup>
+	
+</vw:_InternalView>

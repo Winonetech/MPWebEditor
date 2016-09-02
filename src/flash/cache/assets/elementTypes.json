@@ -1,0 +1,129 @@
+[
+	{
+		"id": "1",
+		"order": "1",
+		"image": "flash/cache/assets/images/picture_big.png",
+		"icon": "flash/cache/assets/images/picture.png",
+		"code": "image",
+		"label": "图片",
+		"name": "image"
+	},
+	{
+		"id": "2",
+		"order": "2",
+		"image": "flash/cache/assets/images/text_big.png",
+		"icon": "flash/cache/assets/images/text.png",
+		"code": "text",
+		"label": "文本控件",
+		"name": "text"
+	},
+
+	{
+		"id": "3",
+		"order": "3",
+		"image": "flash/cache/assets/images/video_big.png",
+		"icon": "flash/cache/assets/images/video.png",
+		"code": "video",
+		"label": "视频",
+		"name": "video"
+	},
+	{
+		"id": "4",
+		"order": "4",
+		"image": "flash/cache/assets/images/streamingMedia_big.png",
+		"icon": "flash/cache/assets/images/streamingMedia.png",
+		"code": "media",
+		"label": "流媒体",
+		"name": "media"
+	},
+	{
+		"id": "5",
+		"order": "5",
+		"image": "flash/cache/assets/images/time_big.png",
+		"icon": "flash/cache/assets/images/time.png",
+		"code": "clock",
+		"label": "时钟控件",
+		"name": "clock"
+	},
+	{
+		"id": "6",
+		"order": "6",
+		"image": "flash/cache/assets/images/airReport_big.png",
+		"icon": "flash/cache/assets/images/airReport.png",
+		"code": "weather",
+		"label": "天气控件",
+		"name": "weather"
+	},
+	{
+		"id": "7",
+		"order": "7",
+		"image": "flash/cache/assets/images/ePaper_big.png",
+		"icon": "flash/cache/assets/images/ePaper.png",
+		"code": "epaper",
+		"label": "电子报",
+		"name": "epaper"
+	},
+	{
+		"id": "8",
+		"order": "8",
+		"image": "flash/cache/assets/images/goodInfo_big.png",
+		"icon": "flash/cache/assets/images/goodInfo.png",
+		"code": "image",
+		"label": "商品信息",
+		"name": "good"
+	},
+	{
+		"id": "9",
+		"order": "9",
+		"image": "flash/cache/assets/images/party_big.png",
+		"icon": "flash/cache/assets/images/party.png",
+		"code": "image",
+		"label": "政策宣传",
+		"name": "party"
+	},
+	{
+		"id": "10",
+		"order": "10",
+		"image": "flash/cache/assets/images/click_big.png",
+		"icon": "flash/cache/assets/images/click.png",
+		"code": "button",
+		"label": "按钮控件",
+		"name": "click"
+	},
+	{
+		"id": "11",
+		"order": "11",
+		"image": "flash/cache/assets/images/qrCode_big.png",
+		"icon": "flash/cache/assets/images/qrCode.png",
+		"code": "image",
+		"label": "二维码",
+		"name": "qrCode"
+	},
+	{
+	  "id": "12",
+	  "order": "12",
+	  "image": "flash/cache/assets/images/marquee_big.png",
+	  "icon": "flash/cache/assets/images/marquee_normal.png",
+	  "code": "marquee",
+	  "label": "跑马灯",
+	  "name": "marquee"
+	},
+	{
+	  "id": "13",
+	  "order": "13",
+	  "image": "flash/cache/assets/images/gallary_big.png",
+	  "icon": "flash/cache/assets/images/gallary.png",
+	  "code": "gallary",
+	  "label": "图集",
+	  "name": "gallary"
+	},
+	{
+	  "id": "14",
+	  "order": "14",
+	  "image": "flash/cache/assets/images/news_big.png",
+	  "icon": "flash/cache/assets/images/news.png",
+	  "code": "news",
+	  "label": "资讯",
+	  "name": "news"
+	}
+]

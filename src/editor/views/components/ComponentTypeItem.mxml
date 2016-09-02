@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Image xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="55" height="35"
+		 mouseChildren="false" smooth="true"
+		 source="{componentType.icon}"
+		 toolTip="{componentType.label}"
+		 horizontalCenter="0" verticalCenter="0"
+		 fillMode="scale" scaleMode="letterbox"
+		 skinClass="editor.skins.ImageErrorSkin"
+		 mouseOver="image_mouseOverHandler(event)"
+		 mouseOut ="image_mouseOutHandler (event)"
+		 mouseDown="image_mouseDownHandler(event)"
+		 mouseUp  ="image_mouseUpHandler  (event)">
+	
+	<s:filters>
+		<s:DropShadowFilter distance="3"/>
+	</s:filters>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.core.ed;
+			import editor.vos.ComponentType;
+			
+			/**
+			 * @private
+			 */
+			private function image_mouseOverHandler(event:MouseEvent):void
+			{
+				alpha = .9;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function image_mouseOutHandler(event:MouseEvent):void
+			{
+				alpha = 1;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function image_mouseDownHandler(event:MouseEvent):void
+			{
+				alpha = .8;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function image_mouseUpHandler(event:MouseEvent):void
+			{
+				alpha = .9;
+			}
+			
+			
+			/**
+			 * 
+			 * 元素类型数据源。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get componentType():ComponentType
+			{
+				return ed::elementType;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set componentType($value:ComponentType):void
+			{
+				ed::elementType = $value;
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			ed var elementType:ComponentType;
+			
+		]]>
+	</fx:Script>
+</s:Image>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vw:_InternalView xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				  xmlns:s ="library://ns.adobe.com/flex/spark" 
+				  xmlns:mx="library://ns.adobe.com/flex/mx"
+				  xmlns:vw="editor.views.*"
+				  xmlns:st="editor.views.sheets.*"
+				  width="150" height="250">
+	
+	<s:Rect width="100%" height="100%" radiusX="5" radiusY="5">
+		<s:fill>
+			<s:SolidColor color="0x000000" alpha=".8"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Scroller width="100%" height="100%">
+		
+		<s:Group width="100%">
+			
+			<st:PageGroup left="5" right="5" top="5" bottom="5"
+						  selectable="false" forceExpand="true"
+						  id="pageGroup" dataProvider="{program.children}"
+						  click="item_clickHandler(event)"/>
+			
+		</s:Group>
+		
+	</s:Scroller>
+	
+	<vw:filters>
+		<s:DropShadowFilter distance="2"/>
+	</vw:filters>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.core.ed;
+			import editor.views.properties.PropertyItem;
+			import editor.views.sheets.PageItem;
+			import editor.vos.PLayout;
+			import editor.vos.Page;
+			
+			import mx.core.IVisualElementContainer;
+			
+			import spark.components.Application;
+			
+			
+			/**
+			 * 
+			 * 显示视图。
+			 * 
+			 */
+			
+			public function show($item:PropertyItem, $parent:Application):void
+			{
+				item = $item;
+				
+				if (item)
+				{
+					var rect:Rectangle = item.getRect($parent);
+					x = rect.x + rect.width * .5 + (rect.width * .25 - width * .5);
+					y = rect.y - height - 5;
+					$parent.addElement(this);
+					
+					stage.addEventListener(MouseEvent.MOUSE_DOWN, stage_clickHandler);
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 隐藏视图。
+			 * 
+			 */
+			
+			public function hide():void
+			{
+				stage.removeEventListener(MouseEvent.MOUSE_DOWN, stage_clickHandler);
+				if (parent) (parent as IVisualElementContainer).removeElement(this);
+			}
+			
+			
+			/**
+			 * 
+			 * 更新视图。
+			 * 
+			 */
+			
+			public function update():void
+			{
+				if (pageGroup) pageGroup.update();
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			private function stage_clickHandler($e:MouseEvent):void
+			{
+				if (mouseX < 0 || mouseX > width || 
+					mouseY < 0 || mouseY > height) hide();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function item_clickHandler($e:MouseEvent):void
+			{
+				if ($e.target is PageItem)
+				{
+					var page:Page = $e.target.sheet as Page;
+					if (page)
+					{
+						item.changeValue(page);
+						
+						hide();
+					}
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 数据源。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get program():PLayout
+			{
+				return ed::pageset;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set program($value:PLayout):void
+			{
+				ed::pageset = $value;
+				
+				update();
+			}
+			
+			
+			/**
+			 * 
+			 * 相关的属性。
+			 * 
+			 */
+			
+			public var item:PropertyItem;
+			
+			
+			/**
+			 * @private
+			 */
+			ed var pageset:PLayout;
+			
+		]]>
+	</fx:Script>
+	
+</vw:_InternalView>

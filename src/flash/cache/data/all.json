@@ -1,0 +1,54 @@
+{
+	"t2b": "fade",
+	"b2t": "fade",
+	"vis": "fade",
+	"pages": [
+		{
+			"order": 0,
+			"pages": [
+				{
+					"order": 0,
+					"coordX": 0,
+					"width": 1920,
+					"coordY": 0,
+					"height": 1080,
+					"label": "新建版面4",
+					"tweenEnabled": true,
+					"components": [
+						{
+							"order": 0,
+							"interactEnabled": true,
+							"coordX": 0,
+							"componentTypeId": "2",
+							"width": 1920,
+							"coordY": 0,
+							"height": 1080,
+							"label": "新建文本控件2",
+							"componentTypeCode": "text"
+						}
+					]
+				}
+			],
+			"label": "新建版面2",
+			"coordX": 0,
+			"width": 1920,
+			"coordY": 0,
+			"height": 1080,
+			"home": true,
+			"tweenEnabled": true,
+			"components": [
+				{
+					"order": 0,
+					"interactEnabled": true,
+					"coordX": 0,
+					"componentTypeId": "1",
+					"width": 885.3982300884957,
+					"coordY": 0,
+					"height": 1080,
+					"label": "新建图片1",
+					"componentTypeCode": "image"
+				}
+			]
+		}
+	]
+}

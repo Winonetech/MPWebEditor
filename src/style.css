@@ -1,0 +1,73 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|Label.programTitle
+{
+	fontFamily: 微软雅黑;
+	fontSize: 28;
+	color: #FFFFFF;
+}
+s|Label.title
+{
+	fontFamily: 微软雅黑;
+	fontSize: 18;
+	color: #FFFFFF;
+}
+s|Label.normal
+{
+	fontFamily: 微软雅黑;
+	fontSize: 12;
+	color: #FFFFFF;
+}
+s|Label.icon
+{
+	fontFamily: 微软雅黑;
+	fontSize: 13;
+	fontWeight: bold;
+	color: #000000;
+}
+s|Label.property
+{
+	fontFamily: 微软雅黑;
+	color: #FFFFFF;
+	fontSize: 12;
+	textAlign: right;
+}
+s|Label.expand
+{
+	fontFamily: 微软雅黑;
+	fontSize: 13;
+	fontWeight: bold;
+	color: #FFFFFF;
+}
+
+s|TextInput.normal
+{
+	fontFamily: 微软雅黑;
+	fontSize: 12;
+	color: #FFFFFF;
+}
+
+s|Button.title
+{
+	fontFamily: 微软雅黑;
+	fontSize: 14;
+	color: #FFFFFF;
+}
+
+s|Button.normal
+{
+	fontFamily: 微软雅黑;
+	fontSize: 12;
+	color: #FFFFFF;
+}
+
+s|Panel.title
+{
+	fontSize: 14;
+	fontFamily: 微软雅黑;
+	fontWeight: normal;
+	color: #FFFFFF;
+}
+

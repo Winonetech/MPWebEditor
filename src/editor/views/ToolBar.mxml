@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  xmlns:cs="editor.views.canvas.*"
+		  backgroundAlpha="0" mouseEnabled="false"
+		  width="100%" height="40"
+		  addedToStage="toolbar_addedToStageHandler(event)">
+	
+	<s:layout>
+		<s:HorizontalLayout verticalAlign="middle"
+							paddingLeft="5" paddingRight="5"
+							paddingTop="5" paddingBottom="5"/>
+	</s:layout>
+	
+	<!-- 标题 -->
+	<s:Label paddingLeft="10" text="{provider.programName}"
+			 styleName="programTitle"
+			 mouseEnabled="false" mouseChildren="false"/>
+	
+	<s:HGroup width="100%" verticalAlign="middle"
+			  paddingLeft="30" gap="50"
+			  mouseEnabled="false">
+		
+		<s:HGroup verticalAlign="middle" mouseEnabled="false">
+			
+			<s:Label text="缩放比例：" styleName="normal"
+					 mouseEnabled="false" mouseChildren="false"/>
+			
+			<!-- 缩放滑动组件 -->
+			
+			<s:HSlider maximum="{viewer.maxScale * 100}"
+					   minimum="{viewer.minScale * 100}"
+					   value="{viewer.contentScale * 100}" width="200" 
+					   change="slider_changeHandler(event)"
+					   mouseDown="slider_mouseDownHandler(event)"/>
+			
+		</s:HGroup>
+		
+		<s:CheckBox label="显示网格" color="0xFFFFFF"
+					selected="{config.showGrid}"
+					skinClass="editor.skins.EditorCheckBoxSkin"
+					change="showGrid_changeHandler(event)"/>
+		
+		<s:CheckBox id="check" label="拖拽模式"  color="0xFFFFFF"
+					selected="{config.dragOnly}"
+					skinClass="editor.skins.EditorCheckBoxSkin"
+					change="dragOnly_changHandler(event)"/>
+		
+		<s:CheckBox id="alignMode" label="对齐模式" color="0xFFFFFF"
+					selected="{config.alignMode}"
+					skinClass="editor.skins.EditorCheckBoxSkin"
+					change="alignMode_changeHandler(event)"/>
+		
+		<s:Spacer width="100%" mouseEnabled="false" mouseChildren="false"/>
+		
+		<s:HGroup horizontalAlign="right" mouseEnabled="false">
+			
+			<!-- 全屏按钮 -->
+			<s:Button height="30" styleName="title" label="全屏"
+					  id="fullBtn" toolTip="全屏编辑"
+					  skinClass="editor.skins.ButtonNormalSkin"
+					  click="full_clickHandler(event)"/>
+			
+			<!-- 保存按钮 -->
+			<s:Button height="30" styleName="title" label="应用"
+					  id="saveBtn" toolTip="应用发布"
+					  skinClass="editor.skins.ButtonNormalSkin"
+					  click="save_clickHandler(event)"/>
+			
+		</s:HGroup>
+		
+	</s:HGroup>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			import editor.core.MDConfig;
+			import editor.core.MDProvider;
+			import editor.utils.CommandUtil;
+			import editor.views.canvas.Viewer;
+			
+			
+			/**
+			 * @private
+			 */
+			private function showGrid_changeHandler(event:Event):void
+			{
+				config.showGrid = event.target.selected;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function dragOnly_changHandler(event:Event):void
+			{
+				config.dragOnly = event.target.selected;
+			}
+			
+			/**
+			 *@private 
+			 */
+			private function alignMode_changeHandler(event:Event):void
+			{
+				config.alignMode = event.target.selected;
+			}
+			
+			/**
+			 * @private
+			 */
+			private function slider_changeHandler(event:Event):void
+			{
+				if (control && viewer) viewer.scaleTo(event.target.value / 100, false);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function slider_mouseDownHandler(event:MouseEvent):void
+			{
+				control = true;
+				var slider_mouseUpHandler:Function = function(e:MouseEvent):void
+				{
+					stage.removeEventListener(MouseEvent.MOUSE_UP, slider_mouseUpHandler);
+					control = false;
+				};
+				stage.addEventListener(MouseEvent.MOUSE_UP, slider_mouseUpHandler);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function save_clickHandler(event:MouseEvent):void
+			{
+				CommandUtil.saveData();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function full_clickHandler(event:MouseEvent):void
+			{
+				CommandUtil.fullScreen();
+			}
+			
+			/**
+			 * @private
+			 */
+			private function toolbar_addedToStageHandler(event:Event):void
+			{
+				stage.addEventListener(FullScreenEvent.FULL_SCREEN, function(e:FullScreenEvent):void
+				{
+					fullBtn.label = (stage.displayState == StageDisplayState.NORMAL) ? "全屏" : "退出全屏";
+				});
+			}
+			
+			
+			/**
+			 * 
+			 * 查看器。
+			 * 
+			 */
+			
+			[Bindable]
+			public var viewer:Viewer;
+			
+			
+			/**
+			 * @private
+			 */
+			private var control:Boolean;
+			
+			
+			/**
+			 * 
+			 * 配置引用。
+			 * 
+			 */
+			
+			[Bindable]
+			private var provider:MDProvider = MDProvider.instance;
+			
+			/**
+			 * 
+			 * 配置引用。
+			 * 
+			 */
+			
+			[Bindable]
+			private var config:MDConfig = MDConfig.instance;
+			
+		]]>
+	</fx:Script>
+	
+</s:BorderContainer>
