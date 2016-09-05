@@ -29,9 +29,13 @@ package editor.views.components
 	import flash.utils.Timer;
 	
 	import mx.core.UIComponent;
+	import mx.graphics.SolidColor;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Image;
+	import spark.components.Label;
+	import spark.primitives.Rect;
 	
 	
 	public class CanvasItem extends Group
@@ -47,6 +51,13 @@ package editor.views.components
 		{
 			super();
 			
+			back = new Rect;
+			back.fill = new SolidColor(0xCCCCCC, .3);
+			addElement(back);
+			
+			mouseChildren = false;
+			
+			addEventListener(MouseEvent.CLICK, component_doubleClickHandler);
 		}
 		
 		
@@ -61,20 +72,6 @@ package editor.views.components
 			updateLayout();
 			
 			updateSource();
-		}
-		
-		
-		/**
-		 * @inheritDoc
-		 */
-		
-		override protected function createChildren():void
-		{
-			addElementAt(back, 0);
-			
-			mouseChildren = false;
-			
-			addEventListener(MouseEvent.CLICK, component_doubleClickHandler);
 		}
 		
 		
@@ -96,9 +93,12 @@ package editor.views.components
 		{
 			updateBack();
 			
-			clearCurrent();
-			
-			if(!updateProperty(componentProperty)) updateIcon();
+			if(!updateProperty(componentProperty)) 
+			{
+				updateIcon();
+				
+				updateContent();
+			}
 		}
 		
 		/**
@@ -106,13 +106,8 @@ package editor.views.components
 		 */
 		private function updateBack():void
 		{
-			if (back)
-			{
-				back.graphics.clear();
-				back.graphics.beginFill(0xCCCCCC, .5);
-				back.graphics.drawRect(0, 0, width, height);
-				back.graphics.endFill();
-			}
+			back.width = width;
+			back.height = height;
 		}
 		
 		/**
@@ -120,13 +115,18 @@ package editor.views.components
 		 */
 		private function updateIcon():void
 		{
+			if (icon) 
+			{
+				if (containsElement(icon)) removeElement(icon);
+				icon = null;
+			}
 			if (componentType)
 			{
-				addElement(icon = new Image);
+				icon = new Image;
+				addElement(icon);
 				icon.setStyle("skinClass", editor.skins.ImageErrorSkin);
 				icon.smooth = true;
 				icon.visible = false;
-				
 				var bmd:BitmapData = ImageManager.retrieveBitmapData(componentType.image);
 				if (bmd)
 				{
@@ -134,7 +134,6 @@ package editor.views.components
 					icon.source = bmd;
 					icon.maxWidth  = bmd.width;
 					icon.maxHeight = bmd.height;
-					
 					resizeIcon();
 				}
 				else
@@ -155,7 +154,26 @@ package editor.views.components
 					icon.addEventListener(IOErrorEvent.IO_ERROR, handler);
 					icon.source = componentType.image;
 				}
+				
 			}
+		}
+		
+		/**
+		 * @private
+		 */
+		private function updateContent():void
+		{
+			if (contentLabel)
+			{
+				if (containsElement(contentLabel)) removeElement(contentLabel);
+				contentLabel = null;
+			}
+			contentLabel = new Label;
+			contentLabel.setStyle("color", 0);
+			contentLabel.setStyle("fontSize", 50);
+			contentLabel.text = component.hasContent ? "有" : "无";
+			addElement(contentLabel);
+			resizeLabel();
 		}
 		
 		/**
@@ -163,7 +181,11 @@ package editor.views.components
 		 */
 		private function updateProperty($property:Object):Boolean
 		{
-			var result:Boolean;
+			if (ui)
+			{
+				if (containsElement(ui)) removeElement(ui);
+				ui = null;
+			}
 			if ($property)
 			{
 				if ($property is Array)
@@ -190,7 +212,7 @@ package editor.views.components
 								addElement(ui);
 								
 								resizeUI();
-								result = true;
+								var result:Boolean = true;
 							}
 						}
 					}
@@ -199,28 +221,13 @@ package editor.views.components
 			return result;
 		}
 		
-		/**
-		 * @private
-		 */
-		private function clearCurrent():void
-		{
-			while(numElements > 1) removeElementAt(1);
-		}
-		
-		/**
-		 * @private
-		 */
-		private function resizeBack():void
-		{
-			updateBack();
-		}
 		
 		/**
 		 * @private
 		 */
 		private function resizeIcon():void
 		{
-			if (icon && containsElement(icon))
+			if (icon)
 			{
 				icon.width  = Math.min(width , icon.maxWidth);
 				icon.height = Math.min(height, icon.maxHeight);
@@ -232,9 +239,25 @@ package editor.views.components
 		/**
 		 * @private
 		 */
+		private function resizeLabel():void
+		{
+			if (contentLabel)
+			{
+				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
+				
+				contentLabel.scaleX = contentLabel.scaleY = scale;
+				
+				contentLabel.x = width  - 10 - 50 * scale;
+				contentLabel.y = height - 10 - 50  * scale;
+			}
+		}
+		
+		/**
+		 * @private
+		 */
 		private function resizeUI():void
 		{
-			if (ui && containsElement(ui))
+			if (ui)
 			{
 				ui.width  = width;
 				ui.height = height;
@@ -249,6 +272,8 @@ package editor.views.components
 			updateBack();
 			
 			resizeIcon();
+			
+			resizeLabel();
 			
 			resizeUI();
 		}
@@ -279,10 +304,6 @@ package editor.views.components
 		{
 			super.width = int($value);
 
-
-
-
-			
 			resizeAll();
 		}
 		
@@ -438,7 +459,12 @@ package editor.views.components
 		/**
 		 * @private
 		 */
-		private var back:UIComponent = new UIComponent;
+		private var back:Rect;
+		
+		/**
+		 * @private
+		 */
+		private var contentLabel:Label;
 		
 		/**
 		 * @private

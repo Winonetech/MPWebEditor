@@ -192,6 +192,26 @@ package editor.vos
 		
 		/**
 		 * 
+		 * 有无内容。
+		 * 
+		 */
+		
+		public function get hasContent():Boolean
+		{
+			return getProperty("hasContent", Boolean);
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set hasContent($value:Boolean):void
+		{
+			setProperty("hasContent", $value);
+		}
+		
+		
+		/**
+		 * 
 		 * 链接至的页面数据结构。
 		 * 
 		 */
@@ -295,14 +315,6 @@ package editor.vos
 			setProperty("linkId", $value);
 		}
 		
-		
-		/**
-		 * 
-		 * 是否被选中。
-		 * 
-		 */
-		public var selected:Boolean;
-		
 		/**
 		 * 
 		 * 过渡效果。
@@ -314,10 +326,14 @@ package editor.vos
 			return getProperty("transition");
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set transition(value:String):void 
 		{
 			setProperty("transition", value);
 		}
+		
 		
 		/**
 		 * 
@@ -325,10 +341,24 @@ package editor.vos
 		 * 
 		 */
 		
-		
 		public var componentType:ComponentType;
 		
+		
+		/**
+		 * 
+		 * 是否被选中。
+		 * 
+		 */
+		
+		public var selected:Boolean;
+		
+		
+		/**
+		 * @private
+		 */
 		private var value:int;
+		
+		
 		/**
 		 * @private
 		 */

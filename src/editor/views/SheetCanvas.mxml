@@ -154,12 +154,7 @@
 			{
 				ed::selectedItem = $value;
 				
-				if (content) 
-				{
-					content.selectedComponent = selectedComponent;
-					//if (selector) selector.canvasItem = content.selectedItem;
-				}
-				
+				if (content) content.selectedComponent = selectedComponent;
 			}
 			
 			
@@ -183,6 +178,7 @@
 				
 				update();
 			}
+			
 			
 			/**
 			 * @private
