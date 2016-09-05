@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" 
+				   xmlns:tabs="editor.views.tabs.*"
+				   borderAlpha="0"
+				   height="30" backgroundAlpha="0">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:layout>
+		<s:HorizontalLayout gap="5"/> 
+	</s:layout>
+	<tabs:TitleTab label="布局"/>
+	<fx:Script>
+		<![CDATA[
+			
+		]]>
+	</fx:Script>
+	
+</s:BorderContainer>

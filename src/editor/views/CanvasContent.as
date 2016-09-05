@@ -6,8 +6,6 @@ package editor.views
 	 * 画布内容。
 	 * 
 	 */
-	
-	
 	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
@@ -18,6 +16,7 @@ package editor.views
 	import editor.utils.CommandUtil;
 	import editor.utils.ComponentUtil;
 	import editor.views.canvas.Viewer;
+	import editor.views.components.CanvasItem;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Sheet;
@@ -35,7 +34,8 @@ package editor.views
 	import mx.managers.DragManager;
 	
 	import spark.components.Group;
-	import editor.views.components.CanvasItem;
+	
+	import w11k.flash.AngularJSAdapter;
 	
 	
 	public final class CanvasContent extends _InternalView
@@ -225,7 +225,7 @@ package editor.views
 			down = new Point(mouseX, mouseY);
 			if ($e.target is CanvasItem)
 			{
-				$e.stopImmediatePropagation();
+				if (config.mode == "edit") $e.stopImmediatePropagation();
 				dragging = $e.target as CanvasItem;
 				stat.x = dragging.x;
 				stat.y = dragging.y;
@@ -485,8 +485,9 @@ package editor.views
 		 */
 		private function item_mouseMoveHandler($e:MouseEvent):void
 		{
+			
 			var mouse:Point = new Point(mouseX, mouseY);
-			if (moving)
+			if (config.mode == "edit" && moving)
 			{
 				if (dragging)
 				{
@@ -556,13 +557,21 @@ package editor.views
 			if ($e.target is CanvasItem)
 			{
 				var item:CanvasItem = $e.target as CanvasItem;
-				var rectangle:Rectangle = ComponentUtil.getMaxmizeRect(item.rect, getComponentRects(item), rect);
-				CommandUtil.edtComponent(item.component, {
-					x: rectangle.x,
-					y: rectangle.y,
-					width : rectangle.width,
-					height: rectangle.height
-				});
+				if (config.mode == "edit")
+				{
+					var rectangle:Rectangle = ComponentUtil.getMaxmizeRect(item.rect, getComponentRects(item), rect);
+					CommandUtil.edtComponent(item.component, {
+						x: rectangle.x,
+						y: rectangle.y,
+						width : rectangle.width,
+						height: rectangle.height
+					});
+				}
+				else if (config.mode == "fill")
+				{
+					CommandUtil.fillComponent(item.component.id, item.component.componentTypeCode);
+					Debugger.log("填充内容：组件ID = " + item.component.id + "，组件编码 = " + item.component.componentTypeCode);
+				}
 			}
 		}
 		

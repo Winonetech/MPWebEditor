@@ -13,6 +13,7 @@ package editor.views.components
 	import cn.mvc.utils.RectangleUtil;
 	import cn.mvc.utils.StringUtil;
 	
+	import editor.core.MDConfig;
 	import editor.core.ed;
 	import editor.managers.ImageManager;
 	import editor.skins.ImageErrorSkin;
@@ -28,10 +29,13 @@ package editor.views.components
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
 	
+	import mx.controls.HRule;
 	import mx.core.UIComponent;
 	
 	import spark.components.Group;
 	import spark.components.Image;
+	import spark.components.Label;
+	import spark.components.TextArea;
 	
 	
 	public class CanvasItem extends Group
@@ -126,7 +130,6 @@ package editor.views.components
 				icon.setStyle("skinClass", editor.skins.ImageErrorSkin);
 				icon.smooth = true;
 				icon.visible = false;
-				
 				var bmd:BitmapData = ImageManager.retrieveBitmapData(componentType.image);
 				if (bmd)
 				{
@@ -156,6 +159,11 @@ package editor.views.components
 					icon.source = componentType.image;
 				}
 			}
+			var label:Label = new Label;
+			label.text = "youdongxi";
+			label.setStyle("color", 0);
+			label.setStyle("fontSize", 50);
+			addElement(label);
 		}
 		
 		/**

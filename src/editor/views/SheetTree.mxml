@@ -6,11 +6,6 @@
 				  xmlns:sh="editor.views.sheets.*"
 				  width="100%" height="100%" mouseEnabled="false">
 
-	<vw:states>
-		<s:State name="deft"/>
-		<s:State name="demo"/>
-	</vw:states>
-	
 	<s:BorderContainer left="0" right="0" height="100%" id="container"
 					   backgroundAlpha="0" mouseEnabled="false">
 		
@@ -25,8 +20,8 @@
 				<s:Label paddingLeft="10" paddingTop="5" styleName="title" text="页面"
 						 mouseEnabled="false" mouseChildren="false"/>
 				
-				<s:HGroup includeIn="deft" width="100%" mouseEnabled="false"
-						  horizontalAlign="right" verticalAlign="middle">
+				<s:HGroup width="100%" mouseEnabled="false"
+						  horizontalAlign="right" verticalAlign="middle" visible="{isEdit}">
 					
 					<s:Button width="22" styleName="title" label="+" toolTip="新增页面"
 							  skinClass="editor.skins.ButtonNormalSkin"
@@ -44,14 +39,13 @@
 			
 			<s:Scroller width="100%" height="100%" id="scroller" mouseEnabled="false">
 				
-				<s:VGroup id="group" gap="0" paddingBottom="10"
-						  dragEnter="group_dragEnterHandler(event)"
-						  dragDrop="group_dragDropHandler(event)"
-						  click="item_clickHandler(event)">
+				<s:VGroup id="group" gap="0" paddingBottom="10" click="item_clickHandler(event)">
 					
-					<sh:ADItem includeIn="deft" sheet="{program.ad}"/>
+					<sh:ADItem sheet="{program.ad}"/>
 					
 					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"
+								  dragEnter="group_dragEnterHandler(event)"
+								  dragDrop="group_dragDropHandler(event)"
 								  mouseDown="group_mouseDownHandler(event)"/>
 					
 				</s:VGroup>
@@ -64,14 +58,16 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import editor.controls.Virtual;
+			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
 			import editor.views.sheets.PageItem;
 			import editor.views.sheets.SheetItem;
+			import editor.views.tabs.TitleTab;
 			import editor.vos.PLayout;
 			import editor.vos.Page;
+			import editor.vos.Sheet;
 			
 			import mx.core.DragSource;
 			import mx.core.UIComponent;
@@ -173,6 +169,7 @@
 					if (event.target is SheetItem)
 					{
 						config.selectedComponent = null;
+						config.selectedSheet = event.target.sheet;
 						var sheetItem:SheetItem = event.target as SheetItem;
 						if (config.selectedSheet) 
 						{
@@ -182,6 +179,7 @@
 								{
 									doubleClickCount = 0;
 									CommandUtil.openSheet(sheetItem.sheet);
+									addTitle(sheetItem.sheet);
 									return;
 								}
 							}
@@ -197,14 +195,18 @@
 				}
 			}
 			
+			private function addTitle(sheet:Sheet):void
+			{
+				var title:TitleTab = new TitleTab;
+				MDVars.instance.titleBar.addElement(title);
+				title.label = sheet.label;
+			}
 			/**
 			 * @private
 			 */
 			private function group_mouseDownHandler($e:MouseEvent):void
 			{
-				if ($e.target is SheetItem) config.selectedSheet = $e.target.sheet;
-				//用mouseDown代替click选择为selectedSheet以保证拖动不会出bug
-				if ($e.target is PageItem)
+				if (isEdit && $e.target is PageItem)
 				{
 					mouseMoved = dragStarted = false;
 					
@@ -225,6 +227,7 @@
 			{
 				if (Point.distance(new Point(mouseX, mouseY), down) > 5)
 				{
+					
 					mouseMoved = true;
 					
 					startScroll();
@@ -253,8 +256,6 @@
 			{
 				item.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, false));
 				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
-				
-				
 				var source:DragSource = new DragSource;
 				source.addData(item.sheet, "page");
 				
@@ -323,6 +324,10 @@
 				}
 			}
 			
+			private function get isEdit():Boolean
+			{
+				return config.mode == 'edit';
+			}
 			
 			/**
 			 * 

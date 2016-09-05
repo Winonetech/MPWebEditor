@@ -16,6 +16,8 @@ package editor.utils
 	import editor.core.MDPresenter;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
+	import editor.tools.FillTool;
+	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Page;
@@ -23,9 +25,21 @@ package editor.utils
 	
 	import spark.components.RichEditableText;
 	
+	import w11k.flash.AngularJSAdapter;
+	
 	
 	public class CommandUtil extends NoInstance
 	{
+		
+		public static function fillComplete(componentId:String, hasCotent:Boolean):void
+		{
+			vars.fillTool.fillComplete(componentId, hasCotent);
+		}
+		
+		public static function fillComponent(componentId:String, componentCode:String):void
+		{
+			presenter.execute(new FillContent(componentId, componentCode));
+		}
 		
 		/**
 		 * 
@@ -42,7 +56,6 @@ package editor.utils
 		 * }
 		 * 
 		 */
-		
 		public static function transmitData($data:Object):void
 		{
 			presenter.execute(new InitProgramCommand($data));

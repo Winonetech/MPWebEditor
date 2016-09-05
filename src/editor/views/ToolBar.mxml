@@ -5,7 +5,14 @@
 		  xmlns:cs="editor.views.canvas.*"
 		  backgroundAlpha="0" mouseEnabled="false"
 		  width="100%" height="40"
+		  currentState="{config.mode}"
 		  addedToStage="toolbar_addedToStageHandler(event)">
+	
+	<s:states>
+		<s:State name="edit"/>
+		<s:State name="fill"/>
+		<s:State name="view"/>
+	</s:states>
 	
 	<s:layout>
 		<s:HorizontalLayout verticalAlign="middle"
@@ -43,11 +50,13 @@
 					change="showGrid_changeHandler(event)"/>
 		
 		<s:CheckBox id="check" label="拖拽模式"  color="0xFFFFFF"
+					includeIn="edit"
 					selected="{config.dragOnly}"
 					skinClass="editor.skins.EditorCheckBoxSkin"
 					change="dragOnly_changHandler(event)"/>
 		
 		<s:CheckBox id="alignMode" label="对齐模式" color="0xFFFFFF"
+					includeIn="edit"
 					selected="{config.alignMode}"
 					skinClass="editor.skins.EditorCheckBoxSkin"
 					change="alignMode_changeHandler(event)"/>
@@ -55,7 +64,6 @@
 		<s:Spacer width="100%" mouseEnabled="false" mouseChildren="false"/>
 		
 		<s:HGroup horizontalAlign="right" mouseEnabled="false">
-			
 			<!-- 全屏按钮 -->
 			<s:Button height="30" styleName="title" label="全屏"
 					  id="fullBtn" toolTip="全屏编辑"
@@ -65,6 +73,7 @@
 			<!-- 保存按钮 -->
 			<s:Button height="30" styleName="title" label="应用"
 					  id="saveBtn" toolTip="应用发布"
+					  includeIn="edit"
 					  skinClass="editor.skins.ButtonNormalSkin"
 					  click="save_clickHandler(event)"/>
 			

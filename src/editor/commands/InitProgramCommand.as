@@ -48,6 +48,7 @@ package editor.commands
 			provider.programName   = data.programName;
 			provider.defaultWidth  = data.defaultWidth;
 			provider.defaultHeight = data.defaultHeight;
+			config.mode			   = data.mode;
 		}
 		
 		

@@ -64,6 +64,7 @@ package editor.commands
 					vars.addone     = vars.editorView.addone;
 					vars.canvas     = vars.editorView.canvas;
 					vars.components = vars.editorView.components;
+					vars.titleBar   = vars.editorView.titleBar;
 					//注册删除组件快捷键DELETE
 					KeyboardManager.keyboardManager.initialize(vars.application.stage);
 					KeyboardManager.keyboardManager.registControl(CommandUtil.shotcutDel, [46]);

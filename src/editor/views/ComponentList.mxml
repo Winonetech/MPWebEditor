@@ -22,7 +22,8 @@
 				       horizontalAlign="right" verticalAlign="middle">
 		
 		     <s:Button width="22" styleName="title" label="-" toolTip="删除组件"
-				       skinClass="editor.skins.ButtonNormalSkin"
+				       visible="{isEdit}"
+					   skinClass="editor.skins.ButtonNormalSkin"
 				       click="del_clickHandler(event)"/>
 			
 		     </s:HGroup>
@@ -156,7 +157,7 @@
 			 */
 			private function group_mouseDownHandler($e:MouseEvent):void
 			{
-				if ($e.target is ComponentListItem)
+				if (isEdit && $e.target is ComponentListItem)
 				{
 					mouseMoved = dragStarted = false;
 					
@@ -248,6 +249,11 @@
 				update();
 			}
 			
+			
+			private function get isEdit():Boolean
+			{
+				return config.mode == "edit";
+			}
 			
 			/**
 			 * @private

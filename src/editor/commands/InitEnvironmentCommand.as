@@ -51,6 +51,7 @@ package editor.commands
 			vars.adapter = adapter;
 			
 			adapter.expose("transmitData", CommandUtil.transmitData);
+			adapter.expose("fillComplete", CommandUtil.fillComplete);
 			//通知浏览器flash准备完毕
 			adapter.fireFlashReady();
 		}

@@ -187,6 +187,8 @@ package editor.core
 		private var lastSelectedComponent:Component;
 		
 		
+		public var mode:String = "edit";
+		
 		/**
 		 * @private
 		 */

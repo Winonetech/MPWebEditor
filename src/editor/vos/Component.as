@@ -296,6 +296,27 @@ package editor.vos
 		}
 		
 		
+		
+		/**
+		 * 
+		 * 链接至页面ID。
+		 * 
+		 */
+		
+		public function get hasContent():Boolean
+		{
+			return getProperty("hasContent");
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set hasContent($value:Boolean):void
+		{
+			setProperty("hasContent", $value);
+		}
+		
+		
 		/**
 		 * 
 		 * 是否被选中。
@@ -324,7 +345,6 @@ package editor.vos
 		 * 元素类别引用。
 		 * 
 		 */
-		
 		
 		public var componentType:ComponentType;
 		

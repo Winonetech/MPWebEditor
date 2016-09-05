@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" 
+				   mouseOut="bordercontainer2_mouseOutHandler(event)"
+				   mouseOver="bordercontainer1_mouseOverHandler(event)"
+				   click="bordercontainer2_clickHandler(event)"
+				   backgroundAlpha=".1" minWidth="60" height="30">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:states>
+		<s:State name="mouseOut"/>
+		<s:State name="mouseOver"/>
+	</s:states>
+	<s:layout>
+		<s:HorizontalLayout paddingLeft="5" paddingRight="5" gap="30" verticalAlign="middle"/> 
+	</s:layout>
+	<s:Label color="0xFFFFFF" text="{label}"/>
+	<s:Button id="button" visible="false" skinClass="editor.skins.ButtonCloseSkin"/>
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var label:String;
+			
+			protected function bordercontainer1_mouseOverHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				currentState = "mouseOver";
+				button.visible = true;
+			}
+			
+			protected function bordercontainer2_mouseOutHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				currentState = "mouseOut";
+				button.visible = false;
+			}
+			
+			protected function bordercontainer2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if (event.target is Button) closePage();
+				else openPage();
+			}
+			
+			private function openPage():void
+			{
+				
+			}
+			
+			private function closePage():void
+			{
+				
+			}
+		]]>
+	</fx:Script>
+</s:BorderContainer>
