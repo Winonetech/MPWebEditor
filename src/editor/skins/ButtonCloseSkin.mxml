@@ -49,8 +49,8 @@
         <s:State name="disabled" />
     </s:states>
     
-	<s:Image excludeFrom="down, over" source="@Embed('../../state1.png')"/>
-	<s:Image includeIn="down, over" source="@Embed('../../state2.png')"/>
+	<s:Image excludeFrom="down, over" source="@Embed('../../flash/cache/assets/images/state1.png')"/>
+	<s:Image includeIn="down, over"   source="@Embed('../../flash/cache/assets/images/state2.png')"/>
     
     
 </s:SparkButtonSkin>
