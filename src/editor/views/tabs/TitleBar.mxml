@@ -4,6 +4,7 @@
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
 				   xmlns:tabs="editor.views.tabs.*"
 				   borderAlpha="0" 
+				   resize="hgroup1_resizeHandler(event)"
 				   height="30" backgroundAlpha="0">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
@@ -12,7 +13,7 @@
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
-	<s:HGroup resize="hgroup1_resizeHandler(event)" gap="5" >
+	<s:HGroup gap="5" >
 		<s:HGroup gap="5" id="HG">
 			<tabs:TitleTab width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
@@ -105,19 +106,32 @@
 //				return oldWidth >= width ? oldNumElements < HG.numElements 
 //					: $addedWidth + oldWidth > MDVars.instance.editorView.canvas.width - 50;
 //			}
-			
-			
+			private var oldWidth:Number;
+			private var count:int;
 			public var state:String;
 			protected function hgroup1_resizeHandler(event:ResizeEvent):void
 			{
-				if (state)
+				if (state == "close") closed()
+				else
 				{
-					if (state == "close") Debugger.log("close...");
-					else Debugger.log("open...");
+					if (count > 1 && count % 2 == 1)
+						opened();
+					else oldWidth = event.oldWidth;
+					
+					count++;
 				}
-				
 			}
 			
+			private function closed():void
+			{
+				Debugger.log("close close close close close");
+			}
+			
+			private function opened():void
+			{
+				Debugger.log("open open open open open open");
+				Debugger.log("oldWidth -> " + oldWidth + " VS newWidth -> " + width);
+			}
 		]]>
 	</fx:Script>
 	

@@ -106,7 +106,6 @@
 			 
 			protected function hgroup1_addHandler(event:FlexEvent):void
 			{
-
 				Debugger.log("add add add add add add add add");
 				if (titleBar)
 					titleBar.state = "open";
