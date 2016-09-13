@@ -33,7 +33,7 @@ package editor.tools
 			{
 				temp.hasContent = hasContent;
 				MDVars.instance.editorView.canvas.content.updateComponent(temp);
-				MDPresenter.instance.execute(new EdtComponentCommand(temp, {hasContent:true}));
+				MDPresenter.instance.execute(new EdtComponentCommand(temp, {hasContent:temp.hasContent}));
 			}
 			
 		}
