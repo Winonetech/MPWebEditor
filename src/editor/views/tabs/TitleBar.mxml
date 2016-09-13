@@ -3,17 +3,120 @@
 				   xmlns:s="library://ns.adobe.com/flex/spark" 
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
 				   xmlns:tabs="editor.views.tabs.*"
-				   borderAlpha="0"
+				   borderAlpha="0" 
 				   height="30" backgroundAlpha="0">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
-	<s:layout>
-		<s:HorizontalLayout gap="5"/> 
-	</s:layout>
-	<tabs:TitleTab label="布局"/>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="much"/>
+	</s:states>
+	<s:HGroup resize="hgroup1_resizeHandler(event)" gap="5" >
+		<s:HGroup gap="5" id="HG">
+			<tabs:TitleTab width="40" label="布局" layoutCloseVisible="false"/>
+		</s:HGroup>
+	<s:ComboBox id="comboBox" dataProvider="{dataArrs}" includeIn="much" change="combobox1_changeHandler(event)"
+					skinClass="editor.skins.TitleBarComboboxSkin"/>
+	</s:HGroup>
 	<fx:Script>
 		<![CDATA[
+			import editor.core.MDConfig;
+			import editor.core.MDProvider;
+			import editor.core.MDVars;
+			import editor.views.Debugger;
+			import editor.vos.Sheet;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			import mx.states.OverrideBase;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var _selected:TitleTab;
+			
+			public function get selected():TitleTab
+			{
+				return _selected;
+			}
+			
+			public function set selected(value:TitleTab):void
+			{
+				var temp:Sheet = tab2Sheet(value);
+				if (temp)
+				{
+					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = temp;
+					_selected = value;
+					updateBackgroundColor();
+				}
+			}
+			
+			[Bindable]
+			public var dataArrs:ArrayCollection = new ArrayCollection; 
+			public var idObj:Object = {};
+			
+			public function sheet2Tab($sheet:Sheet):TitleTab
+			{
+				var temp:TitleTab;
+				for (var i:int; i < HG.numElements; i++)
+				{
+					temp = HG.getElementAt(i) as TitleTab	
+					if ($sheet.id == idObj[temp])
+					{
+						return temp; 
+					}
+				}
+				return null;
+			}
+			
+			public function tab2Sheet($tab:TitleTab):Sheet
+			{
+				return MDProvider.instance.program.sheets[idObj[$tab]];
+			}
+			
+			public function updateBackgroundColor():void
+			{
+				var temp:TitleTab;
+				for (var i:int; i < HG.numElements; i++)
+				{
+					temp = HG.getElementAt(i) as TitleTab;
+					if (idObj[temp] != idObj[selected])
+					{
+						temp.button.visible = false;
+						temp.setStyle("backgroundColor", 0xffffff);
+					}
+					else
+					{
+						temp.button.visible = true;
+						temp.setStyle("backgroundColor", 0);
+					}
+				}
+			}
+			
+			protected function combobox1_changeHandler(event:IndexChangeEvent):void
+			{
+			}
+			
+//			private function isOverBorder($addedWidth:Number):Boolean
+//			{
+//				Debugger.log(oldNumElements + "  " + HG.numElements);
+//				return oldWidth >= width ? oldNumElements < HG.numElements 
+//					: $addedWidth + oldWidth > MDVars.instance.editorView.canvas.width - 50;
+//			}
+			
+			
+			public var state:String;
+			protected function hgroup1_resizeHandler(event:ResizeEvent):void
+			{
+				if (state)
+				{
+					if (state == "close") Debugger.log("close...");
+					else Debugger.log("open...");
+				}
+				
+			}
 			
 		]]>
 	</fx:Script>

@@ -134,7 +134,6 @@
 				{
 					var scope:Object = {};
 					scope[item.property] = item.value;
-					
 					if (item.property == "width" || item.property == "height")
 					{
 						ComponentUtil.limitSheetComponents(

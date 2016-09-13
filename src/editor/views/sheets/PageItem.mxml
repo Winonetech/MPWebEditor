@@ -3,7 +3,7 @@
 			  xmlns:s ="library://ns.adobe.com/flex/spark"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
 			  xmlns:sh="editor.views.sheets.*"
-			  icon="PG" selected="{sheet.selected}"
+			  icon="PG" selected="{sheet.selected}" 
 			  creationComplete="changeBackgroundIndex(event)"
 			  click="expand_clickHandler(event)">
 	
@@ -36,7 +36,6 @@
 				  forceExpand="{forceExpand}"
 				  dataProvider="{page.pagesArr}"
 				  mouseEnabled="false"/>
-	
 	<fx:Script>
 		<![CDATA[
 			import editor.core.ed;
@@ -72,7 +71,6 @@
 					expand = !expand;
 					event.stopImmediatePropagation();
 				}
-				trace(currentState);
 			}
 			
 			

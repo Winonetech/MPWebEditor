@@ -27,6 +27,7 @@ package editor.views
 	import flash.geom.Rectangle;
 	import flash.text.engine.ContentElement;
 	
+	import mx.controls.Alert;
 	import mx.controls.HRule;
 	import mx.controls.VRule;
 	import mx.core.UIComponent;
@@ -223,10 +224,10 @@ package editor.views
 		{
 			moving = false;
 			down = new Point(mouseX, mouseY);
-			if ($e.target is CanvasItem)
+			if (ComponentUtil.isType($e.target))
 			{
 				if (config.mode == "edit") $e.stopImmediatePropagation();
-				dragging = $e.target as CanvasItem;
+				dragging = ComponentUtil.isType($e.target);
 				stat.x = dragging.x;
 				stat.y = dragging.y;
 				if(config.alignMode)
@@ -543,20 +544,27 @@ package editor.views
 		{
 			if(!moving) 
 			{
-				var item:CanvasItem = $e.target as CanvasItem;
-				config.selectedSheet = null;
-				config.selectedComponent = item ? item.component : null;
+				var item:CanvasItem = ComponentUtil.isType($e.target);
+				if (item != null)
+				{
+					config.selectedSheet = null;
+					config.selectedComponent = item ? item.component : null;
+				}
 			}
 		}
 		
 		/**
 		 * @private
 		 */
+		
+		/**
+		 * @private
+		 */
 		private function item_doubleClickHandler($e:MouseEvent):void
 		{
-			if ($e.target is CanvasItem)
+			if (ComponentUtil.isType($e.target))
 			{
-				var item:CanvasItem = $e.target as CanvasItem;
+				var item:CanvasItem = ComponentUtil.isType($e.target);
 				if (config.mode == "edit")
 				{
 					var rectangle:Rectangle = ComponentUtil.getMaxmizeRect(item.rect, getComponentRects(item), rect);

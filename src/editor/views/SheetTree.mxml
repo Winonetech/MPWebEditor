@@ -195,12 +195,30 @@
 				}
 			}
 			
+			/**
+			 * @private
+			 */
 			private function addTitle(sheet:Sheet):void
 			{
 				var title:TitleTab = new TitleTab;
-				MDVars.instance.titleBar.addElement(title);
-				title.label = sheet.label;
+				if (repeatById(sheet.id))
+				{
+					var temp:TitleTab = MDVars.instance.titleBar.HG.addElement(title) as TitleTab;
+					idObj[temp] = sheet.id;
+				}
+				MDVars.instance.titleBar.selected = MDVars.instance.titleBar.sheet2Tab(sheet);
 			}
+			
+			/**
+			 * @private
+			 */
+			private function repeatById($id:String):Boolean
+			{
+				for each (var id:String in idObj)
+					if (id == $id) return false;
+				return true;
+			}
+			
 			/**
 			 * @private
 			 */
@@ -256,12 +274,12 @@
 			{
 				item.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, false));
 				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
+				
 				var source:DragSource = new DragSource;
 				source.addData(item.sheet, "page");
 				
 				var virtual:Virtual = new Virtual;
 				virtual.source = item;
-				
 				DragManager.doDrag(item, source, $e, virtual);
 			}
 			
@@ -351,7 +369,13 @@
 				update();
 			}
 			
-			
+			/**
+			 * @private
+			 */
+			private function get idObj():Object
+			{
+				return MDVars.instance.titleBar.idObj;
+			}
 			/**
 			 * @private
 			 */
@@ -395,13 +419,12 @@
 			/**
 			 * @private
 			 */
-			private var doubleClickTimer:Timer = new Timer(500, 1);
 			
+			private var doubleClickTimer:Timer = new Timer(300, 1);
 			/**
 			 * @private
 			 */
 			ed var pageset:PLayout;
-			
 		]]>
 	</fx:Script>
 </vw:_InternalView>

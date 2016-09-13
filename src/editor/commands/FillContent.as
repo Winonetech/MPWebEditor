@@ -2,7 +2,6 @@ package editor.commands
 {
 	import cn.mvc.collections.Map;
 	
-	import editor.events.FillEvent;
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	
@@ -15,14 +14,15 @@ package editor.commands
 		public function FillContent($componentId:String, $componentCode:String)
 		{
 			super();
-			componentCode = $componentCode;
-			componentId = $componentId;
+			component["componentCode"] = $componentCode;
+			component["componentId"] = $componentId;
 		}
 		
 		override public function execute():void
 		{
 			commandStart();
 			excuteCommand();
+			commandEnd();
 		}
 		
 		/**
@@ -31,16 +31,7 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			var complete:Function = function(e:FillEvent):void
-			{
-				vars.fillTool.removeEventListener(Event.COMPLETE, complete);
-				
-				findComponentById(e.componentId).hasContent = e.hasContent;
-				
-				commandEnd();
-			};
-			vars.fillTool.addEventListener(Event.COMPLETE, complete);
-			vars.fillTool.fillComponent(componentId, componentCode);
+			vars.fillTool.fillComponent(component);
 		}
 		
 		private function findComponentById($id:String):Component
@@ -48,8 +39,6 @@ package editor.commands
 			return config.editingSheet 
 				? config.editingSheet.componentsMap.componentMap[$id] : null;
 		}
-		
-		private var componentCode:String;
-		private var componentId:String;
+		private var component:Object = {};
 	}
 }

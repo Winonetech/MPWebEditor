@@ -1,7 +1,10 @@
 package editor.tools
 {
+	import editor.commands.EdtComponentCommand;
 	import editor.core.MDConfig;
-	import editor.events.FillEvent;
+	import editor.core.MDPresenter;
+	import editor.core.MDVars;
+	import editor.views.Debugger;
 	import editor.vos.Component;
 	
 	import flash.events.Event;
@@ -9,8 +12,6 @@ package editor.tools
 	import flash.events.IEventDispatcher;
 	
 	import w11k.flash.AngularJSAdapter;
-	
-	[Event(name="complete", type="flash.events.Event")]
 	
 	public final class FillTool extends EventDispatcher
 	{
@@ -20,20 +21,27 @@ package editor.tools
 		}
 		
 		
-		public function fillComponent($componentId:String, $componentCode:String):void
+		public function fillComponent($component:Object):void
 		{
-			AngularJSAdapter.getInstance().call("fillComponent(component)", {"componentId":$componentId, "componentCode":$componentCode});
+			AngularJSAdapter.getInstance().call("fillComponent(component)", {"component" : $component});
 		}
 		
-		public function fillComplete(componentId:String, hasCotent:Boolean):void
+		public function fillComplete(componentId:String, hasContent:Boolean):void
 		{
-			dispatchEvent(new FillEvent(FillEvent.COMPLETE, componentId, hasCotent));
+			var temp:Component = findComponentById(componentId);
+			if (temp)
+			{
+				temp.hasContent = hasContent;
+				MDVars.instance.editorView.canvas.content.updateComponent(temp);
+				MDPresenter.instance.execute(new EdtComponentCommand(temp, {hasContent:true}));
+			}
+			
 		}
 		
-		private function findComponentById($id:uint):Component
+		private function findComponentById($id:String):Component
 		{
 			return config.editingSheet 
-				? config.editingSheet.componentsMap.componentMap[$id] : null;
+				? config.editingSheet.componentsMap[$id] : null;
 		}
 		
 		private var config:MDConfig = MDConfig.instance;

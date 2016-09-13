@@ -8,8 +8,8 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import editor.core.ed;
+			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
 			import mx.binding.utils.BindingUtils;
@@ -23,7 +23,6 @@
 			override protected function createChildren():void
 			{
 				super.createChildren();
-				
 				addElement(background);
 				background.setStyle("backgroundColor", 0x000000);
 				background.height = 30;
@@ -52,7 +51,6 @@
 			private function updateBackgroundAlpha($state:String = null):void
 			{
 				if ($state) state = $state;
-				
 				background.setStyle("backgroundAlpha", interactiveAlphas[state][uint(selected)]);
 			}
 			

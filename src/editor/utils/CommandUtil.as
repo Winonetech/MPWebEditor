@@ -16,24 +16,28 @@ package editor.utils
 	import editor.core.MDPresenter;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
-	import editor.tools.FillTool;
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Page;
 	import editor.vos.Sheet;
 	
-	import spark.components.RichEditableText;
+	import mx.controls.Alert;
 	
-	import w11k.flash.AngularJSAdapter;
+	import spark.components.RichEditableText;
 	
 	
 	public class CommandUtil extends NoInstance
 	{
 		
-		public static function fillComplete(componentId:String, hasCotent:Boolean):void
+		public static function fillComplete(component:Object):void
 		{
-			vars.fillTool.fillComplete(componentId, hasCotent);
+			if (component)
+			{
+				vars.fillTool.fillComplete(component.componentId, component.hasContent);
+			}
+			else
+				Alert.show("组件参数为空!", "错误");
 		}
 		
 		public static function fillComponent(componentId:String, componentCode:String):void

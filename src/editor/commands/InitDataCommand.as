@@ -14,6 +14,7 @@ package editor.commands
 	
 	import editor.core.ed;
 	import editor.utils.VOUtil;
+	import editor.views.Debugger;
 	import editor.vos.*;
 	
 	
@@ -163,7 +164,6 @@ package editor.commands
 					
 					component.componentType = layout.componentTypesMap[component.componentTypeID];
 					component.sheetID = $sheet.id;
-					
 					layout.addComponent($sheet, component);
 				}
 				
@@ -181,13 +181,16 @@ package editor.commands
 			{
 				if (layout.children.length)
 				{
-					var homeNum:int = 0;
 					for (var i:int; i < layout.children.length; i++)
 					{
-						if (layout.children[i].home) homeNum = i;
+						if (layout.children[i].home)
+						{
+							layout.home = layout.children[i];
+							layout.home.home = true;
+							break;
+						}
+
 					}
-					layout.home = layout.children[homeNum];
-					layout.home.home = true;
 				}
 			}
 			

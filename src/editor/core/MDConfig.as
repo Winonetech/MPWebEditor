@@ -11,6 +11,7 @@ package editor.core
 	import cn.mvc.core.MCObject;
 	import cn.mvc.errors.SingleTonError;
 	
+	import editor.views.tabs.TitleTab;
 	import editor.vos.Component;
 	import editor.vos.Sheet;
 	
@@ -69,6 +70,10 @@ package editor.core
 			if (selectedSheet) selectedSheet.selected = true;
 		}
 		
+		public function get selectedTitle():TitleTab
+		{
+			return MDVars.instance.titleBar.selected;
+		}
 		
 		/**
 		 * 

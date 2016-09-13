@@ -18,9 +18,11 @@ package editor.views.components
 	import editor.managers.ImageManager;
 	import editor.skins.ImageErrorSkin;
 	import editor.utils.ComponentUtil;
+	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -31,11 +33,13 @@ package editor.views.components
 	
 	import mx.controls.HRule;
 	import mx.core.UIComponent;
+	import mx.graphics.SolidColor;
 	
+	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Image;
 	import spark.components.Label;
-	import spark.components.TextArea;
+	import spark.primitives.Rect;
 	
 	
 	public class CanvasItem extends Group
@@ -51,6 +55,10 @@ package editor.views.components
 		{
 			super();
 			
+			back = new Rect;
+			back.fill = new SolidColor(0xCCCCCC, .3);
+			addElement(back);
+			addEventListener(MouseEvent.CLICK, component_doubleClickHandler);
 		}
 		
 		
@@ -63,22 +71,7 @@ package editor.views.components
 		public function update():void
 		{
 			updateLayout();
-			
 			updateSource();
-		}
-		
-		
-		/**
-		 * @inheritDoc
-		 */
-		
-		override protected function createChildren():void
-		{
-			addElementAt(back, 0);
-			
-			mouseChildren = false;
-			
-			addEventListener(MouseEvent.CLICK, component_doubleClickHandler);
 		}
 		
 		
@@ -100,9 +93,12 @@ package editor.views.components
 		{
 			updateBack();
 			
-			clearCurrent();
-			
-			if(!updateProperty(componentProperty)) updateIcon();
+			if(!updateProperty(componentProperty)) 
+			{
+				updateIcon();
+				if (MDConfig.instance.mode == "fill")
+					updateContent();
+			}
 		}
 		
 		/**
@@ -110,13 +106,8 @@ package editor.views.components
 		 */
 		private function updateBack():void
 		{
-			if (back)
-			{
-				back.graphics.clear();
-				back.graphics.beginFill(0xCCCCCC, .5);
-				back.graphics.drawRect(0, 0, width, height);
-				back.graphics.endFill();
-			}
+			back.width = width;
+			back.height = height;
 		}
 		
 		/**
@@ -124,12 +115,19 @@ package editor.views.components
 		 */
 		private function updateIcon():void
 		{
+			if (icon) 
+			{
+				if (containsElement(icon)) removeElement(icon);
+				icon = null;
+			}
 			if (componentType)
 			{
-				addElement(icon = new Image);
+				icon = new Image;
+				addElement(icon);
 				icon.setStyle("skinClass", editor.skins.ImageErrorSkin);
 				icon.smooth = true;
 				icon.visible = false;
+				icon.mouseEnabled = false;
 				var bmd:BitmapData = ImageManager.retrieveBitmapData(componentType.image);
 				if (bmd)
 				{
@@ -137,7 +135,6 @@ package editor.views.components
 					icon.source = bmd;
 					icon.maxWidth  = bmd.width;
 					icon.maxHeight = bmd.height;
-					
 					resizeIcon();
 				}
 				else
@@ -158,12 +155,22 @@ package editor.views.components
 					icon.addEventListener(IOErrorEvent.IO_ERROR, handler);
 					icon.source = componentType.image;
 				}
+				
 			}
-			var label:Label = new Label;
-			label.text = "youdongxi";
-			label.setStyle("color", 0);
-			label.setStyle("fontSize", 50);
-			addElement(label);
+		}
+		
+		public function updateContent():void
+		{
+			if (contentImage)
+			{
+				if (containsElement(contentImage)) removeElement(contentImage);
+				contentImage = null;
+			}
+			contentImage = new Image;
+			contentImage.source  = component.hasContent ? filledImage : emptyImage;
+			contentImage.toolTip = component.hasContent ? "已填充素材" : "未填充素材";
+			addElement(contentImage);
+			resizeImage();
 		}
 		
 		/**
@@ -171,7 +178,11 @@ package editor.views.components
 		 */
 		private function updateProperty($property:Object):Boolean
 		{
-			var result:Boolean;
+			if (ui)
+			{
+				if (containsElement(ui)) removeElement(ui);
+				ui = null;
+			}
 			if ($property)
 			{
 				if ($property is Array)
@@ -198,7 +209,7 @@ package editor.views.components
 								addElement(ui);
 								
 								resizeUI();
-								result = true;
+								var result:Boolean = true;
 							}
 						}
 					}
@@ -207,28 +218,13 @@ package editor.views.components
 			return result;
 		}
 		
-		/**
-		 * @private
-		 */
-		private function clearCurrent():void
-		{
-			while(numElements > 1) removeElementAt(1);
-		}
-		
-		/**
-		 * @private
-		 */
-		private function resizeBack():void
-		{
-			updateBack();
-		}
 		
 		/**
 		 * @private
 		 */
 		private function resizeIcon():void
 		{
-			if (icon && containsElement(icon))
+			if (icon)
 			{
 				icon.width  = Math.min(width , icon.maxWidth);
 				icon.height = Math.min(height, icon.maxHeight);
@@ -240,9 +236,25 @@ package editor.views.components
 		/**
 		 * @private
 		 */
+		private function resizeImage():void
+		{
+			if (contentImage)
+			{
+				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
+				
+				contentImage.scaleX = contentImage.scaleY = scale;
+				
+				contentImage.x = width  - 50 * scale;
+				contentImage.y = height - 50 * scale;
+			}
+		}
+		
+		/**
+		 * @private
+		 */
 		private function resizeUI():void
 		{
-			if (ui && containsElement(ui))
+			if (ui)
 			{
 				ui.width  = width;
 				ui.height = height;
@@ -257,6 +269,8 @@ package editor.views.components
 			updateBack();
 			
 			resizeIcon();
+			
+			resizeImage();
 			
 			resizeUI();
 		}
@@ -287,10 +301,6 @@ package editor.views.components
 		{
 			super.width = int($value);
 
-
-
-
-			
 			resizeAll();
 		}
 		
@@ -446,8 +456,18 @@ package editor.views.components
 		/**
 		 * @private
 		 */
-		private var back:UIComponent = new UIComponent;
+		private var back:Rect;
 		
+		/**
+		 * @private
+		 */
+		[Embed(source="../../../flash/cache/assets/images/empty.png")]
+		private var emptyImage:Class;
+		
+		[Embed(source="../../../flash/cache/assets/images/filled.png")]
+		private var filledImage:Class;
+		
+		private var contentImage:Image;
 		/**
 		 * @private
 		 */

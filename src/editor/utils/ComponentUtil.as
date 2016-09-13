@@ -14,12 +14,14 @@ package editor.utils
 	import editor.controls.MDFlash;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
-	import editor.views.PageSelector;
 	import editor.views.CanvasContent;
+	import editor.views.Debugger;
+	import editor.views.PageSelector;
 	import editor.views.components.CanvasItem;
 	import editor.views.properties.PropertyItem;
 	
 	import flash.geom.Rectangle;
+	import flash.sampler.stopSampling;
 	
 	import mx.controls.Alert;
 
@@ -28,6 +30,19 @@ package editor.utils
 	public final class ComponentUtil extends NoInstance
 	{
 		
+		
+		/**
+		 * 
+		 * 判定组件本身及其父容器是否为CanvasItem类型
+		 * 
+		 */
+		public static function isType($component:*):CanvasItem
+		{
+			var result:Boolean = $component is CanvasItem;
+			if ($component != null)
+				return result ? $component : isType($component.parent);
+			else return null;
+		}
 		
 		/**
 		 * 
