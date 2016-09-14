@@ -24,6 +24,7 @@
 			import editor.vos.Sheet;
 			
 			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
 			
 			[Bindable]
 			public var label:String;
@@ -50,6 +51,7 @@
 			
 			protected function bordercontainer2_clickHandler(event:MouseEvent):void
 			{
+				
 				if (event.target is Button) closePage();
 				else openPage();
 			}
@@ -57,6 +59,7 @@
 			
 			private function openPage():void
 			{
+				MDConfig.instance.selectedSheet = null;
 				titleBar.selected = this;
 			}
 			
@@ -69,7 +72,7 @@
 				{
 					var index:uint = titleBar.HG.getElementIndex(this); 
 					index = index == (titleBar.HG.numElements - 1) 
-						? index - 1 : index + 1;					
+						? index - 1 : index + 1;
 					titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
 				}
 				titleBar.HG.removeElement(this);
