@@ -3,18 +3,17 @@
 				   xmlns:s ="library://ns.adobe.com/flex/spark" 
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
 				   xmlns:tabs="editor.views.tabs.*"
-				   borderAlpha="0" width="100%"
-				   resize="hgroup1_resizeHandler(event)"
+				   borderAlpha="0.6" 
+				   width="{HG.width + 2}"
+				   resize="HG_resizeHandler(event)"
 				   height="30" backgroundAlpha="0">
 	
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
-	
-	<s:HGroup gap="5" width="100%">
-		
-		<s:HGroup gap="5" id="HG" maxWidth="{width - 50}">
+	<s:HGroup gap="5">
+		<s:HGroup gap="5" id="HG">
 			<tabs:TitleTab width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
 		
@@ -38,6 +37,7 @@
 			import mx.states.OverrideBase;
 			
 			import spark.events.IndexChangeEvent;
+			
 			
 			[Bindable]
 			public var dataArrs:ArrayCollection = new ArrayCollection; 
@@ -83,38 +83,63 @@
 			
 			protected function combobox1_changeHandler(event:IndexChangeEvent):void
 			{
-			}
-			
-//			private function isOverBorder($addedWidth:Number):Boolean
-//			{
-//				Debugger.log(oldNumElements + "  " + HG.numElements);
-//				return oldWidth >= width ? oldNumElements < HG.numElements 
-//					: $addedWidth + oldWidth > MDVars.instance.editorView.canvas.width - 50;
-//			}
-			
-			
-			protected function hgroup1_resizeHandler(event:ResizeEvent):void
-			{
-				if (state == "close") closed()
-				else
+				MDConfig.instance.selectedSheet = null;
+				var temp:TitleTab = comboBox.selectedItem as TitleTab;
+				while (temp.width + width > MDVars.instance.editorView.canvas.width - 50)
 				{
-					if (count > 1 && count % 2 == 1)
-						opened();
-					else oldWidth = event.oldWidth;
-					
-					count++;
+					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
+					width -= removed.width;
+					dataArrs.addItem(removed); 
 				}
+				HG.addElement(temp);
+				dataArrs.removeItemAt(comboBox.selectedIndex);
+				selected = temp;
 			}
+			
 			
 			private function closed():void
 			{
-				Debugger.log("close close close close close");
+				Debugger.log("closed closed closed");
+				if (dataArrs.length != 0)
+				{
+					for (var i:int; i < dataArrs.length; i++)
+					{
+						if (dataArrs[i].width + width < MDVars.instance.editorView.canvas.width - 50)
+						{
+							var temp:TitleTab = HG.addElement(dataArrs[i]) as TitleTab;
+							dataArrs.removeItemAt(i);
+							updateBackgroundColor();
+						}
+					}
+				}
 			}
 			
 			private function opened():void
 			{
-				Debugger.log("open open open open open open");
-				Debugger.log("oldWidth -> " + oldWidth + " VS newWidth -> " + width);
+				Debugger.log("opened opened opened opened");
+				while (width > MDVars.instance.editorView.canvas.width - 50)
+				{
+					currentState = "much";
+ 					width -= (HG.getElementAt(HG.numElements - 2) as TitleTab).width;
+					dataArrs.addItem(HG.getElementAt(HG.numElements - 2) as TitleTab);
+					HG.removeElementAt(HG.numElements - 2);
+				}
+			}
+			
+			protected function HG_resizeHandler(event:ResizeEvent):void
+			{
+				if (state == "close") closed();
+				else
+				{
+					if (count > 1 && count & 1 == 1)
+					{
+						opened();
+					}
+					else oldWidth = event.oldWidth;
+					
+					count++;
+				}
+				if (dataArrs.length == 0) currentState = "normal";
 			}
 			
 			

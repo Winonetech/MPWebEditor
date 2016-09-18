@@ -223,7 +223,7 @@ is defined by the ComboBoxTextInputSkin class.
     <s:Button id="openButton" width="20" right="0" top="0" bottom="0" focusEnabled="false"
               skinClass="spark.skins.spark.ComboBoxButtonSkin" tabEnabled="false" />  
     <!--- @copy spark.components.ComboBox#textInput -->
-    <s:TextInput id="textInput" includeIn="disabled" enabled.disabled="false"
+    <s:TextInput id="textInput" width="0" height="0" editable="false" enabled="false"
                  left="0" right="0"
                  skinClass="spark.skins.spark.ComboBoxTextInputSkin"/> 
     
