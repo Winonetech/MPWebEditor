@@ -11,19 +11,23 @@
 		<s:State name="ad"/>
 	</vw:states>	
 	
-	<s:BorderContainer width="100%" backgroundAlpha="0">
+	<s:BorderContainer width="100%" backgroundAlpha="0" mouseEnabled="false">
 		
 		<s:layout>
-			<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5"/>
+			<s:VerticalLayout paddingLeft="5" paddingRight="5"
+							  paddingBottom="5" paddingTop="5"/>
 		</s:layout>
 		
 		<s:Label paddingLeft="10" paddingTop="5" styleName="title" text="页面属性"/>
 		
 		<mx:HRule width="100%" height="1"/>
 		
-		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" gap="25">
+		<s:VGroup width="100%" gap="25"
+				  paddingBottom="5" paddingLeft="5"
+				  paddingRight="5" paddingTop="5"
+				  mouseEnabled="false">
 			
-			<s:VGroup width="100%">
+			<s:VGroup width="100%" mouseEnabled="false">
 				
 				<!-- 版面名称 -->
 				
@@ -65,15 +69,18 @@
 				
 				<s:HGroup width="100%">
 					
-					<pr:PropertyItem property="backgroundColor" currentState="color" width="50%"
-									 value="{sheet.backgroundColor}" label="背景颜色："
+					<pr:PropertyItem property="backgroundColor" label="背景颜色："
+									 currentState="color" width="50%"
+									 value="{sheet.backgroundColor}"
 									 change="property_changeHandler(event)"/>
 					
-					<pr:PropertyItem property="enabled" currentState="bool" includeIn="ad" width="50%"
+					<pr:PropertyItem property="enabled" currentState="bool"
+									 includeIn="ad" width="50%"
 									 value="{ad.enabled}" label="启用广告："
 									 change="property_changeHandler(event)"/>
 					
-					<pr:PropertyItem property="tweenable" includeIn="page" currentState="bool" width="50%"
+					<pr:PropertyItem property="tweenable" includeIn="page"
+									 currentState="bool" width="50%"
 									 value="{page.tweenable}" label="启用缓动："
 									 change="property_changeHandler(event)"/>
 					
@@ -81,16 +88,18 @@
 				
 				<s:HGroup width="100%">
 					
-					<pr:PropertyItem property="home" includeIn="page" currentState="bool"
-									 value="{page.home}" label="是否为首页：" enabled="false" 
+					<pr:PropertyItem property="home" includeIn="page"
+									 currentState="bool" enabled="false" 
+									 value="{page.home}" label="是否为首页："
 									 change="property_changeHandler(event)"/>
 					
-					<pr:PropertyItem property="home" includeIn="page" currentState="button"
-									 value="{page.home}" enabled="true" 
+					<pr:PropertyItem property="home" includeIn="page"
+									 currentState="index" value="{page.home}" 
 									 change="home_changeHandler(event)"/>
 					
-					<pr:PropertyItem property="waitTime" includeIn="ad" restrict="0-9"
-									 value="{ad.waitTime}" label="无人值守(秒)："
+					<pr:PropertyItem property="waitTime" includeIn="ad"
+									 restrict="0-9" label="无人值守(秒)："
+									 value="{ad.waitTime}"
 									 change="property_changeHandler(event)"/>
 					
 				</s:HGroup>

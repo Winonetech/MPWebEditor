@@ -4,7 +4,7 @@
 				  xmlns:mx="library://ns.adobe.com/flex/mx"
 				  xmlns:vw="editor.views.*"
 				  xmlns:cs="editor.views.canvas.*"
-				  currentState="{config.mode == 'edit' ? 'deft' : 'view'}"
+				  currentState="{config.mode == 'edit' ? 'edit' : 'view'}"
 				  width="100%" height="100%" mouseEnabled="false" xmlns:tabs="editor.views.tabs.*">
 	
 	<vw:layout>
@@ -12,7 +12,7 @@
 	</vw:layout>
 	
 	<vw:states>
-		<s:State name="deft"/>
+		<s:State name="edit"/>
 		<s:State name="view"/>
 	</vw:states>
 	
@@ -56,7 +56,7 @@
 				<s:VGroup width="100%" mouseEnabled="false">
 					
 					<!-- 组件类型列表 -->
-					<vw:ComponentsAddone includeIn="deft" id="addone"/>
+					<vw:ComponentsAddone includeIn="edit" id="addone"/>
 					<!-- 页面属性面板 -->
 					
 					<vw:SheetProperty id="sheetProperty" sheet="{config.editingSheet}"/>

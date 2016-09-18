@@ -11,7 +11,6 @@ package editor.core
 	import cn.mvc.core.MCObject;
 	import cn.mvc.errors.SingleTonError;
 	
-	import editor.tools.FillTool;
 	import editor.views.ComponentList;
 	import editor.views.ComponentsAddone;
 	import editor.views.EditorView;
@@ -19,7 +18,6 @@ package editor.core
 	import editor.views.ProgressWindow;
 	import editor.views.SheetCanvas;
 	import editor.views.SheetTree;
-	import editor.views.ToolBar;
 	import editor.views.tabs.TitleBar;
 	
 	import spark.components.Application;
@@ -135,14 +133,6 @@ package editor.core
 		public var adapter:AngularJSAdapter;
 		
 		public var titleBar:TitleBar;
-		
-		/**
-		 * 
-		 * 内容填充处理器。
-		 * 
-		 */
-		
-		public var fillTool:FillTool = new FillTool;
 		
 	}
 }

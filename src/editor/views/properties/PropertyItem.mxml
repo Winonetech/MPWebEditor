@@ -3,15 +3,16 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  xmlns:ct="editor.controls.*"
-		  verticalAlign="middle" height="23">
+		  verticalAlign="middle" height="23"
+		  mouseEnabled="false">
 	
 	<s:states>
 		<s:State name="text"/>
 		<s:State name="bool"/>
 		<s:State name="color"/>
 		<s:State name="link"/>
-		<s:State name="button"/>
-		<s:State name="combobox"/>
+		<s:State name="index"/>
+		<s:State name="combo"/>
 
 	</s:states>
 
@@ -22,39 +23,45 @@
 					enter="text_changeHandler(event)"
 					focusOut="text_changeHandler(event)"/>
 	
-	
 	<s:CheckBox id="check" includeIn="bool"
 				selected="{value}" verticalCenter="-2"
 				skinClass="editor.skins.EditorCheckBoxSkin"
 				change="check_changeHandler(event)"/>
 	
-	<s:ComboBox id="combo" includeIn="combobox" width="100%"
-				dataProvider="{TRANSITION_ARGS}" verticalCenter="-2"
-				selectedIndex="{(value == 'leftRight' || !value) ? 0 : 1}"
+	<s:ComboBox id="combo" includeIn="combo"
+				width="100%" verticalCenter="-2" labelField="label" 
+				dataProvider="{comboProvider}"
+				selectedIndex="{comboChange(value as String)}"
 				skinClass="editor.skins.EditorComboBoxSkin"
-				change="cb_changeHandler(event)"/>
+				change="combo_changeHandler(event)"/>
 	
 	<mx:ColorPicker id="picker" includeIn="color" verticalCenter="-2"
 					selectedColor="{ColorUtil.colorString2uint(value as String)}"
 					change="picker_changeHandler(event)"/>
 	
 	<s:Button includeIn="link" verticalCenter="-2"
-			  label="{value ? value.label : '选择页面'}"
+			  label="{value ? value.label : '选择'}"
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="page_selectHandler(event)"/>
 	
-	<s:Button verticalCenter="-2" includeIn="link"
+	<s:Button includeIn="link" verticalCenter="-2"
 			  label="清除" visible="{Boolean(value)}"
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="page_clearHandler(event)"/>
 	
-	
-	<s:Button includeIn="button" label="设为首页" verticalCenter="-2"
+	<s:Button includeIn="index" verticalCenter="-2" label="设为首页"
 			  skinClass="editor.skins.ButtonNormalSkin"
-			  click="page_btnHandler(event)"/>
+			  click="page_setIndexHandler(event)"/>
 	
 	
 	<fx:Metadata>
+		
+		/**
+		 * 
+		 * 当属性的值改变时派发此事件。
+		 * 
+		 */
+		
 		[Event(name="change", type="flash.events.Event")]
 	</fx:Metadata>
 	
@@ -70,6 +77,7 @@
 			
 			import spark.events.IndexChangeEvent;
 			
+			
 			/**
 			 * 
 			 * 改变值。
@@ -84,6 +92,21 @@
 					
 					if ($dispatch) dispatchEvent(new Event(Event.CHANGE));
 				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function comboChange($value:String):int
+			{
+				var i:int = -1, l:int;
+				if (combo)
+				{
+					l = combo.dataProvider.length;
+					for (i = l - 1; i >= 0; i--)
+						if (combo.dataProvider[i].value == $value) break;
+				}
+				return i;
 			}
 			
 			
@@ -125,14 +148,19 @@
 					dispatchEvent(new Event(Event.CHANGE));
 				}
 			}
+			
 			/**
 			 * @private
 			 */
-			private function cb_changeHandler(event:IndexChangeEvent):void
+			private function combo_changeHandler(event:IndexChangeEvent):void
 			{
-				value = combo.selectedIndex == 0 ? "leftRight" : "upDown";
-				
-				dispatchEvent(new Event(Event.CHANGE));
+				var result:* = combo.selectedItem["value"];
+				if (result!= value)
+				{
+					value = result;
+					
+					dispatchEvent(new Event(Event.CHANGE));
+				}
 			}
 			
 			/**
@@ -151,6 +179,7 @@
 				if (value)
 				{
 					value = null;
+					
 					dispatchEvent(new Event(Event.CHANGE));
 				}
 			}
@@ -158,19 +187,31 @@
 			/**
 			 * @private
 			 */
-			private function page_btnHandler($e:Event):void
+			private function page_setIndexHandler($e:Event):void
 			{
 				value = true;
+				
 				dispatchEvent(new Event(Event.CHANGE));
 			}
+			
 			
 			/**
 			 * 
 			 * 字符输入限制。
 			 * 
 			 */
+			
 			[Bindable]
 			public var restrict:String;
+			
+			
+			/**
+			 * 
+			 * 下拉框的数据提供源。
+			 * 
+			 */
+			[Bindable]
+			public var comboProvider:ArrayCollection;
 			
 			
 			/**
@@ -195,7 +236,7 @@
 			
 			/**
 			 * 
-			 * 值。
+			 * 属性的值。
 			 * 
 			 */
 			
@@ -211,11 +252,6 @@
 			
 			public var host:Object;
 			
-			
-			/**
-			 * @private
-			 */
-			private static const TRANSITION_ARGS:ArrayCollection = new ArrayCollection(['左右滑动', '上下滑动']);
 		]]>
 	</fx:Script>
 	

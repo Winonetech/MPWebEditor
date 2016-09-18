@@ -16,7 +16,6 @@ package editor.utils
 	import editor.core.MDPresenter;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
-	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Page;
@@ -30,20 +29,39 @@ package editor.utils
 	public class CommandUtil extends NoInstance
 	{
 		
-		public static function fillComplete(component:Object):void
+		
+		/**
+		 * 
+		 * 组件内容填充完毕处理。
+		 * 
+		 * @param $componentId:String 组件ID。
+		 * @param $componentCode:String 组件编码。
+		 * 
+		 */
+		
+		public static function fillComplete($scope:Object):void
 		{
-			if (component)
-			{
-				vars.fillTool.fillComplete(component.componentId, component.hasContent);
-			}
+			if ($scope)
+				edtComponent(getComponentById($scope.componentId), {"hasContent": $scope.hasContent});
 			else
-				Alert.show("组件参数为空!", "错误");
+				Alert.show("组件参数为空!", "错误：");
 		}
 		
-		public static function fillComponent(componentId:String, componentCode:String):void
+		
+		/**
+		 * 
+		 * 填充组件。
+		 * 
+		 * @param $componentId:String 组件ID。
+		 * @param $componentCode:String 组件编码。
+		 * 
+		 */
+		
+		public static function fillComponent($componentId:String, $componentCode:String):void
 		{
-			presenter.execute(new FillContent(componentId, componentCode));
+			presenter.execute(new FillContentComand($componentId, $componentCode));
 		}
+		
 		
 		/**
 		 * 
@@ -60,6 +78,7 @@ package editor.utils
 		 * }
 		 * 
 		 */
+		
 		public static function transmitData($data:Object):void
 		{
 			presenter.execute(new InitProgramCommand($data));
@@ -161,7 +180,6 @@ package editor.utils
 		{
 			if ($page)
 			{
-				var provider:MDProvider = MDProvider.instance;
 				var pageArr:Array = $page.parent ? $page.parent.pagesArr : provider.program.children;
 				$order = MathUtil.clamp($order, 0, pageArr.length - 1);
 				if ($order != $page.order)
@@ -313,7 +331,21 @@ package editor.utils
 		/**
 		 * @private
 		 */
+		private static function getComponentById($id:String):Component
+		{
+			return config.editingSheet ? config.editingSheet.componentsMap[$id] : null;
+		}
+		
+		
+		/**
+		 * @private
+		 */
 		private static var config:MDConfig = MDConfig.instance;
+		
+		/**
+		 * @private
+		 */
+		private static var provider:MDProvider = MDProvider.instance;
 		
 		/**
 		 * @private

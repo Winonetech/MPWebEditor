@@ -21,7 +21,10 @@
 		
 		<mx:HRule width="100%" height="1"/>
 		
-		<s:VGroup width="100%" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5" enabled="{Boolean(component)}">
+		<s:VGroup width="100%" mouseEnabled="false"
+				  enabled="{Boolean(component)}"
+				  paddingBottom="5" paddingLeft="5"
+				  paddingRight="5" paddingTop="5">
 			
 			<!-- 版面名称 -->
 			<pr:PropertyItem width="100%" property="label"
@@ -59,26 +62,30 @@
 			
 			<!-- 自定义 -->
 			<s:HGroup width="100%" gap="3">
+				
 				<pr:PropertyItem width="25%" property="interactable" currentState="bool"
 								 value="{component.interactable}" label="允许交互："
 								 change="property_changeHandler(event)"/>
 				
-				<pr:PropertyItem width="75%" property="transition" currentState="combobox"
+				<pr:PropertyItem width="75%" property="transition" currentState="combo"
+								 comboProvider="{DataConsts.TRANSITION_DIRECTIONS}"
 						 		 value="{component.transition}" label="过渡效果" 								 
 						 		 change="property_changeHandler(event)"/>
 			</s:HGroup>
 	
-				<pr:PropertyItem property="link" currentState="link" host="{component}"
-								 value="{component.link}" label="绑定页面：" includeIn="button"
-								 change="property_changeHandler(event)"/>
-		</s:VGroup>
+			<pr:PropertyItem property="link" currentState="link" host="{component}"
+							 value="{component.link}" label="绑定页面：" includeIn="button"
+							 change="property_changeHandler(event)"/>
 			
+		</s:VGroup>
+		
 	</s:BorderContainer>
 	
 	<fx:Script>
 		<![CDATA[
 			
 			import editor.consts.ComponentCodeConsts;
+			import editor.consts.DataConsts;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
 			import editor.utils.ComponentUtil;
@@ -150,6 +157,7 @@
 			public function set component($value:Component):void
 			{
 				ed::component = $value;
+				
 				currentState = (component && 
 					(component.componentTypeCode == ComponentCodeConsts.CLICK || 
 					(component.componentTypeCode == ComponentCodeConsts.MARQUEE)))

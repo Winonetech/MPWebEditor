@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
-				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:s ="library://ns.adobe.com/flex/spark" 
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
 				   xmlns:tabs="editor.views.tabs.*"
-				   borderAlpha="0" 
+				   borderAlpha="0" width="100%"
 				   resize="hgroup1_resizeHandler(event)"
 				   height="30" backgroundAlpha="0">
-	<fx:Declarations>
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-	</fx:Declarations>
+	
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
-	<s:HGroup gap="5" >
-		<s:HGroup gap="5" id="HG">
+	
+	<s:HGroup gap="5" width="100%">
+		
+		<s:HGroup gap="5" id="HG" maxWidth="{width - 50}">
 			<tabs:TitleTab width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
-	<s:ComboBox id="comboBox" dataProvider="{dataArrs}" includeIn="much" change="combobox1_changeHandler(event)"
-					skinClass="editor.skins.TitleBarComboboxSkin"/>
+		
+		<s:ComboBox id="comboBox" includeIn="much" dataProvider="{dataArrs}"
+					skinClass="editor.skins.TitleBarComboboxSkin"
+					change="combobox1_changeHandler(event)"/>
+		
 	</s:HGroup>
 	<fx:Script>
 		<![CDATA[
 			import editor.core.MDConfig;
 			import editor.core.MDProvider;
 			import editor.core.MDVars;
+			import editor.core.ed;
 			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
@@ -34,25 +38,6 @@
 			import mx.states.OverrideBase;
 			
 			import spark.events.IndexChangeEvent;
-			
-			[Bindable]
-			public var _selected:TitleTab;
-			
-			public function get selected():TitleTab
-			{
-				return _selected;
-			}
-			
-			public function set selected(value:TitleTab):void
-			{
-				var temp:Sheet = tab2Sheet(value);
-				if (temp)
-				{
-					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = temp;
-					_selected = value;
-					updateBackgroundColor();
-				}
-			}
 			
 			[Bindable]
 			public var dataArrs:ArrayCollection = new ArrayCollection; 
@@ -106,9 +91,8 @@
 //				return oldWidth >= width ? oldNumElements < HG.numElements 
 //					: $addedWidth + oldWidth > MDVars.instance.editorView.canvas.width - 50;
 //			}
-			private var oldWidth:Number;
-			private var count:int;
-			public var state:String;
+			
+			
 			protected function hgroup1_resizeHandler(event:ResizeEvent):void
 			{
 				if (state == "close") closed()
@@ -132,6 +116,50 @@
 				Debugger.log("open open open open open open");
 				Debugger.log("oldWidth -> " + oldWidth + " VS newWidth -> " + width);
 			}
+			
+			
+			/**
+			 * 
+			 * 当前正在编辑的页面选项卡。
+			 * 
+			 */
+			
+			[Bindable]
+			public function get selected():TitleTab
+			{
+				return ed::selected;
+			}
+			
+			/**
+			 * @private
+			 */
+			public function set selected(value:TitleTab):void
+			{
+				var temp:Sheet = tab2Sheet(value);
+				if (temp)
+				{
+					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = temp;
+					ed::selected = value;
+					updateBackgroundColor();
+				}
+			}
+			
+			
+			/**
+			 * @private
+			 */
+			ed var selected:TitleTab;
+			
+			
+			/**
+			 * 
+			 */
+			public var state:String;
+			
+			private var oldWidth:Number;
+			
+			private var count:int;
+			
 		]]>
 	</fx:Script>
 	

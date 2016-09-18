@@ -376,6 +376,8 @@
 			{
 				return MDVars.instance.titleBar.idObj;
 			}
+			
+			
 			/**
 			 * @private
 			 */
@@ -421,10 +423,12 @@
 			 */
 			
 			private var doubleClickTimer:Timer = new Timer(300, 1);
+			
 			/**
 			 * @private
 			 */
 			ed var pageset:PLayout;
+			
 		]]>
 	</fx:Script>
 </vw:_InternalView>
