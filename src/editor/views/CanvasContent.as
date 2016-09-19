@@ -9,37 +9,29 @@ package editor.views
 	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
-	import cn.mvc.utils.RectangleUtil;
 	
-	import editor.core.MDVars;
 	import editor.core.ed;
+	import editor.utils.AppUtil;
+	import editor.utils.CanvasUtil;
 	import editor.utils.CommandUtil;
 	import editor.utils.ComponentUtil;
-	import editor.views.canvas.Viewer;
 	import editor.views.components.CanvasItem;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Sheet;
 	
-	import flash.display.FrameLabel;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.text.engine.ContentElement;
 	
-	import mx.controls.Alert;
-	import mx.controls.HRule;
-	import mx.controls.VRule;
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
 	
 	import spark.components.Group;
 	
-	import w11k.flash.AngularJSAdapter;
 	
-	
-	public final class CanvasContent extends _InternalView
+	public final class CanvasContent extends _InternalContent
 	{
 		
 		/**
@@ -69,7 +61,7 @@ package editor.views
 			container.removeAllElements();
 			editing.removeAllElements();
 			
-			_dic.clear();
+			itemsMap.clear();
 			
 			if (sheet)
 			{
@@ -82,7 +74,7 @@ package editor.views
 				
 				for each (var item:Component in sheet.componentsArr) updateComponent(item, 1);
 				
-				if (config.selectedComponent) selectedItem = dic[config.selectedComponent.id];
+				if (config.selectedComponent) selectedItem = itemsMap[config.selectedComponent.id];
 			}
 		}
 		
@@ -133,25 +125,25 @@ package editor.views
 			switch ($type)
 			{
 				case 0:
-					if (_dic[$component.id])
+					if (itemsMap[$component.id])
 					{
-						var item:CanvasItem = _dic[$component.id];
+						var item:CanvasItem = itemsMap[$component.id];
 						item.update();
 					}
 					break;
 				case 1:
-					if(!_dic[$component.id])
+					if(!itemsMap[$component.id])
 					{
 						item = new CanvasItem;
 						item.component = $component;
-						container.addElement(item);
-						_dic[$component.id] = item;
+						itemsMap.addElement(item);
+						itemsMap[$component.id] = item;
 					}
 					break;
 				case 2:
-					if (_dic[$component.id])
+					if (itemsMap[$component.id])
 					{
-						item = _dic[$component.id];
+						item = itemsMap[$component.id];
 						
 						if (selectedItem == item)
 							selectedItem = null;
@@ -161,7 +153,7 @@ package editor.views
 						else if (container.containsElement(item))
 							container.removeElement(item);
 						
-						delete _dic[$component.id];
+						delete itemsMap[$component.id];
 					}
 					break;
 			}
@@ -224,262 +216,21 @@ package editor.views
 		{
 			moving = false;
 			down = new Point(mouseX, mouseY);
-			if (ComponentUtil.isType($e.target))
+			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+			if (item)
 			{
-				if (config.mode == "edit") $e.stopImmediatePropagation();
-				dragging = ComponentUtil.isType($e.target);
+				//编辑模式下立即停止冒泡。
+				if (AppUtil.isEditMode()) $e.stopImmediatePropagation();
+				dragging = item;
 				stat.x = dragging.x;
 				stat.y = dragging.y;
-				if(config.alignMode)
-				{
-					controlLine(dragging);
-				}
+				//对齐
+				if(config.alignMode) ruleContainer.controlLine(dragging);
+				
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, item_mouseMoveHandler);
 				stage.addEventListener(MouseEvent.MOUSE_UP, item_mouseUpHandler);
 			}
 		}
-		
-		
-		
-		/**
-		 * 
-		 * 获取辅助线属性。
-		 * @param $recMove:CanvasItem : 所需获取辅助线属性的元素。
-		 * 
-		 */
-		public function showWhere($recMove:CanvasItem, $forbid:* = "all"):Object
-		{
-			if ($recMove)
-			{
-				if ($forbid is Array) var flag:Boolean = true;
-				var pointR:Point = $recMove.center;
-				var compare:Function = function(a:Rectangle, b:Rectangle):int
-				{
-					var pointA:Point = RectangleUtil.getCenter(a);
-					var pointB:Point = RectangleUtil.getCenter(b);
-					var temp:Number = Point.distance(pointA, pointR) - Point.distance(pointB, pointR);
-					return temp > 0 ? 1 : (temp < 0 ? -1 : 0);
-				};
-				var obj:Object = {"Ver":null, "Hor":null};
-				
-				var newRects:Vector.<Rectangle> = getComponentRects($recMove);
-				
-				var scale:Number = MDVars.instance.canvas.viewer.contentScale;
-				
-				newRects.sort(compare);
-				
-				var item:Rectangle;
-				//遍历X方向
-				for each (item in newRects)
-				{
-					if (item)
-					{
-						if (flag) $forbid = "right";
-						if (($forbid == "left" || $forbid == "all") && (MathUtil.isBetween(item.left - 5 / scale, $recMove.x, item.left + 5 / scale) ||
-							MathUtil.isBetween(item.right - 5 / scale, $recMove.x, item.right + 5 / scale)))
-						{
-							obj["Ver"] = MathUtil.near(item.right, $recMove.x, item.left);
-							break;
-						}
-						else if (($forbid == "right" || $forbid == "all") && (MathUtil.isBetween(item.left - 5 / scale, $recMove.x + $recMove.width, item.left + 5 / scale) || 
-							MathUtil.isBetween(item.right - 5 / scale, $recMove.x + $recMove.width, item.right + 5 / scale)))
-						{
-							obj["Ver"] = MathUtil.near(item.right, $recMove.x + $recMove.width, item.left);
-							break;
-						}
-					}// if (item)
-				}// for each
-				//遍历Y方向
-				for each (item in newRects)
-				{
-					if (item)
-					{
-						if (flag) $forbid = "bottom";
-						if (($forbid == "bottom" || $forbid == "all") && (MathUtil.isBetween(item.top - 5 / scale, $recMove.y + $recMove.height, item.top + 5 / scale) || 
-							MathUtil.isBetween(item.bottom - 5 / scale, $recMove.y + $recMove.height, item.bottom + 5 / scale)))
-						{
-							obj["Hor"] = MathUtil.near(item.bottom, $recMove.y + $recMove.height, item.top);
-							break;
-						}
-						else if (($forbid == "top" || $forbid == "all") && (MathUtil.isBetween(item.top - 5 / scale, $recMove.y, item.top + 5 / scale) || 
-								MathUtil.isBetween(item.bottom - 5 / scale, $recMove.y, item.bottom + 5 / scale)))
-							{
-								obj["Hor"] = MathUtil.near(item.bottom, $recMove.y, item.top);
-								break;
-							}
-					}// if (item)
-				}
-			}
-			return obj;
-		}
-		
-		
-		
-		/**
-		 * 
-		 * @private
-		 * 
-		 */
-		private function controlLine($data:Object):void
-		{
-			for (var state:String in $data)
-			{
-				var $rule:*;
-				var lineColor:uint = 0x00FFFFFF - ColorUtil.colorString2uint(config.editingSheet.backgroundColor);
-				if ($data[state] != null)
-				{
-					if (state == "Ver")
-					{
-						$rule = vlrule;
-						$rule.x = $data[state];
-						$rule.height = 2000;
-						$rule.setStyle("strokeWidth", 2);
-						$rule.setStyle("shadowColor", lineColor);
-						$rule.setStyle("strokeColor", lineColor);
-						ruleContainer.addElement($rule);
-					}
-					else if (state == "Hor")
-					{
-						$rule = htrule;
-						$rule.y = $data[state];
-						$rule.width = 2000;
-						$rule.setStyle("strokeWidth", 2);
-						$rule.setStyle("shadowColor", lineColor);
-						$rule.setStyle("strokeColor", lineColor);
-						ruleContainer.addElement($rule);
-					}
-				}
-				else
-				{
-					cleanLine(state);
-				}
-			}
-		}
-		
-		
-		/**
-		 * 
-		 * 清除辅助线。
-		 * @param $state:String 所需清除的辅助线位置。默认为"all"即全部删除。
-		 * 
-		 */
-		public function cleanLine($state:String = "all"):void
-		{
-				switch($state)
-				{
-					case "all" : ;
-					case "Hor":
-					{
-						if (ruleContainer.containsElement(htrule))
-							ruleContainer.removeElement(htrule);
-						if ($state != "all") break;
-					}
-					case "Ver":
-					{
-						if (ruleContainer.containsElement(vlrule)) 
-							ruleContainer.removeElement(vlrule);
-						if ($state != "all") break;
-					}
-				}
-		}
-		
-		/**
-		 * 
-		 * 展示辅助线。
-		 * @param $currentComponent : 需要被展示辅助线的组件
-		 * @param $forbid:限制参数  : 当为String时，只允许获取该参数对应边的参数。<br>
-		 *     当为一个Array时表示只允许right和bottom。其默认值为all表示无限制全部允许获取。<br>
-		 *     可能的值为“left”, “right”, "bottom", "top", "all" 和 任意一个数组类型。
-		 * 
-		 */
-		public function showLine($currentComponent:CanvasItem, $forbid:* = "all"):void
-		{
-			var obj:Object = showWhere($currentComponent, $forbid);
-			controlLine(obj);
-		}
-		
-		/**
-		 * 
-		 * 返回满足吸附条件的点/Object。
-		 * @param $currentComponent : 需要被合并的组件
-		 * @param $point : 能否被吸附的点
-		 * @param $isMoving : 返回point还是Object
-		 * 
-		 */
-		public function autoCombine($currentComponent:CanvasItem, $point:Point, $isMoving:Boolean = true, $forbid:String = "all"):*
-		{
-			var scale:Number = MDVars.instance.canvas.viewer.contentScale;
-			
-			var obj:Object = showWhere($currentComponent, $forbid);
-			var tempX:Number;
-			var tempW:Number;
-			var tempY:Number;
-			var tempH:Number;
-			if (obj["Ver"] != null)
-			{
-				if (obj["Ver"] > $currentComponent.center.x)
-				{
-					if ($isMoving)
-					{
-						tempX = MathUtil.isBetween(obj["Ver"] - 5 / scale, $point.x + $currentComponent.width, obj["Ver"] + 5 / scale)
-							? obj["Ver"] - $currentComponent.width : $point.x;
-					}
-					else
-					{
-						tempW = MathUtil.isBetween(obj["Ver"] - 5 / scale, $point.x + $currentComponent.x, obj["Ver"] + 5 / scale)
-							? obj["Ver"] - $currentComponent.x : $point.x;
-					}
-					
-				}
-				else //线在左边
-				{
-					tempX = MathUtil.isBetween(obj["Ver"] - 5 / scale, $point.x, obj["Ver"] + 5 / scale)
-						? obj["Ver"] : $point.x;
-					tempW = $point.x;
-				}
-			}
-			else //不在吸附范围内
-			{
-				tempX = tempW = $point.x;
-				trace("Ver not in")
-			}
-			
-			if (obj["Hor"] != null) 
-			{
-				if (obj["Hor"] > $currentComponent.center.y)
-				{
-					if ($isMoving)
-					{
-						tempY = MathUtil.isBetween(obj["Hor"] - 5 / scale, $point.y + $currentComponent.height, obj["Hor"] + 5 / scale)
-							? obj["Hor"] - $currentComponent.height : $point.y;
-					}
-					else
-					{
-						tempH = MathUtil.isBetween(obj["Hor"] - 5 / scale, $point.y + $currentComponent.y, obj["Hor"] + 5 / scale)
-							? obj["Hor"] - $currentComponent.y : $point.y;
-					}
-					
-				}
-				else //线在上边
-				{
-					tempY = MathUtil.isBetween(obj["Hor"] - 5 / scale, $point.y, obj["Hor"] + 5 / scale)
-						? obj["Hor"] : $point.y;
-					tempH = $point.y;
-				}
-				
-			}
-			else
-			{
-				tempY = tempH = $point.y;
-			}
-			return $isMoving ? new Point(tempX, tempY) : {"point":new Point(tempX, tempY), "tempW":tempW, "tempH":tempH};
-		}
-		
-		
-		
-		
-		
-		
 		
 		/**
 		 * @private
@@ -498,8 +249,8 @@ package editor.views
 					if (config.alignMode)
 					{
 						showLine(dragging);
-						tempX = autoCombine(dragging, new Point(tempX, tempY)).x;
-						tempY = autoCombine(dragging, new Point(tempX, tempY)).y;
+						tempX = CanvasUtil.autoCombine(dragging, new Point(tempX, tempY)).x;
+						tempY = CanvasUtil.autoCombine(dragging, new Point(tempX, tempY)).y;
 					}
 					dragging.x = ComponentUtil.reviseComponent(tempX, width  - dragging.width);
 					dragging.y = ComponentUtil.reviseComponent(tempY, height  - dragging.height);
@@ -521,7 +272,6 @@ package editor.views
 		 */
 		private function item_mouseUpHandler($e:MouseEvent):void
 		{
-			cleanLine();
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, item_mouseMoveHandler);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, item_mouseUpHandler);
 			
@@ -534,7 +284,8 @@ package editor.views
 				});
 			}
 			dragging = null;
-			cleanLine();
+			
+			ruleContainer.cleanLine();
 		}
 		
 		/**
@@ -544,8 +295,8 @@ package editor.views
 		{
 			if(!moving) 
 			{
-				var item:CanvasItem = ComponentUtil.isType($e.target);
-				if (item != null)
+				var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+				if (item)
 				{
 					config.selectedSheet = null;
 					config.selectedComponent = item ? item.component : null;
@@ -556,18 +307,17 @@ package editor.views
 		/**
 		 * @private
 		 */
-		
-		/**
-		 * @private
-		 */
 		private function item_doubleClickHandler($e:MouseEvent):void
 		{
-			if (ComponentUtil.isType($e.target))
+			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+			if (item)
 			{
-				var item:CanvasItem = ComponentUtil.isType($e.target);
-				if (config.mode == "edit")
+				if (AppUtil.isEditMode())
 				{
-					var rectangle:Rectangle = ComponentUtil.getMaxmizeRect(item.rect, getComponentRects(item), rect);
+					var rectangle:Rectangle = CanvasUtil.getMaxmizeRect(
+						CanvasUtil.getRect(item), 
+						CanvasUtil.getExceptRects(itemsMap, item), 
+						new Rectangle(0, 0, width, height));
 					CommandUtil.edtComponent(item.component, {
 						x: rectangle.x,
 						y: rectangle.y,
@@ -575,39 +325,12 @@ package editor.views
 						height: rectangle.height
 					});
 				}
-				else if (config.mode == "fill")
+				else if (AppUtil.isFillMode())
 				{
 					CommandUtil.fillComponent(item.component.id, item.component.componentTypeCode);
 					Debugger.log("填充内容：组件ID = " + item.component.id + "，组件编码 = " + item.component.componentTypeCode);
 				}
 			}
-		}
-		
-		
-		/**
-		 * 
-		 * 获取除该元素外其他子元素占位集合。
-		 * 
-		 */
-		
-		public function getComponentRects($component:CanvasItem = null):Vector.<Rectangle>
-		{
-			var vec:Vector.<Rectangle> = new Vector.<Rectangle>;
-			for each (var item:CanvasItem in _dic) 
-				if (item != $component) vec.push(item.rect);
-			return vec;
-		}
-		
-		
-		/**
-		 * 
-		 * 获取画布矩形占位。
-		 * 
-		 */
-		
-		public function get rect():Rectangle
-		{
-			return new Rectangle(0, 0, width, height);
 		}
 		
 		
@@ -621,6 +344,7 @@ package editor.views
 		{
 			return container.numElements + editing.numElements;
 		}
+		
 		
 		/**
 		 * 
@@ -670,7 +394,7 @@ package editor.views
 			if ($value!= selectedComponent)
 			{
 				ed::selectedComponent = $value;
-				selectedItem = selectedComponent ? _dic[selectedComponent.id] : null;
+				selectedItem = selectedComponent ? itemsMap[selectedComponent.id] : null;
 			}
 		}
 		
@@ -702,9 +426,9 @@ package editor.views
 		 * 返回所有组件
 		 * 
 		 */
-		public function get dic():Map
+		public function get itemsMap():Map
 		{
-			return _dic;
+			return ed::itemsMap;
 		}
 		
 		
@@ -727,17 +451,6 @@ package editor.views
 		 * @private
 		 */
 		private var background:UIComponent = new UIComponent;
-		
-		/**
-		 * @private
-		 */
-		private var vlrule:VRule = new VRule;
-		
-		
-		/**
-		 * @private
-		 */
-		private var htrule:HRule = new HRule;
 		
 		
 		/**
@@ -764,13 +477,11 @@ package editor.views
 		 */
 		private var stat:Point = new Point;
 		
+		
 		/**
 		 * @private
 		 */
-		private var _dic:Map = new Map;
-		
-		private var ruleContainer:Group = new Group;
-		
+		ed var itemsMap:Map = new Map;
 		
 		/**
 		 * @private

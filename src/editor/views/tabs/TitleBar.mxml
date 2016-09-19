@@ -4,7 +4,7 @@
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
 				   xmlns:tabs="editor.views.tabs.*"
 				   borderAlpha="0.6" 
-				   width="{HG.width + 2}"
+				   
 				   resize="HG_resizeHandler(event)"
 				   height="30" backgroundAlpha="0">
 	
