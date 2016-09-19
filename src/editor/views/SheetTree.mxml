@@ -179,7 +179,6 @@
 								{
 									doubleClickCount = 0;
 									CommandUtil.openSheet(sheetItem.sheet);
-									addTitle(sheetItem.sheet);
 									return;
 								}
 							}
@@ -195,29 +194,7 @@
 				}
 			}
 			
-			/**
-			 * @private
-			 */
-			private function addTitle(sheet:Sheet):void
-			{
-				var title:TitleTab = new TitleTab;
-				if (repeatById(sheet.id))
-				{
-					var temp:TitleTab = MDVars.instance.titleBar.HG.addElement(title) as TitleTab;
-					idObj[temp] = sheet.id;
-				}
-				MDVars.instance.titleBar.selected = MDVars.instance.titleBar.sheet2Tab(sheet);
-			}
 			
-			/**
-			 * @private
-			 */
-			private function repeatById($id:String):Boolean
-			{
-				for each (var id:String in idObj)
-					if (id == $id) return false;
-				return true;
-			}
 			
 			/**
 			 * @private

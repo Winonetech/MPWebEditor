@@ -3,24 +3,22 @@
 				   xmlns:s ="library://ns.adobe.com/flex/spark" 
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
 				   xmlns:tabs="editor.views.tabs.*"
-				   borderAlpha="0.6" 
-				   width="{HG.width + 2}"
-				   resize="HG_resizeHandler(event)"
+				   borderAlpha="0.8" 
+				   resize="TB_resizeHandler(event)" 
 				   height="30" backgroundAlpha="0">
 	
 	<s:states>
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
-	<s:HGroup gap="5">
-		<s:HGroup gap="5" id="HG">
-			<tabs:TitleTab width="40" label="布局" layoutCloseVisible="false"/>
+	<s:HGroup id="TC" gap="5">
+		<s:HGroup gap="5" updateComplete="HG_updateCompleteHandler(event)" resize="HG_resizeHandler(event)" id="HG" >
+			<tabs:TitleTab label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
 		
 		<s:ComboBox id="comboBox" includeIn="much" dataProvider="{dataArrs}"
 					skinClass="editor.skins.TitleBarComboboxSkin"
 					change="combobox1_changeHandler(event)"/>
-		
 	</s:HGroup>
 	<fx:Script>
 		<![CDATA[
@@ -43,7 +41,7 @@
 			public var dataArrs:ArrayCollection = new ArrayCollection; 
 			public var idObj:Object = {};
 			
-			public function sheet2Tab($sheet:Sheet):TitleTab
+			private function sheet2Tab($sheet:Sheet):TitleTab
 			{
 				var temp:TitleTab;
 				for (var i:int; i < HG.numElements; i++)
@@ -54,15 +52,24 @@
 						return temp; 
 					}
 				}
+				i = 0;
+				for (var i:int; i < dataArrs.length; i++)
+				{
+					temp = dataArrs[i];
+					if ($sheet.id == idObj[temp])
+					{
+						return temp;
+					}
+				}
 				return null;
 			}
 			
-			public function tab2Sheet($tab:TitleTab):Sheet
+			private function tab2Sheet($tab:TitleTab):Sheet
 			{
 				return MDProvider.instance.program.sheets[idObj[$tab]];
 			}
 			
-			public function updateBackgroundColor():void
+			private function updateBackgroundColor():void
 			{
 				var temp:TitleTab;
 				for (var i:int; i < HG.numElements; i++)
@@ -85,28 +92,31 @@
 			{
 				MDConfig.instance.selectedSheet = null;
 				var temp:TitleTab = comboBox.selectedItem as TitleTab;
-				while (temp.width + width > MDVars.instance.editorView.canvas.width - 50)
+				var tempWidth:Number = HG.width;
+				while (temp.width + tempWidth > width - 50)
 				{
 					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
-					width -= removed.width;
-					dataArrs.addItem(removed); 
+					var tempNamed:Number = removed.named.width >= 43 ? 43 : removed.named.width;
+					tempWidth -= removed.width + tempNamed - 38;
+					dataArrs.addItem(removed);
 				}
-				HG.addElement(temp);
 				dataArrs.removeItemAt(comboBox.selectedIndex);
+				HG.addElement(temp);
 				selected = temp;
 			}
 			
-			
-			private function closed():void
+			private function closed($oldWidth:Number):void
 			{
-				Debugger.log("closed closed closed");
+				var temp:TitleTab;
+				var tempWidth:Number = HG.width;
 				if (dataArrs.length != 0)
 				{
-					for (var i:int; i < dataArrs.length; i++)
+					for (var i:int = 0; i < dataArrs.length; i++)
 					{
-						if (dataArrs[i].width + width < MDVars.instance.editorView.canvas.width - 50)
+						if (dataArrs[i].width + tempWidth < width - 50)
 						{
-							var temp:TitleTab = HG.addElement(dataArrs[i]) as TitleTab;
+							temp = HG.addElement(dataArrs[i]) as TitleTab;
+							tempWidth += dataArrs[i].width;
 							dataArrs.removeItemAt(i);
 							updateBackgroundColor();
 						}
@@ -116,32 +126,68 @@
 			
 			private function opened():void
 			{
-				Debugger.log("opened opened opened opened");
-				while (width > MDVars.instance.editorView.canvas.width - 50)
+				var tempTab:TitleTab;
+				var tempNamed:Number;
+				var temp:Number = HG.width;
+				while (temp > width - 50)
 				{
 					currentState = "much";
- 					width -= (HG.getElementAt(HG.numElements - 2) as TitleTab).width;
-					dataArrs.addItem(HG.getElementAt(HG.numElements - 2) as TitleTab);
+					tempTab = HG.getElementAt(HG.numElements - 2) as TitleTab;
+					tempNamed = tempTab.named.width >= 43 ? 43 : tempTab.named.width;
+					temp -= tempTab.width + tempNamed - 38;
+					dataArrs.addItem(tempTab);
 					HG.removeElementAt(HG.numElements - 2);
 				}
 			}
 			
+			protected function TB_resizeHandler(event:ResizeEvent):void
+			{
+				Debugger.log("=================== TB is Changing !!! ==============" + width);
+			}
+			
 			protected function HG_resizeHandler(event:ResizeEvent):void
 			{
-				if (state == "close") closed();
+				if (state == "close") closed(event.oldWidth);
 				else
 				{
-					if (count > 1 && count & 1 == 1)
+					if (count > 1 && count % 2 == 1)
 					{
 						opened();
 					}
-					else oldWidth = event.oldWidth;
-					
 					count++;
 				}
-				if (dataArrs.length == 0) currentState = "normal";
 			}
 			
+			/**
+			 * @private
+			 */
+			public function addTitle(sheet:Sheet):void
+			{
+				var title:TitleTab = new TitleTab;
+				if (repeatById(sheet.id))
+				{
+					var temp:TitleTab = HG.addElement(title) as TitleTab;
+					idObj[temp] = sheet.id;
+				}
+				selected = sheet2Tab(sheet);
+			}
+			
+			/**
+			 * @private
+			 */
+			private function repeatById($id:String):Boolean
+			{
+				for each (var id:String in idObj)
+				if (id == $id) return false;
+				return true;
+			}
+			
+			private function repeatByTab($tab:TitleTab):Boolean
+			{
+				for each (var tab:TitleTab in dataArrs)
+				if (tab == $tab) return false;
+				return true;	
+			}
 			
 			/**
 			 * 
@@ -165,25 +211,35 @@
 				{
 					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = temp;
 					ed::selected = value;
+					if (!repeatByTab(value))
+					{
+						dataArrs.removeItemAt(dataArrs.getItemIndex(value));
+						HG.addElement(value);
+					}
 					updateBackgroundColor();
 				}
 			}
 			
+			protected function HG_updateCompleteHandler(event:FlexEvent):void
+			{
+				if (dataArrs.length == 0) currentState = "normal";
+			}
 			
 			/**
 			 * @private
 			 */
 			ed var selected:TitleTab;
 			
-			
 			/**
 			 * 
 			 */
+			public var border:Number = 40;
+			
 			public var state:String;
 			
 			private var oldWidth:Number;
 			
-			private var count:int;
+			private var count:int = 0;
 			
 		]]>
 	</fx:Script>

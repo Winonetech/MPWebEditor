@@ -224,8 +224,7 @@ is defined by the ComboBoxTextInputSkin class.
               skinClass="spark.skins.spark.ComboBoxButtonSkin" tabEnabled="false" />  
     <!--- @copy spark.components.ComboBox#textInput -->
     <s:TextInput id="textInput" width="0" height="0" editable="false" enabled="false"
-                 left="0" right="0"
-                 skinClass="spark.skins.spark.ComboBoxTextInputSkin"/> 
+                 left="0" right="0" skinClass="spark.skins.spark.ComboBoxTextInputSkin"/> 
     
 </s:SparkSkin>
 

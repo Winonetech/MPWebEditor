@@ -43,6 +43,8 @@ package editor.commands
 				config.editingSheet = sheet;
 				
 				config.selectedComponent = null;
+				
+				vars.titleBar.addTitle(sheet);
 			}
 		}
 		

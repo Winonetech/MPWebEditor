@@ -24,6 +24,7 @@
 			import editor.vos.Sheet;
 			
 			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
 			import mx.events.StateChangeEvent;
 			
 			[Bindable]
@@ -103,16 +104,18 @@
 			
 			protected function hgroup1_removeHandler(event:FlexEvent):void
 			{
-				Debugger.log("remove remove remove remove remove remove");
 				titleBar.state = "close";
 			}
 			 
 			protected function hgroup1_addHandler(event:FlexEvent):void
 			{
-				Debugger.log("add add add add add add add add");
 				if (titleBar)
+				{
 					titleBar.state = "open";
+				}
 			}
+			
+			
 		]]>
 	</fx:Script>
 </s:BorderContainer>
