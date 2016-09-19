@@ -10,35 +10,27 @@ package editor.views.components
 	
 	import cn.mvc.interfaces.ISource;
 	import cn.mvc.utils.ObjectUtil;
-	import cn.mvc.utils.RectangleUtil;
 	import cn.mvc.utils.StringUtil;
 	
-	import editor.core.MDConfig;
 	import editor.core.ed;
 	import editor.managers.ImageManager;
 	import editor.skins.ImageErrorSkin;
+	import editor.utils.AppUtil;
 	import editor.utils.ComponentUtil;
-	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Timer;
 	
-	import mx.controls.HRule;
 	import mx.core.UIComponent;
 	import mx.graphics.SolidColor;
 	
-	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.Image;
-	import spark.components.Label;
 	import spark.primitives.Rect;
 	
 	
@@ -96,8 +88,8 @@ package editor.views.components
 			if(!updateProperty(componentProperty)) 
 			{
 				updateIcon();
-				if (MDConfig.instance.mode == "fill")
-					updateContent();
+				
+				updateContent();
 			}
 		}
 		
@@ -106,7 +98,7 @@ package editor.views.components
 		 */
 		private function updateBack():void
 		{
-			back.width = width;
+			back.width  = width;
 			back.height = height;
 		}
 		
@@ -159,18 +151,24 @@ package editor.views.components
 			}
 		}
 		
-		public function updateContent():void
+		/**
+		 * @private
+		 */
+		private function updateContent():void
 		{
-			if (contentImage)
+			if (AppUtil.isFillMode())
 			{
-				if (containsElement(contentImage)) removeElement(contentImage);
-				contentImage = null;
+				if (contentImage)
+				{
+					if (containsElement(contentImage)) removeElement(contentImage);
+					contentImage = null;
+				}
+				contentImage = new Image;
+				contentImage.source  = component.hasContent ? filledImage : emptyImage;
+				contentImage.toolTip = component.hasContent ? "已填充素材" : "未填充素材";
+				addElement(contentImage);
+				resizeImage();
 			}
-			contentImage = new Image;
-			contentImage.source  = component.hasContent ? filledImage : emptyImage;
-			contentImage.toolTip = component.hasContent ? "已填充素材" : "未填充素材";
-			addElement(contentImage);
-			resizeImage();
 		}
 		
 		/**
@@ -339,21 +337,6 @@ package editor.views.components
 		
 		/**
 		 * 
-		 * 获取此元素的矩形占位。
-		 * 
-		 */
-		
-		public function get rect():Rectangle
-		{
-			return new Rectangle(x, y, width, height);
-		}
-		
-		public function get center():Point
-		{
-			return RectangleUtil.getCenter(rect);
-		}
-		/**
-		 * 
 		 * 是否被选中。
 		 * 
 		 */
@@ -461,17 +444,7 @@ package editor.views.components
 		/**
 		 * @private
 		 */
-		[Embed(source="../../../flash/cache/assets/images/empty.png")]
-		private var emptyImage:Class;
-		
-		[Embed(source="../../../flash/cache/assets/images/filled.png")]
-		private var filledImage:Class;
-		
 		private var contentImage:Image;
-		/**
-		 * @private
-		 */
-		private var childrens:Array = [];
 		
 		/**
 		 * @private
@@ -483,6 +456,19 @@ package editor.views.components
 		 * @private
 		 */
 		ed var component:Component;
+		
+		
+		/**
+		 * @private
+		 */
+		[Embed(source="../../../flash/cache/assets/images/empty.png")]
+		private static const emptyImage:Class;
+		
+		/**
+		 * @private
+		 */
+		[Embed(source="../../../flash/cache/assets/images/filled.png")]
+		private static const filledImage:Class;
 		
 	}
 }

@@ -78,6 +78,7 @@
 			import editor.core.MDConfig;
 			import editor.core.MDProvider;
 			import editor.core.ed;
+			import editor.utils.CanvasUtil;
 			import editor.utils.CommandUtil;
 			import editor.utils.ComponentUtil;
 			import editor.views.CanvasContent;
@@ -144,7 +145,7 @@
 				if (config.alignMode)
 				{
 					content.showLine(canvasItem, "left");
-					temp = content.autoCombine(canvasItem, new Point(temp, canvasItem.y), true, "left").x;
+					temp = CanvasUtil.autoCombine(canvasItem, new Point(temp, canvasItem.y), true, "left").x;
 				}
 				canvasItem.x = ComponentUtil.reviseComponent(temp, stat.right);
 				canvasItem.width = stat.right - canvasItem.x;
@@ -159,7 +160,7 @@
 				if (config.alignMode)
 				{
 					content.showLine(canvasItem, "right");
-					temp = content.autoCombine(canvasItem, new Point(temp, canvasItem.y), false, "right")["tempW"];
+					temp = CanvasUtil.autoCombine(canvasItem, new Point(temp, canvasItem.y), false, "right")["tempW"];
 				}
 				canvasItem.width = ComponentUtil.reviseComponent(temp, contentW - stat.x);
 			}
@@ -173,7 +174,7 @@
 				if (config.alignMode)
 				{
 					content.showLine(canvasItem, "top");
-					temp = content.autoCombine(canvasItem, new Point(canvasItem.x, temp), true, "top").y;
+					temp = CanvasUtil.autoCombine(canvasItem, new Point(canvasItem.x, temp), true, "top").y;
 				}	
 				canvasItem.y = ComponentUtil.reviseComponent(temp, stat.bottom);
 				canvasItem.height = stat.bottom - canvasItem.y;
@@ -188,7 +189,7 @@
 				if (config.alignMode)
 				{
 					content.showLine(canvasItem, "bottom");
-					temp = content.autoCombine(canvasItem, new Point(canvasItem.x, temp), false, "bottom")["tempH"];
+					temp = CanvasUtil.autoCombine(canvasItem, new Point(canvasItem.x, temp), false, "bottom")["tempH"];
 				}
 				canvasItem.height = ComponentUtil.reviseComponent(temp, contentH - stat.y);
 			}
@@ -211,8 +212,8 @@
 			
 				if (config.alignMode)
 				{
-					var changedW:Number = content.autoCombine(canvasItem, new Point(bw, canvasItem.y), false, "right")["tempW"];
-					var changedH:Number = content.autoCombine(canvasItem, new Point(canvasItem.x, bh), false, "bottom")["tempH"];
+					var changedW:Number = CanvasUtil.autoCombine(canvasItem, new Point(bw, canvasItem.y), false, "right")["tempW"];
+					var changedH:Number = CanvasUtil.autoCombine(canvasItem, new Point(canvasItem.x, bh), false, "bottom")["tempH"];
 					var subW:Number = changedW - bw;
 					var subH:Number = changedH - bh;
 					if (subW != 0)
@@ -325,7 +326,6 @@
 				else
 				{
 					removeTimer();
-					
 					hideBtns();
 				}
 			}
@@ -336,7 +336,6 @@
 			private function btnsHodler_showHandler($e:TimerEvent):void
 			{
 				removeTimer();
-				
 				showBtns();
 			}
 			
