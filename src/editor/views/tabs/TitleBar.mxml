@@ -13,7 +13,7 @@
 	</s:states>
 	<s:HGroup id="TC" gap="5">
 		<s:HGroup gap="5" updateComplete="HG_updateCompleteHandler(event)" resize="HG_resizeHandler(event)" id="HG" >
-			<tabs:TitleTab label="布局" layoutCloseVisible="false"/>
+			<tabs:TitleTab width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
 		
 		<s:ComboBox id="comboBox" includeIn="much" dataProvider="{dataArrs}"
@@ -117,9 +117,9 @@
 							temp = HG.addElement(dataArrs[i]) as TitleTab;
 							tempWidth += dataArrs[i].width;
 							dataArrs.removeItemAt(i);
-							updateBackgroundColor();
 						}
 					}
+					updateBackgroundColor();
 				}
 			}
 			
@@ -128,7 +128,7 @@
 				var tempTab:TitleTab;
 				var tempNamed:Number;
 				var temp:Number = HG.width;
-				while (temp > width - 50)
+				while (HG.numElements > 2 && temp > width - 50)
 				{
 					currentState = "much";
 					tempTab = HG.getElementAt(HG.numElements - 2) as TitleTab;
@@ -141,15 +141,13 @@
 			
 			protected function TB_resizeHandler(event:ResizeEvent):void
 			{
-				result = event.oldWidth > width ? "small" : "big";
+				state = event.oldWidth > width ? "open" : "close";
 				HG.dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE));
 			}
 			
-			private var result:String;
 			
 			protected function HG_resizeHandler(event:ResizeEvent):void
 			{
-				state = result == "big" ? "close" : "open";
 				if (state == "close") closed();
 				else
 				{
@@ -157,7 +155,6 @@
 						opened();
 					count++;
 				}
-				result = null;
 			}
 			
 			/**

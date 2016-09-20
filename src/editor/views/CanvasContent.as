@@ -117,6 +117,9 @@ package editor.views
 		/**
 		 * 
 		 * 更新元素。
+		 * 0 : 修改
+		 * 1 : 添加
+		 * 2 : 删除
 		 * 
 		 */
 		
@@ -136,7 +139,7 @@ package editor.views
 					{
 						item = new CanvasItem;
 						item.component = $component;
-						itemsMap.addElement(item);
+						container.addElement(item);
 						itemsMap[$component.id] = item;
 					}
 					break;
