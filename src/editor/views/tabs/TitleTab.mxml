@@ -20,23 +20,9 @@
 		<![CDATA[
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
-			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
 			import mx.events.FlexEvent;
-			import mx.events.ResizeEvent;
-			import mx.events.StateChangeEvent;
-			
-			[Bindable]
-			public var label:String;
-			
-			[Bindable]
-			public var selectedSheet:Sheet = MDConfig.instance.editingSheet;
-			
-			public function get selected():Boolean
-			{
-				return this == titleBar.selected;
-			}
 			
 			protected function bordercontainer1_mouseOverHandler(event:MouseEvent):void
 			{
@@ -52,19 +38,8 @@
 			
 			protected function bordercontainer2_clickHandler(event:MouseEvent):void
 			{
-				
-				if (event.target is Button) closePage();
-				else openPage();
+				event.target is Button ? closePage() : openPage();
 			}
-			
-			
-			private function openPage():void
-			{
-				MDConfig.instance.selectedSheet = null;
-				titleBar.selected = this;
-			}
-			
-			
 			
 			private function closePage():void
 			{
@@ -74,11 +49,36 @@
 					var index:uint = titleBar.HG.getElementIndex(this); 
 					index = index == (titleBar.HG.numElements - 1) 
 						? index - 1 : index + 1;
-					titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
+					if (index != 0)
+						titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
+					else 
+						titleBar.selected = null;
 				}
 				titleBar.HG.removeElement(this);
 				if (titleBar.HG.numElements == 1) 
 					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = null; 
+			}
+			
+			private function openPage():void
+			{
+				MDConfig.instance.selectedSheet = null;
+				MDConfig.instance.selectedComponent = null;
+				titleBar.selected = this;
+			}
+			
+			protected function hgroup1_removeHandler(event:FlexEvent):void
+			{
+				if (titleBar) titleBar.state = "close";
+			}
+			
+			protected function hgroup1_addHandler(event:FlexEvent):void
+			{
+				if (titleBar) titleBar.state = "open";
+			}
+			
+			override public function toString():String
+			{
+				return this.named.text;
 			}
 			
 			[Bindable]
@@ -86,6 +86,17 @@
 			
 			[Bindable]
 			public var layoutCloseVisible:Boolean = true;
+			
+			[Bindable]
+			public var label:String;
+			
+			[Bindable]
+			public var selectedSheet:Sheet = MDConfig.instance.editingSheet;
+			
+			public function get selected():Boolean
+			{
+				return this == titleBar.selected;
+			}
 			
 			public function get idObj():Object
 			{
@@ -96,25 +107,6 @@
 			{
 				return MDVars.instance.titleBar;
 			}
-			
-			override public function toString():String
-			{
-				return this.named.text;
-			}
-			
-			protected function hgroup1_removeHandler(event:FlexEvent):void
-			{
-				titleBar.state = "close";
-			}
-			 
-			protected function hgroup1_addHandler(event:FlexEvent):void
-			{
-				if (titleBar)
-				{
-					titleBar.state = "open";
-				}
-			}
-			
 			
 		]]>
 	</fx:Script>

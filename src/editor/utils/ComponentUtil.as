@@ -17,6 +17,7 @@ package editor.utils
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
 	import editor.views.CanvasContent;
+	import editor.views.PageContent;
 	import editor.views.PageSelector;
 	import editor.views.components.CanvasItem;
 	import editor.views.properties.PropertyItem;
@@ -90,40 +91,6 @@ package editor.utils
 				CommandUtil.edtComponent(item.component, scope);
 			}
 			content.update();
-			/*
-			switch($state)
-			{
-				case "width":
-				{
-					for each(var item1:CanvasItem in dic)
-					{
-						item1.component.width = Math.round(item1.width * $change);
-						if (item1.component.width == 0) item1.component.width ++;
-						item1.component.x = Math.round(item1.x * $change);
-						CommandUtil.edtComponent(item1.component, {
-							"x" : item1.component.x,
-							"width" : item1.component.width
-						});
-					}
-					break;
-				}
-				default:
-				{
-					for each (var item2:CanvasItem in dic)
-					{
-						item2.component.height = Math.round(item2.height * $change);
-						if (item2.component.height == 0) item2.component.height++;
-						item2.component.y = Math.round(item2.y * $change);
-						CommandUtil.edtComponent(item2.component, {
-							"height" : item2.component.height,
-							"y" : item2.component.y
-						});
-					}//foreach
-					break;
-				}//default
-				
-			}//switch
-			*/
 		}//function
 		
 		
@@ -175,7 +142,7 @@ package editor.utils
 		/**
 		 * @private
 		 */
-		private static function get content():CanvasContent
+		private static function get content():*
 		{
 			return vars.canvas.content;
 		}

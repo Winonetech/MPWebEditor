@@ -37,7 +37,7 @@
 				
 				<!-- 版面布局 -->
 				
-				<s:HGroup width="100%">
+				<s:HGroup mouseChildren.ad="false" width="100%">
 					
 					<pr:PropertyItem width="50%" property="x"
 									 value="{sheet.x}" label="横轴："
@@ -51,7 +51,7 @@
 					
 				</s:HGroup>
 				
-				<s:HGroup width="100%">
+				<s:HGroup mouseChildren.ad="false" width="100%">
 					
 					<pr:PropertyItem width="50%" property="width"
 									 value="{sheet.width}" label="宽度："
@@ -86,6 +86,13 @@
 					
 				</s:HGroup>
 				
+				
+				<s:HGroup width="100%">
+					<pr:PropertyItem property="pageBackground" currentState="pageBtn"
+									 label="背景图片："
+									 change="pageBackground_changeHandler(event)"/>
+				</s:HGroup>
+				
 				<s:HGroup width="100%">
 					
 					<pr:PropertyItem property="home" includeIn="page"
@@ -94,7 +101,7 @@
 									 change="property_changeHandler(event)"/>
 					
 					<pr:PropertyItem property="home" includeIn="page"
-									 currentState="index" value="{page.home}" 
+									 currentState="index" 
 									 change="home_changeHandler(event)"/>
 					
 					<pr:PropertyItem property="waitTime" includeIn="ad"
@@ -112,6 +119,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import cn.mvc.core.Command;
+			import cn.mvc.utils.MathUtil;
 			
 			import editor.core.MDProvider;
 			import editor.core.ed;
@@ -142,13 +151,16 @@
 				if (item && sheet)
 				{
 					var scope:Object = {};
-					scope[item.property] = item.value;
 					if (item.property == "width" || item.property == "height")
 					{
+						scope[item.property] = item.property == "width"
+							? (Number(item.value) > 1920 ? "1920" : item.value)
+							: (Number(item.value) > 1080 ? "1080" : item.value);
 						ComponentUtil.limitSheetComponents(
 							scope[item.property] / sheet[item.property], item.property);
 					}
-					
+					else scope[item.property] = item.value;
+					item.value = scope[item.property];
 					CommandUtil.edtSheet(sheet, scope);
 				}
 			}
@@ -195,6 +207,14 @@
 			 * @private
 			 */
 			ed var sheet:Sheet;
+			
+			protected function pageBackground_changeHandler(event:Event):void
+			{
+				if (sheet)
+				{
+					CommandUtil.fillSheetBackground(sheet.id, sheet.background);
+				}
+			}
 			
 		]]>
 	</fx:Script>

@@ -52,6 +52,7 @@ package editor.commands
 			
 			adapter.expose("transmitData", CommandUtil.transmitData);
 			adapter.expose("fillComplete", CommandUtil.fillComplete);
+			adapter.expose("getSheetBackground", CommandUtil.getSheetBackground);
 			//通知浏览器flash准备完毕
 			adapter.fireFlashReady();
 		}

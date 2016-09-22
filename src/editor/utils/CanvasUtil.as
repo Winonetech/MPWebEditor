@@ -9,6 +9,7 @@ package editor.utils
 	
 	import editor.core.MDVars;
 	import editor.views.CanvasContent;
+	import editor.views.PageContent;
 	import editor.views.components.CanvasItem;
 	
 	import flash.display.DisplayObject;
@@ -122,7 +123,8 @@ package editor.utils
 				var newRects:Vector.<Rectangle> = getExceptRects(content.itemsMap, $recMove);
 				var scale:Number = vars.canvas.viewer.contentScale;
 				
-				newRects.sort(compare);
+				if (newRects)
+					newRects.sort(compare);					
 				
 				var item:Rectangle;
 				//遍历X方向
@@ -282,7 +284,7 @@ package editor.utils
 		/**
 		 * @private
 		 */
-		private static function get content():CanvasContent
+		private static function get content():*
 		{
 			return vars.canvas.content;
 		}

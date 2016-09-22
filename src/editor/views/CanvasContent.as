@@ -10,25 +10,31 @@ package editor.views
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
 	
+	import editor.core.MDProvider;
 	import editor.core.ed;
 	import editor.utils.AppUtil;
 	import editor.utils.CanvasUtil;
 	import editor.utils.CommandUtil;
 	import editor.utils.ComponentUtil;
 	import editor.views.components.CanvasItem;
+	import editor.vos.AD;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
+	import editor.vos.Page;
 	import editor.vos.Sheet;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import mx.controls.Alert;
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
 	
 	import spark.components.Group;
+	import spark.components.Image;
 	
 	
 	public final class CanvasContent extends _InternalContent
@@ -43,8 +49,37 @@ package editor.views
 		public function CanvasContent()
 		{
 			super();
+			
 		}
 		
+		public var flag:Boolean;
+		
+		private function removeC4LC():void
+		{
+			for (var i:int = numElements - 1; i >= 0; i--)
+			{
+				if (getElementAt(i) is PageContent) 
+				{
+					removeElementAt(i);
+					flag = true;
+					return;
+				}
+			}
+			flag = false;
+		}
+		
+		private function initContent():void
+		{
+			ed::selectedItem = lastSelectedItem = null;
+			
+			removeC4LC();
+			background.graphics.clear();
+			
+			container.removeAllElements();
+			editing.removeAllElements();
+			
+			itemsMap.clear();
+		}
 		
 		/**
 		 * 
@@ -54,19 +89,25 @@ package editor.views
 		
 		public function update():void
 		{
-			ed::selectedItem = lastSelectedItem = null;
+			initContent();
 			
-			background.graphics.clear();
+//			if (flag)
+//			{
+//				createChildren();
+//			}
 			
-			container.removeAllElements();
-			editing.removeAllElements();
 			
-			itemsMap.clear();
 			
 			if (sheet)
 			{
 				width  = sheet.width;
 				height = sheet.height;
+				
+				if (sheet.background != null)
+				{
+					backgroundImg.source = sheet.background;
+					container.addElementAt(backgroundImg, container.numElements);
+				}
 				
 				background.graphics.beginFill(ColorUtil.colorString2uint(sheet.backgroundColor));
 				background.graphics.drawRect(0, 0, width, height);
@@ -434,6 +475,11 @@ package editor.views
 			return ed::itemsMap;
 		}
 		
+		/**
+		 * @private
+		 */
+		private var backgroundImg:Image = new Image;
+		
 		
 		/**
 		 * @private
@@ -443,7 +489,7 @@ package editor.views
 		/**
 		 * @private
 		 */
-		private var container:Group = new Group;
+		public var container:Group = new Group;
 		
 		/**
 		 * @private

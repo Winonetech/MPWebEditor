@@ -19,11 +19,11 @@ package editor.consts
 		{
 			domain:"http://192.168.7.3:9000/layout",
 			programId: 10,
-			layoutId: 2,
+			layoutId: 5,
 			programName: null,
 			defaultWidth: "1920",
 			defaultHeight: "1080", 
-			mode:"fill"
+			mode:"edit"
 		};
 		
 		

@@ -13,7 +13,7 @@
 		<s:State name="link"/>
 		<s:State name="index"/>
 		<s:State name="combo"/>
-
+		<s:State name="pageBtn"/>
 	</s:states>
 
 	<s:Label paddingTop="3" styleName="property" text="{label}"/>
@@ -53,6 +53,9 @@
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="page_setIndexHandler(event)"/>
 	
+	<s:Button includeIn="pageBtn" verticalCenter="-2" label="填充"
+			  skinClass="editor.skins.ButtonNormalSkin"
+			  click="pageBtn_clickHandler(event)"/>
 	
 	<fx:Metadata>
 		
@@ -195,6 +198,10 @@
 			}
 			
 			
+			protected function pageBtn_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event(Event.CHANGE));
+			}
 			/**
 			 * 
 			 * 字符输入限制。
@@ -251,7 +258,6 @@
 			 */
 			
 			public var host:Object;
-			
 		]]>
 	</fx:Script>
 	

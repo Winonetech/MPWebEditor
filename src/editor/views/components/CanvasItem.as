@@ -19,6 +19,8 @@ package editor.views.components
 	import editor.utils.ComponentUtil;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
+	import editor.vos.Page;
+	import editor.vos.Sheet;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -52,7 +54,6 @@ package editor.views.components
 			addElement(back);
 			addEventListener(MouseEvent.CLICK, component_doubleClickHandler);
 		}
-		
 		
 		/**
 		 * 
@@ -403,6 +404,7 @@ package editor.views.components
 		}
 		
 		
+		
 		/**
 		 * 
 		 * 元素数据。
@@ -456,6 +458,11 @@ package editor.views.components
 		 * @private
 		 */
 		ed var component:Component;
+		
+		/**
+		 * @private
+		 */
+		ed var page:Page;
 		
 		
 		/**

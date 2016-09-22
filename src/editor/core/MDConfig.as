@@ -46,6 +46,16 @@ package editor.core
 		}
 		
 		
+		/**
+		 * 
+		 * 页面可视化
+		 * 
+		 */
+		public function get isLayoutOpened():Boolean
+		{
+			return MDVars.instance.titleBar.isLayoutOpened;
+		}
+		
 		
 		/**
 		 * 
@@ -167,6 +177,7 @@ package editor.core
 		public var dragOnly:Boolean = false;
 		
 		
+				
 		/**
 		 * 
 		 * 显示网格

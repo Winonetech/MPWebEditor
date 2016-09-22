@@ -53,11 +53,12 @@
 			
 			public function update():void
 			{
+				
 				resizeViewer();
 				
 				if (content)
 				{
-					if (content.sheet!= sheet)
+					if (content.sheet != sheet)
 						content.sheet = sheet;
 					else
 						content.update();
@@ -100,6 +101,8 @@
 				
 				resizeViewer();
 			}
+			
+			
 			
 			
 			/**
@@ -184,7 +187,21 @@
 			 * @private
 			 */
 			[Bindable]
-			public var content:CanvasContent;
+			private var _content:_InternalContent;
+			
+			public function set content(value:_InternalContent):void
+			{
+				if (value is CanvasContent) _content = value as CanvasContent;
+				else if (value is PageContent) _content = value as PageContent;
+				else _content = null;
+			}
+			
+			[Bindable]
+			public function get content():*
+			{
+				return (_content is CanvasContent) 
+				? _content as CanvasContent : _content as PageContent;
+			}
 			
 			
 			/**

@@ -100,12 +100,14 @@ package editor.commands
 			if ($ad)
 			{
 				var ad:AD = new AD($ad);
+				ad.width  = provider.defaultWidth;
+				ad.height = provider.defaultHeight;
 				ad.label = ad.label || "广告";
 				initComponents(ad, $ad.components);
 			}
 			else
 			{
-				ad = VOUtil.createAD(0, 0, layout.defaultWidth, layout.defaultHeight);
+				ad = VOUtil.createAD(0, 0, provider.defaultWidth, provider.defaultHeight);
 			}
 			
 			layout.ad = ad;

@@ -16,6 +16,7 @@ package editor.utils
 	import editor.core.MDPresenter;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
+	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Page;
@@ -42,11 +43,34 @@ package editor.utils
 		public static function fillComplete($scope:Object):void
 		{
 			if ($scope)
-				edtComponent(getComponentById($scope.componentId), {"hasContent": $scope.hasContent});
+				edtComponent(getComponentById($scope.componentId), {"hasContent" : $scope.hasContent});
 			else
 				Alert.show("组件参数为空!", "错误：");
 		}
 		
+		
+		public static function getSheetBackground($scope:Object):void
+		{
+			if ($scope)
+			{
+				edtSheet(config.editingSheet, {"background" : $scope.background});
+			}
+			else
+				Alert.show("页面参数为空!", "错误：");
+		}
+		
+		
+		/**
+		 * 
+		 * 填充背景。
+		 * 
+		 * @param $sheetId:String 页面ID。
+		 * 
+		 */
+		public static function fillSheetBackground($sheetId:String, $background:String):void
+		{
+			presenter.execute(new FillSheetBackgroundCommand($sheetId, $background));
+		}
 		
 		/**
 		 * 
@@ -336,6 +360,13 @@ package editor.utils
 			return config.editingSheet ? config.editingSheet.componentsMap[$id] : null;
 		}
 		
+		/**
+		 * @private
+		 */
+		private static function getSheetById($id:String):Sheet
+		{
+			return config.editingSheet ? MDProvider.instance.program.sheets[$id] : null;
+		}
 		
 		/**
 		 * @private

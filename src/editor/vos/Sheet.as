@@ -154,7 +154,7 @@ package editor.vos
 		
 		/**
 		 * 
-		 * 背景图片。
+		 * 背景颜色。
 		 * 
 		 */
 		
@@ -163,14 +163,27 @@ package editor.vos
 			return getProperty("backgroundColor");
 		}
 		
-		/**
-		 * @private
-		 */
 		public function set backgroundColor($value:String):void
 		{
 			setProperty("backgroundColor", $value);
 		}
 		
+		
+		/**
+		 * 
+		 * 背景图片。
+		 * 
+		 */
+		
+		public function get background():String
+		{
+			return getProperty("background");
+		}
+		
+		public function set background($value:String):void
+		{
+			setProperty("background", $value);
+		}
 		
 		/**
 		 * 
