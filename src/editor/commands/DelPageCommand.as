@@ -82,6 +82,9 @@ package editor.commands
 				//clear select, editing
 				if (page == config.selectedSheet) config.selectedSheet = null;
 				if (page == config.editingSheet ) config.editingSheet  = null;
+				
+				if (vars.titleBar.sheet2Tab(page))
+					vars.titleBar.sheet2Tab(page).closePage();
 			}
 			else
 			{

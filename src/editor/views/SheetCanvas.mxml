@@ -8,24 +8,23 @@
 	
 	<s:BorderContainer left="0" right="0" top="0" bottom="0" 
 					   backgroundAlpha="0">
-		
+		<!-- 该Group是整个的边框 即放置viewer的地方 -->
 		<s:Group left="5" right="5" top="5" bottom="5"
 				 clipAndEnableScrolling="true" id="container"
 				 resize="canvas_resizeHandler(event)">
-			 
-			<cs:Viewer id="viewer"
+			<!-- 该Viewer是存放组件、网格等CanvasContent的地方 -->
+			<cs:Viewer id="viewer" 
 					   alignMode="{config.alignMode}"
 					   dragOnly ="{config.dragOnly}"
 					   showGrid ="{config.showGrid}"/>
-			
+			<!-- 该Group用于存放ToolSelect ToolSelect是被选择的边框 -->
 			<s:Group width ="{viewer.width}"
 					 height="{viewer.height}"
 					 x="{viewer.x}" 
 					 mouseEnabled="false"
 					 clipAndEnableScrolling="true">
-				
 				<cs:ToolSelect id="selector" viewer="{viewer}"
-							   visible   ="{config.editingSheet &amp;&amp; selectedComponent}"
+							   visible="{config.editingSheet &amp;&amp; selectedComponent}"
 							   canvasItem="{content.selectedItem}"/>
 				
 			</s:Group>
@@ -36,7 +35,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
+			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.views.components.CanvasItem;
 			import editor.vos.Component;
@@ -53,31 +52,67 @@
 			
 			public function update():void
 			{
-				
-				resizeViewer();
-				
+				if (!MDVars.instance.titleBar.isLayoutOpened) resizeViewer();
+				else resizeLayoutViewer();
 				if (content)
 				{
+					//当在同一个类型(CanvasContent || PageContent)时会进入该区域
 					if (content.sheet != sheet)
+					{
+						// 当同一类型切换时会进入该区域
 						content.sheet = sheet;
-					else
+					}
+					else   
+					{
+						// 当改变当前页面的宽高时会进入该区域
 						content.update();
+					}
 				}
 				else
 				{
-					content = new CanvasContent;
+					// 每次切换类型时会进入该方法
+					content = MDVars.instance.titleBar.isLayoutOpened
+						? new PageContent : new CanvasContent;
 					content.sheet = sheet;
 				}
 				
 				if (viewer)
 				{
-					if (viewer.content!= content)
+					//viewer.content 是上一个的画布内容！
+					//content 是当前的画布内容！
+					if (viewer.content != content)
+					{
+						//在不同类型内切换会进入该区域
 						viewer.content = content;
+					}
 					else
+					{
+						//在同一类型内切换会进入该区域
 						viewer.update();
+					}
 				}
 			}
 			
+			
+			private function resizeLayoutViewer():void
+			{
+				if (container && viewer)
+				{
+					var ww:Number = container.width;
+					var wh:Number = container.height;
+					var cw:Number = 1920;
+					var ch:Number = 1080;
+					var ws:Number = ww / wh;
+					var cs:Number = cw / ch;
+					var ss:Number = ws < cs ? ww / cw : wh /ch;
+					
+					viewer.width  = ss * 1920;
+					viewer.height = ss * 1080;
+					viewer.x = .5 * (ww - viewer.width);
+					
+					viewer.update();
+				}
+			}
 			
 			/**
 			 * 
@@ -98,7 +133,6 @@
 			override protected function createChildren():void
 			{
 				super.createChildren();
-				
 				resizeViewer();
 			}
 			
@@ -112,12 +146,19 @@
 			{
 				if (container && viewer && sheet)
 				{
+					//ww wh -> 总容器尺寸
 					var ww:Number = container.width;
 					var wh:Number = container.height;
+					//container的 width和 height不变 
+					
+					//cw ch -> 页面尺寸
 					var cw:Number = sheet.width;
 					var ch:Number = sheet.height;
+					
+					
 					var ws:Number = ww / wh;
 					var cs:Number = cw / ch;
+					
 					var ss:Number = ws < cs ? ww / cw : wh /ch;
 					
 					viewer.width  = ss * sheet.width;
@@ -178,7 +219,6 @@
 			public function set sheet($value:Sheet):void
 			{
 				ed::sheet = $value;
-				
 				update();
 			}
 			
@@ -187,9 +227,9 @@
 			 * @private
 			 */
 			[Bindable]
-			private var _content:_InternalContent;
+			private var _content:*;
 			
-			public function set content(value:_InternalContent):void
+			private function set content(value:*):void
 			{
 				if (value is CanvasContent) _content = value as CanvasContent;
 				else if (value is PageContent) _content = value as PageContent;
@@ -199,7 +239,7 @@
 			[Bindable]
 			public function get content():*
 			{
-				return (_content is CanvasContent) 
+				return (!MDVars.instance.titleBar.isLayoutOpened) 
 				? _content as CanvasContent : _content as PageContent;
 			}
 			

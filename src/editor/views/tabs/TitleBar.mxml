@@ -12,7 +12,7 @@
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
-	<s:HGroup id="TC" gap="5">
+	<s:HGroup gap="5">
 		<s:HGroup id="HG" gap="5" updateComplete="HG_updateCompleteHandler(event)" resize="HG_resizeHandler(event)">
 			<tabs:TitleTab id="tabLayout" width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
@@ -27,9 +27,8 @@
 			import editor.core.MDProvider;
 			import editor.core.MDVars;
 			import editor.core.ed;
-			import editor.views.PageContent;
-			import editor.views.CanvasContent;
 			import editor.views.Debugger;
+			import editor.views.PageContent;
 			import editor.vos.Sheet;
 			
 			import mx.collections.ArrayCollection;
@@ -40,7 +39,7 @@
 			
 			
 			
-			private function sheet2Tab($sheet:Sheet):TitleTab
+			public function sheet2Tab($sheet:Sheet):TitleTab
 			{
 				var temp:TitleTab;
 				for (var i:int = 1; i < HG.numElements; i++)
@@ -62,7 +61,7 @@
 				return null;
 			}
 			
-			private function tab2Sheet($tab:TitleTab):Sheet
+			public function tab2Sheet($tab:TitleTab):Sheet
 			{
 				return MDProvider.instance.program.sheets[idObj[$tab]];
 			}
@@ -87,22 +86,6 @@
 				}
 			}
 			
-			protected function combobox1_changeHandler(event:IndexChangeEvent):void
-			{
-				MDConfig.instance.selectedSheet = null;
-				var temp:TitleTab = comboBox.selectedItem as TitleTab;
-				var tempWidth:Number = HG.width;
-				while (temp.width + tempWidth > width - 50)
-				{
-					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
-					var tempNamed:Number = removed.named.width >= 43 ? 43 : removed.named.width;
-					tempWidth -= removed.width + tempNamed - 38;
-					dataArrs.addItem(removed);
-				}
-				dataArrs.removeItemAt(comboBox.selectedIndex);
-				HG.addElement(temp);
-				selected = temp;
-			}
 			
 			private function dataArrs_Pop():void
 			{
@@ -148,11 +131,32 @@
 							tempTab = HG.getElementAt(HG.numElements - 3) as TitleTab;
 						else break;
 					}
+					else if (HG.getElementAt(HG.numElements - 1) as TitleTab != selected) 
+					{
+						tempTab = HG.getElementAt(HG.numElements - 1) as TitleTab;  
+					}
 					tempNamed = tempTab.named.width >= 43 ? 43 : tempTab.named.width;
 					temp -= tempTab.width + tempNamed - 38;
 					dataArrs.addItem(tempTab);
 					HG.removeElementAt(HG.getElementIndex(tempTab));
 				}
+			}
+			
+			protected function combobox1_changeHandler(event:IndexChangeEvent):void
+			{
+				MDConfig.instance.selectedSheet = null;
+				var temp:TitleTab = comboBox.selectedItem as TitleTab;
+				var tempWidth:Number = HG.width;
+				while (temp.width + tempWidth > width - 50)
+				{
+					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
+					var tempNamed:Number = removed.named.width >= 43 ? 43 : removed.named.width;
+					tempWidth -= removed.width + tempNamed - 38;
+					dataArrs.addItem(removed);
+				}
+				dataArrs.removeItemAt(comboBox.selectedIndex);
+				HG.addElement(temp);
+				selected = temp;
 			}
 			
 			protected function TB_resizeHandler(event:ResizeEvent):void
@@ -167,7 +171,7 @@
 				if (state == "close") dataArrs_Pop();
 				else
 				{
-					if (isResize || (count > 1 && count % 2 == 1))
+					if (isResize || (count > 0 && count % 2 == 1))
 						dataArrs_Push();
 					if (!isResize) count++;
 					else isResize = false;
@@ -179,9 +183,9 @@
 			 */
 			public function addTitle(sheet:Sheet):void
 			{
-				var title:TitleTab = new TitleTab;
 				if (repeatById(sheet.id))
 				{
+					var title:TitleTab = new TitleTab;
 					var temp:TitleTab = HG.addElement(title) as TitleTab;
 					idObj[temp] = sheet.id;
 				}
@@ -222,11 +226,11 @@
 			 */
 			public function set selected(value:TitleTab):void
 			{
-				var temp:Sheet = tab2Sheet(value);
 				ed::selected = value;
+				var temp:Sheet = tab2Sheet(value);
+				MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = temp;
 				if (temp)
 				{
-					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = temp;
 					if (!repeatByTab(value))
 					{
 						var tempWidth:Number = HG.width;
@@ -251,18 +255,15 @@
 				if (dataArrs.length == 0) currentState = "normal";
 			}
 			
-			protected function TB_creationCompleteHandler(event:FlexEvent):void
+			public function TB_creationCompleteHandler(event:FlexEvent):void
 			{
-				tabLayout.addEventListener(MouseEvent.CLICK, tabLayout_clickHandler, true);
+				tabLayout.addEventListener(MouseEvent.CLICK, tabLayout_clickHandler);
 			}
 			
-			
-			protected function tabLayout_clickHandler(event:MouseEvent):void
+			private function tabLayout_clickHandler(event:MouseEvent):void
 			{
-				config.selectedSheet = config.editingSheet = null;
-				config.selectedComponent = null;
+				config.selectedComponent = null;        
 				var temp:TitleTab;
-				ed::selected = tabLayout;
 				for (var i:int; i < HG.numElements; i++)
 				{
 					temp = HG.getElementAt(i) as TitleTab;
@@ -270,13 +271,8 @@
 					temp.setStyle("backgroundColor", 0xffffff);
 				}
 				tabLayout.setStyle("backgroundColor", 0);
-				
-				new PageContent().update();
-				
-				event.stopImmediatePropagation();
+				selected = tabLayout;
 			}
-			
-			
 			
 			/**
 			 * @private
@@ -296,10 +292,7 @@
 			
 			private var isResize:Boolean;
 			
-			public function get isLayoutOpened():Boolean
-			{
-				return selected == tabLayout;
-			}
+			public var isLayoutOpened:Boolean;
 			/**
 			 * @private
 			 */

@@ -15,6 +15,7 @@ package editor.views.canvas
 	import editor.core.MDConfig;
 	import editor.core.ed;
 	import editor.views.CanvasContent;
+	import editor.views.Debugger;
 	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
@@ -319,6 +320,7 @@ package editor.views.canvas
 		{
 			if (container && lastContent &&  
 				container.containsElement(lastContent))
+				
 				container.removeElement(lastContent);
 			
 			if (content)
@@ -520,7 +522,7 @@ package editor.views.canvas
 		
 		/**
 		 * 
-		 * 内容
+		 * 内容  即是CanvasContent的尺寸
 		 * 
 		 */
 		

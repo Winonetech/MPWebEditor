@@ -100,8 +100,11 @@ package editor.commands
 			if ($ad)
 			{
 				var ad:AD = new AD($ad);
-				ad.width  = provider.defaultWidth;
-				ad.height = provider.defaultHeight;
+				if (ad.width == 0 || ad.height == 0)
+				{
+					ad.width  = provider.defaultWidth;
+					ad.height = provider.defaultHeight;
+				}
 				ad.label = ad.label || "广告";
 				initComponents(ad, $ad.components);
 			}

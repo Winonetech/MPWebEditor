@@ -17,6 +17,7 @@ package editor.views.components
 	import editor.skins.ImageErrorSkin;
 	import editor.utils.AppUtil;
 	import editor.utils.ComponentUtil;
+	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Page;
@@ -177,6 +178,7 @@ package editor.views.components
 		 */
 		private function updateProperty($property:Object):Boolean
 		{
+			
 			if (ui)
 			{
 				if (containsElement(ui)) removeElement(ui);
@@ -459,10 +461,6 @@ package editor.views.components
 		 */
 		ed var component:Component;
 		
-		/**
-		 * @private
-		 */
-		ed var page:Page;
 		
 		
 		/**

@@ -10,25 +10,20 @@ package editor.views
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
 	
-	import editor.core.MDProvider;
 	import editor.core.ed;
 	import editor.utils.AppUtil;
 	import editor.utils.CanvasUtil;
 	import editor.utils.CommandUtil;
 	import editor.utils.ComponentUtil;
 	import editor.views.components.CanvasItem;
-	import editor.vos.AD;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
-	import editor.vos.Page;
 	import editor.vos.Sheet;
 	
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import mx.controls.Alert;
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
@@ -49,32 +44,27 @@ package editor.views
 		public function CanvasContent()
 		{
 			super();
-			
 		}
 		
-		public var flag:Boolean;
 		
-		private function removeC4LC():void
-		{
-			for (var i:int = numElements - 1; i >= 0; i--)
-			{
-				if (getElementAt(i) is PageContent) 
-				{
-					removeElementAt(i);
-					flag = true;
-					return;
-				}
-			}
-			flag = false;
-		}
+//		private function removeC4LC():void
+//		{
+//			for (var i:int = numElements - 1; i >= 0; i--)
+//			{
+//				if (getElementAt(i) is PageContent) 
+//				{
+//					removeElementAt(i);
+//					return;
+//				}
+//			}
+//		}
 		
 		private function initContent():void
 		{
 			ed::selectedItem = lastSelectedItem = null;
 			
-			removeC4LC();
+//			removeC4LC();
 			background.graphics.clear();
-			
 			container.removeAllElements();
 			editing.removeAllElements();
 			
@@ -90,13 +80,6 @@ package editor.views
 		public function update():void
 		{
 			initContent();
-			
-//			if (flag)
-//			{
-//				createChildren();
-//			}
-			
-			
 			
 			if (sheet)
 			{
@@ -460,7 +443,6 @@ package editor.views
 		public function set sheet($value:Sheet):void
 		{
 			ed::sheet = $value;
-			
 			update();
 		}
 		

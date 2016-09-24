@@ -10,22 +10,13 @@ package editor.utils
 	
 	import cn.mvc.collections.Map;
 	import cn.mvc.core.NoInstance;
-	import cn.mvc.utils.MathUtil;
-	import cn.mvc.utils.RectangleUtil;
 	
 	import editor.controls.MDFlash;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
-	import editor.views.CanvasContent;
-	import editor.views.PageContent;
 	import editor.views.PageSelector;
 	import editor.views.components.CanvasItem;
 	import editor.views.properties.PropertyItem;
-	
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
-	import mx.controls.Alert;
 
 	
 	public final class ComponentUtil extends NoInstance

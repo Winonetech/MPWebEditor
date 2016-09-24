@@ -2,11 +2,12 @@
 <s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				   xmlns:s="library://ns.adobe.com/flex/spark" 
 				   xmlns:mx="library://ns.adobe.com/flex/mx" 
+				   borderAlpha=".618" backgroundAlpha=".1"
+				   minWidth="50" height="30" 
 				   mouseOut="bordercontainer2_mouseOutHandler(event)"
 				   mouseOver="bordercontainer1_mouseOverHandler(event)"
-				   click="bordercontainer2_clickHandler(event)"
-				   remove="hgroup1_removeHandler(event)" add="hgroup1_addHandler(event)"
-				   backgroundAlpha=".1" minWidth="50" height="30">
+				   add="hgroup1_addHandler(event)" remove="hgroup1_removeHandler(event)"
+				   click="bordercontainer2_clickHandler(event)"		>
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
@@ -20,6 +21,7 @@
 		<![CDATA[
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
+			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
 			import mx.events.FlexEvent;
@@ -38,10 +40,19 @@
 			
 			protected function bordercontainer2_clickHandler(event:MouseEvent):void
 			{
-				event.target is Button ? closePage() : openPage();
+				if (event.currentTarget != titleBar.tabLayout)
+				{
+					if (event.target is Button) closePage();
+					else 
+					{
+						titleBar.isLayoutOpened = false;
+						openPage();
+					}
+				}
+				else titleBar.isLayoutOpened = true;
 			}
 			
-			private function closePage():void
+			public function closePage():void
 			{
 				delete idObj[this];
 				if (this == titleBar.selected)
@@ -51,17 +62,24 @@
 						? index - 1 : index + 1;
 					if (index != 0)
 						titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
-					else 
-						titleBar.selected = null;
 				}
-				titleBar.HG.removeElement(this);
+				
+				if (titleBar.HG.containsElement(this))	
+					titleBar.HG.removeElement(this);
+				else if (titleBar.dataArrs.contains(this))
+				{
+					titleBar.dataArrs.removeItemAt(titleBar.dataArrs.getItemIndex(this));
+					titleBar.HG.dispatchEvent(new FlexEvent(FlexEvent.UPDATE_COMPLETE));
+				}
+				
 				if (titleBar.HG.numElements == 1) 
-					MDConfig.instance.editingSheet = MDConfig.instance.selectedSheet = null; 
+				{
+					titleBar.tabLayout.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+				}
 			}
 			
 			private function openPage():void
 			{
-				MDConfig.instance.selectedSheet = null;
 				MDConfig.instance.selectedComponent = null;
 				titleBar.selected = this;
 			}

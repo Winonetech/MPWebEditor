@@ -27,7 +27,7 @@
 				  paddingRight="5" paddingTop="5"
 				  mouseEnabled="false">
 			
-			<s:VGroup width="100%" mouseEnabled="false">
+			<s:VGroup width="100%">
 				
 				<!-- 版面名称 -->
 				
@@ -37,7 +37,7 @@
 				
 				<!-- 版面布局 -->
 				
-				<s:HGroup mouseChildren.ad="false" width="100%">
+				<s:HGroup width="100%">
 					
 					<pr:PropertyItem width="50%" property="x"
 									 value="{sheet.x}" label="横轴："
@@ -51,7 +51,7 @@
 					
 				</s:HGroup>
 				
-				<s:HGroup mouseChildren.ad="false" width="100%">
+				<s:HGroup width="100%">
 					
 					<pr:PropertyItem width="50%" property="width"
 									 value="{sheet.width}" label="宽度："
@@ -119,9 +119,6 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import cn.mvc.core.Command;
-			import cn.mvc.utils.MathUtil;
-			
 			import editor.core.MDProvider;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;

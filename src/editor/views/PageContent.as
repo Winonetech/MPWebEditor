@@ -1,14 +1,11 @@
 package editor.views
 {
 	import cn.mvc.collections.Map;
-	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
 	
-	import editor.core.MDConfig;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
 	import editor.core.ed;
-	import editor.views.components.CanvasItem;
 	import editor.views.sheets.Layout_PageItem;
 	import editor.vos.Page;
 	import editor.vos.Sheet;
@@ -38,7 +35,6 @@ package editor.views
 			ed::selectedItem = lastSelectedItem = null;			
 			
 			
-			
 			background.graphics.clear();
 			
 			container.removeAllElements();
@@ -46,26 +42,15 @@ package editor.views
 			
 			itemsMap.clear();
 			
-						
-			
-			
-			
-			
 			width  = 1920;
 			height = 1080;
 			background.graphics.beginFill(0xffffff);
-			background.graphics.drawRect(0, 0, width, height);
+			background.graphics.drawRect(0, 0, 1920, 1080);
 			background.graphics.endFill();
-			canvas.addElement(this);
-//			container.addElement(new Canvas4LayoutItem);
-//				for each (var item:* in ) 
-//				{
-//					if (item is Page)
-//					{
-//						item = item as Page;
-//						updatePage(item, 1);
-//					}
-//				}
+			for each (var item:Page in provider.program.pages) 
+			{
+				updatePage(item, 1);
+			}
 				
 		}
 		
@@ -80,30 +65,30 @@ package editor.views
 		 * 
 		 */
 		
-		public function updatePage($component:Sheet, $type:uint = 0):CanvasItem
+		public function updatePage($page:Page, $type:uint = 0):Layout_PageItem
 		{
 			switch ($type)
 			{
 				case 0:
-					if (itemsMap[$component.id])
+					if (itemsMap[$page.id])
 					{
-						var item:CanvasItem = itemsMap[$component.id];
-						item.update();
+						var item:Layout_PageItem = itemsMap[$page.id];
+//						item.update();
 					}
 					break;
 				case 1:
-					if(!itemsMap[$component.id])
+					if(!itemsMap[$page.id])
 					{
-						item = new CanvasItem;
-//						item.component = $component;
+						item = new Layout_PageItem;
+						item.page = $page;
 						container.addElement(item);
-						itemsMap[$component.id] = item;
+						itemsMap[$page.id] = item;
 					}
 					break;
 				case 2:
-					if (itemsMap[$component.id])
+					if (itemsMap[$page.id])
 					{
-						item = itemsMap[$component.id];
+						item = itemsMap[$page.id];
 						
 						if (selectedItem == item)
 							selectedItem = null;
@@ -113,7 +98,7 @@ package editor.views
 						else if (container.containsElement(item))
 							container.removeElement(item);
 						
-						delete itemsMap[$component.id];
+						delete itemsMap[$page.id];
 					}
 					break;
 			}
@@ -176,7 +161,7 @@ package editor.views
 //		{
 //			moving = false;
 //			down = new Point(mouseX, mouseY);
-//			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+//			var item:Layout_PageItem = ComponentUtil.convertLayout_PageItem($e.target);
 //			if (item)
 //			{
 //				//编辑模式下立即停止冒泡。
@@ -255,7 +240,7 @@ package editor.views
 //		{
 //			if(!moving) 
 //			{
-//				var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+//				var item:Layout_PageItem = ComponentUtil.convertLayout_PageItem($e.target);
 //				if (item)
 //				{
 //					config.selectedSheet = null;
@@ -269,7 +254,7 @@ package editor.views
 //		 */
 //		private function item_doubleClickHandler($e:MouseEvent):void
 //		{
-//			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+//			var item:Layout_PageItem = ComponentUtil.convertLayout_PageItem($e.target);
 //			if (item)
 //			{
 //				if (AppUtil.isEditMode())
@@ -313,7 +298,7 @@ package editor.views
 		 */
 		
 		[Bindable]
-		public function get selectedItem():CanvasItem
+		public function get selectedItem():Layout_PageItem
 		{
 			return ed::selectedItem;
 		}
@@ -321,20 +306,39 @@ package editor.views
 		/**
 		 * @private
 		 */
-		public function set selectedItem($value:CanvasItem):void
+		public function set selectedItem($value:Layout_PageItem):void
 		{
 			if ($value!= selectedItem)
 			{
 				lastSelectedItem = selectedItem;
 				ed::selectedItem = $value;
-				
-				if (lastSelectedItem) 
-					container.addElementAt(lastSelectedItem, MathUtil.clamp(lastSelectedItem.order, 0, numElements));
-				if (selectedItem) editing.addElement(selectedItem);
+//				
+//				if (lastSelectedItem) 
+//					container.addElementAt(lastSelectedItem, MathUtil.clamp(lastSelectedItem.order, 0, numElements));
+//				if (selectedItem) editing.addElement(selectedItem);
 			}
 		}
 		
+		/**
+		 * 
+		 * 数据源。
+		 * 
+		 */
 		
+		public function get sheet():Sheet
+		{
+			return ed::sheet;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set sheet($value:Sheet):void
+		{
+			ed::sheet = $value;
+			
+			update();
+		}
 		
 		private function get provider():MDProvider
 		{
@@ -356,10 +360,9 @@ package editor.views
 			return provider.program.sheets;
 		}
 		
-		private function get canvas():*
+		private function get content():PageContent
 		{
-			var temp:* = vars.canvas.content;
-			return (temp is CanvasContent) ? temp as CanvasContent : temp as PageContent;
+			return vars.canvas.content as PageContent;
 		}
 		
 		private function get vars():MDVars
@@ -367,14 +370,10 @@ package editor.views
 			return MDVars.instance;
 		}
 		
-		public function get c4lc():PageContent
-		{
-			return this;
-		}
 		/**
 		 * @private
 		 */
-		private var lastSelectedItem:CanvasItem;
+		private var lastSelectedItem:Layout_PageItem;
 		
 		/**
 		 * @private
@@ -399,7 +398,7 @@ package editor.views
 		/**
 		 * @private
 		 */
-		private var dragging:CanvasItem;
+		private var dragging:Layout_PageItem;
 		
 		/**
 		 * @private
@@ -416,6 +415,10 @@ package editor.views
 		 */
 		private var stat:Point = new Point;
 		
+		/**
+		 * @private
+		 */
+		ed var sheet:Sheet;
 		
 		/**
 		 * @private
@@ -426,7 +429,7 @@ package editor.views
 		/**
 		 * @private
 		 */
-		ed var selectedItem:CanvasItem;
+		ed var selectedItem:Layout_PageItem;
 		
 	}
 }

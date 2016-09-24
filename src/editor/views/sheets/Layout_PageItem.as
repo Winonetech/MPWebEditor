@@ -2,8 +2,12 @@ package editor.views.sheets
 {
 	
 	import editor.core.ed;
+	import editor.managers.ImageManager;
+	import editor.utils.AppUtil;
+	import editor.views.Debugger;
 	import editor.vos.Page;
 	
+	import flash.display.BitmapData;
 	import flash.utils.Timer;
 	
 	import mx.core.UIComponent;
@@ -11,6 +15,7 @@ package editor.views.sheets
 	
 	import spark.components.Group;
 	import spark.components.Image;
+	import spark.components.Label;
 	import spark.primitives.Rect;
 	
 	public class Layout_PageItem extends Group
@@ -22,11 +27,6 @@ package editor.views.sheets
 			back = new Rect;
 			back.fill = new SolidColor(0xCCCCCC, .3);
 			addElement(back);
-			back.width = back.height = 800;
-			var image:Image = new Image;
-			image.width = image.height = 500;
-			image.source = background;
-			addElement(image);
 		}
 		/**
 		 * @private
@@ -40,38 +40,37 @@ package editor.views.sheets
 		 * 
 		 */
 		
-//		public function update():void
-//		{
-//			updateLayout();
-//			updateSource();
-//		}
+		public function update():void
+		{
+			updateLayout();
+			updateSource();
+		}
 		
 		
 		/**
 		 * @private
 		 */
-//		private function updateLayout():void
-//		{
-//			x = component.x;
-//			y = component.y;
-//			width  = component.width;
-//			height = component.height;
-//		}
+		private function updateLayout():void
+		{
+			x = page.x;
+			y = page.y;
+			width  = page.width;
+			height = page.height;
+		}
 		
 		/**
 		 * @private
 		 */
-//		private function updateSource():void
-//		{
-//			updateBack();
-//			
-//			if(!updateProperty(componentProperty)) 
-//			{
-//				updateIcon();
-//				
-//				updateContent();
-//			}
-//		}
+		private function updateSource():void
+		{
+			updateBack();
+			
+			var bmd:BitmapData = ImageManager.retrieveBitmapData("flash/cache/assets/images/background.png");
+			
+			updateIcon();
+			
+			updateContent();
+		}
 		
 		/**
 		 * @private
@@ -85,159 +84,76 @@ package editor.views.sheets
 		/**
 		 * @private
 		 */
-//		private function updateIcon():void
-//		{
-//			if (icon) 
-//			{
-//				if (containsElement(icon)) removeElement(icon);
-//				icon = null;
-//			}
-//			if (componentType)
-//			{
-//				icon = new Image;
-//				addElement(icon);
-//				icon.setStyle("skinClass", editor.skins.ImageErrorSkin);
-//				icon.smooth = true;
-//				icon.visible = false;
-//				icon.mouseEnabled = false;
-//				var bmd:BitmapData = ImageManager.retrieveBitmapData(componentType.image);
-//				if (bmd)
-//				{
-//					icon.visible = true;
-//					icon.source = bmd;
-//					icon.maxWidth  = bmd.width;
-//					icon.maxHeight = bmd.height;
-//					resizeIcon();
-//				}
-//				else
-//				{
-//					var handler:Function = function(e:Event):void
-//					{
-//						icon.removeEventListener(Event.COMPLETE, handler);
-//						icon.removeEventListener(IOErrorEvent.IO_ERROR, handler);
-//						if (e.type == Event.COMPLETE)
-//						{
-//							icon.visible = true;
-//							icon.maxWidth  = icon.bitmapData.width;
-//							icon.maxHeight = icon.bitmapData.height;
-//							resizeIcon();
-//						}
-//					};
-//					icon.addEventListener(Event.COMPLETE, handler);
-//					icon.addEventListener(IOErrorEvent.IO_ERROR, handler);
-//					icon.source = componentType.image;
-//				}
-//				
-//			}
-//		}
-		
-		/**
-		 * @private
-		 */
-//		private function updateContent():void
-//		{
-//			if (AppUtil.isFillMode())
-//			{
-//				if (contentImage)
-//				{
-//					if (containsElement(contentImage)) removeElement(contentImage);
-//					contentImage = null;
-//				}
-//				contentImage = new Image;
-//				contentImage.source  = component.hasContent ? filledImage : emptyImage;
-//				contentImage.toolTip = component.hasContent ? "已填充素材" : "未填充素材";
-//				addElement(contentImage);
-//				resizeImage();
-//			}
-//		}
-		
-		/**
-		 * @private
-		 */
-//		private function updateProperty($property:Object):Boolean
-//		{
-//			if (ui)
-//			{
-//				if (containsElement(ui)) removeElement(ui);
-//				ui = null;
-//			}
-//			if ($property)
-//			{
-//				if ($property is Array)
-//				{
-//					for each (var item:* in $property) 
-//					if (updateProperty(item)) result = true;
-//				}
-//				else
-//				{
-//					if (componentTypeProperty && 
-//						StringUtil.empty($property.value) == false && 
-//						ObjectUtil.convert(componentTypeProperty["viewable"], Boolean))
-//					{
-//						var classRef:Class = ComponentUtil.getComponentByCode($property["type"]);
-//						if (classRef)
-//						{
-//							var temp:ISource = (new classRef) as ISource;
-//							
-//							ui = temp as UIComponent;
-//							if (ui)
-//							{
-//								var bmd:BitmapData = ImageManager.retrieveBitmapData($property.value);
-//								temp.source = bmd ? bmd : $property.value;
-//								addElement(ui);
-//								
-//								resizeUI();
-//								var result:Boolean = true;
-//							}
-//						}
-//					}
-//				}
-//			}
-//			return result;
-//		}
-		
-		
-		/**
-		 * @private
-		 */
-//		private function resizeIcon():void
-//		{
-//			if (icon)
-//			{
-//				icon.width  = Math.min(width , icon.maxWidth);
-//				icon.height = Math.min(height, icon.maxHeight);
-//				icon.x = .5 * (width  - icon.width);
-//				icon.y = .5 * (height - icon.height);
-//			}
-//		}
-//		
-//		/**
-//		 * @private
-//		 */
-//		private function resizeImage():void
-//		{
-//			if (contentImage)
-//			{
-//				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
-//				
-//				contentImage.scaleX = contentImage.scaleY = scale;
-//				
-//				contentImage.x = width  - 50 * scale;
-//				contentImage.y = height - 50 * scale;
-//			}
-//		}
-		
-		/**
-		 * @private
-		 */
-		private function resizeUI():void
+		private function updateIcon():void
 		{
-			if (ui)
+			Debugger.log("_________ Hello !! ___________");
+			icon = new Image;
+			addElement(icon);
+			icon.smooth = true;
+			icon.visible = false;
+			icon.mouseEnabled = false;
+			var bmd:BitmapData = ImageManager.retrieveBitmapData("flash/cache/assets/images/background.png");
+			if (bmd)
 			{
-				ui.width  = width;
-				ui.height = height;
+				icon.visible = true;
+				icon.source = bmd;
+				icon.maxWidth  = bmd.width;
+				icon.maxHeight = bmd.height;
+				resizeIcon();
 			}
 		}
+		
+		/**
+		 * @private
+		 */
+		private function updateContent():void
+		{
+				if (contentLabel)
+				{
+					if (containsElement(contentLabel)) removeElement(contentLabel);
+					contentLabel = null;
+				}
+				contentLabel = new Label;
+				contentLabel.text = page.label;
+				contentLabel.setStyle("fontSize", 50);
+				contentLabel.setStyle("color", 0);
+				addElement(contentLabel);
+				resizeLabel();
+		}
+		
+		
+		
+		/**
+		 * @private
+		 */
+		private function resizeIcon():void
+		{
+			if (icon)
+			{
+				icon.width  = Math.min(width , icon.maxWidth);
+				icon.height = Math.min(height, icon.maxHeight);
+				icon.x = .5 * (width  - icon.width);
+				icon.y = .5 * (height - icon.height);
+			}
+		}
+		
+		/**
+		 * @private
+		 */
+		private function resizeLabel():void
+		{
+			if (contentLabel)
+			{
+				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
+				
+				contentLabel.scaleX = contentLabel.scaleY = scale;
+				
+				contentLabel.x = width / 2;
+				contentLabel.y = height / 2;
+			}
+		}
+		
+		
 		
 		/**
 		 * @private
@@ -294,6 +210,24 @@ package editor.views.sheets
 //			resizeAll();
 //		}
 		
+		/**
+		 * 
+		 * 元素数据。
+		 * 
+		 */
+		
+		[Bindable]
+		public function get page():Page
+		{
+			return ed::page;
+		}
+		
+		public function set page($value:Page):void
+		{
+			ed::page = $value;
+			update();
+		}
+		
 		
 		/**
 		 * @inheritDoc
@@ -314,8 +248,8 @@ package editor.views.sheets
 			super.y = int($value);
 		}
 		
-		
-		
+		[Embed(source="flash/cache/assets/images/background.png")]
+		private var background:Class;
 		
 		/**
 		 * @private
@@ -335,7 +269,7 @@ package editor.views.sheets
 		/**
 		 * @private
 		 */
-		private var contentImage:Image;
+		private var contentLabel:Label;
 		
 		/**
 		 * @private
