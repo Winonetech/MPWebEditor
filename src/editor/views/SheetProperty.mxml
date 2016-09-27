@@ -152,8 +152,10 @@
 					if (item.property == "width" || item.property == "height")
 					{
 						scope[item.property] = item.property == "width"
-							? (Number(item.value) > 1920 ? "1920" : item.value)
-							: (Number(item.value) > 1080 ? "1080" : item.value);
+							? (Number(item.value) + sheet.x > 1920 
+								? 1920 - sheet.x : item.value)
+							: (Number(item.value) + sheet.y > 1080
+								? 1080 - sheet.y : item.value);
 						ComponentUtil.limitSheetComponents(
 							scope[item.property] / sheet[item.property], item.property);
 					}

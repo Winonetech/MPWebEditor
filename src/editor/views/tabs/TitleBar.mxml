@@ -98,7 +98,7 @@
 					l = dataArrs.length - 1;
 					for (var i:int = l; i >= 0; i--)
 					{
-						if (dataArrs[i].width + tempWidth < width - 50)
+						if (dataArrs[i].width + tempWidth < width - BUFFER)
 						{
 							tempNamed = dataArrs[i].named.width >= 43 ? 43 : dataArrs[i].named.width;
 							temp = HG.addElement(dataArrs[i]) as TitleTab;
@@ -114,12 +114,19 @@
 				if (selected != tabLayout) updateBackgroundColor();
 			}
 			
+			/**
+			 * 
+			 * 标签push缓冲值
+			 * 
+			 */
+			private static const BUFFER:uint = 50;
+			
 			private function dataArrs_Push():void
 			{
 				var tempTab:TitleTab;
 				var tempNamed:Number;
 				var temp:Number = HG.width;
-				while (HG.numElements > 2 && temp > width - 50)
+				while (HG.numElements > 2 && temp > width - BUFFER)
 				{
 					currentState = "much";
 					tempTab = HG.getElementAt(HG.numElements - 2) as TitleTab;
@@ -148,7 +155,7 @@
 				var temp:TitleTab = comboBox.selectedItem as TitleTab;
 				var tempWidth:Number = HG.width;
 				Debugger.log(temp.width + " VS " + tempWidth + " VS " + width);
-				while (HG.numElements > 1 && temp.width + tempWidth > width - 50)
+				while (HG.numElements > 1 && temp.width + tempWidth > width - BUFFER)
 				{
 					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
 					var tempNamed:Number = removed.named.width >= 43 ? 43 : removed.named.width;
@@ -237,7 +244,7 @@
 						var tempWidth:Number = HG.width;
 						var tempNamed:Number;
 						var removed:TitleTab;
-						while (HG.numElements > 1 && value.width + tempWidth > width - 50)
+						while (HG.numElements > 1 && value.width + tempWidth > width - BUFFER)
 						{
 							removed = HG.removeElementAt(HG.numElements - 1) as TitleTab;
 							dataArrs.addItem(removed);
