@@ -42,14 +42,12 @@ package editor.commands
 			{
 				if(!sheet) sheet = provider.program.home;
 				
+				
 				vars.titleBar.isLayoutOpened = false;
 				config.editingSheet = sheet;
 				
 				config.selectedComponent = null;
-				
 				vars.titleBar.addTitle(sheet);
-				
-//				if (config.isLayoutOpened) vars.canvas.update();   //解决当 "布局"被选定同时以双击 SheetTree的方式打开其他标题时，画布不更新的BUG。
 			}
 		}
 		

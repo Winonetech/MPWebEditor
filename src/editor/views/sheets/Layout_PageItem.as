@@ -1,6 +1,8 @@
 package editor.views.sheets
 {
 	
+	import cn.mvc.utils.MathUtil;
+	
 	import editor.core.ed;
 	import editor.managers.ImageManager;
 	import editor.utils.AppUtil;
@@ -8,6 +10,8 @@ package editor.views.sheets
 	import editor.vos.Page;
 	
 	import flash.display.BitmapData;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.utils.Timer;
 	
 	import mx.core.UIComponent;
@@ -28,11 +32,6 @@ package editor.views.sheets
 			back.fill = new SolidColor(0xCCCCCC, .3);
 			addElement(back);
 		}
-		/**
-		 * @private
-		 */
-		[Embed(source="../../../flash/cache/assets/images/background.png")]
-		private static const background:Class;
 		
 		/**
 		 * 
@@ -65,8 +64,6 @@ package editor.views.sheets
 		{
 			updateBack();
 			
-			var bmd:BitmapData = ImageManager.retrieveBitmapData("flash/cache/assets/images/background.png");
-			
 			updateIcon();
 			
 			updateContent();
@@ -86,7 +83,6 @@ package editor.views.sheets
 		 */
 		private function updateIcon():void
 		{
-			Debugger.log("_________ Hello !! ___________");
 			icon = new Image;
 			addElement(icon);
 			icon.smooth = true;
@@ -101,6 +97,24 @@ package editor.views.sheets
 				icon.maxHeight = bmd.height;
 				resizeIcon();
 			}
+			else
+			{
+				var handler:Function = function(e:Event):void
+				{
+					icon.removeEventListener(Event.COMPLETE, handler);
+					icon.removeEventListener(IOErrorEvent.IO_ERROR, handler);
+					if (e.type == Event.COMPLETE)
+					{
+						icon.visible = true;
+						icon.maxWidth  = icon.bitmapData.width;
+						icon.maxHeight = icon.bitmapData.height;
+						resizeIcon();
+					}
+				};
+				icon.addEventListener(Event.COMPLETE, handler);
+				icon.addEventListener(IOErrorEvent.IO_ERROR, handler);
+				icon.source = "flash/cache/assets/images/background.png";
+			}
 		}
 		
 		/**
@@ -114,8 +128,7 @@ package editor.views.sheets
 					contentLabel = null;
 				}
 				contentLabel = new Label;
-				contentLabel.text = page.label;
-				contentLabel.setStyle("fontSize", 50);
+				contentLabel.toolTip = contentLabel.text = page.label;
 				contentLabel.setStyle("color", 0);
 				addElement(contentLabel);
 				resizeLabel();
@@ -145,11 +158,14 @@ package editor.views.sheets
 			if (contentLabel)
 			{
 				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
-				
 				contentLabel.scaleX = contentLabel.scaleY = scale;
-				
-				contentLabel.x = width / 2;
-				contentLabel.y = height / 2;
+				contentLabel.x = .5 * width;
+				contentLabel.y = .5 * height;
+				if (page.width == 0 || page.height == 0) 
+				{
+					contentLabel.visible = false;
+				}
+				else contentLabel.setStyle("fontSize", 50);
 			}
 		}
 		
@@ -158,16 +174,14 @@ package editor.views.sheets
 		/**
 		 * @private
 		 */
-//		private function resizeAll():void
-//		{
-//			updateBack();
-//			
-//			resizeIcon();
-//			
-//			resizeImage();
-//			
-//			resizeUI();
-//		}
+		private function resizeAll():void
+		{
+			updateBack();
+			
+			resizeIcon();
+			
+			resizeLabel();
+		}
 		
 		
 //		/**
@@ -191,24 +205,24 @@ package editor.views.sheets
 		 * @inheritDoc
 		 */
 		
-//		override public function set width($value:Number):void
-//		{
-//			super.width = int($value);
-//			
-//			resizeAll();
-//		}
+		override public function set width($value:Number):void
+		{
+			super.width = int($value);
+			
+			resizeAll();
+		}
 		
 		
 		/**
 		 * @inheritDoc
 		 */
 		
-//		override public function set height($value:Number):void
-//		{
-//			super.height = int($value);
-//			
-//			resizeAll();
-//		}
+		override public function set height($value:Number):void
+		{
+			super.height = int($value);
+			
+			resizeAll();
+		}
 		
 		/**
 		 * 
@@ -248,8 +262,6 @@ package editor.views.sheets
 			super.y = int($value);
 		}
 		
-		[Embed(source="flash/cache/assets/images/background.png")]
-		private var background:Class;
 		
 		/**
 		 * @private

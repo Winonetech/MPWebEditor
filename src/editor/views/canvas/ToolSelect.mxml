@@ -4,11 +4,15 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 clipAndEnableScrolling="false"
 		 mouseEnabled="false" visible="false"
-		 width ="{canvasItem.width  * viewer.contentScale + 6}"
-		 height="{canvasItem.height * viewer.contentScale + 6}"
-		 x="{canvasItem.x * viewer.contentScale + viewer.contentX - 3}"
-		 y="{canvasItem.y * viewer.contentScale + viewer.contentY - 3}"
+		 width ="{selectedItem.width  * viewer.contentScale + 6}"
+		 height="{selectedItem.height * viewer.contentScale + 6}"
+		 x="{selectedItem.x * viewer.contentScale + viewer.contentX - 3}"
+		 y="{selectedItem.y * viewer.contentScale + viewer.contentY - 3}"
 		 addedToStage="callbackVisible()">
+	<s:states>
+		<s:State name="CanvasContent"/>
+		<s:State name="PageContent"/>
+	</s:states>
 	
 	<s:Rect id="border" width="100%" height="100%">
 		<s:stroke>
@@ -57,11 +61,13 @@
 		</s:layout>
 		
 		<s:Button width="25" height="25" label="↑"
+				  excludeFrom="PageContent"
 				  styleName="title" toolTip="上移一层"
 				  skinClass="editor.skins.ButtonNormalSkin"
 				  click="down_clickHandler(event)"/>
 		
 		<s:Button width="25" height="25" label="↓" 
+				  excludeFrom="PageContent"
 				  styleName="title" toolTip="下移一层"
 				  skinClass="editor.skins.ButtonNormalSkin"
 				  click="up_clickHandler(event)"/>
@@ -74,15 +80,18 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import editor.core.MDConfig;
 			import editor.core.MDProvider;
+			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.CanvasUtil;
 			import editor.utils.CommandUtil;
 			import editor.utils.ComponentUtil;
 			import editor.views.CanvasContent;
+			import editor.views.Debugger;
+			import editor.views.PageContent;
 			import editor.views.components.CanvasItem;
+			import editor.views.sheets.Layout_PageItem;
 			
 			
 			/**
@@ -144,11 +153,11 @@
 				var temp:Number = stat.x + plus.x / contentScale;
 				if (config.alignMode)
 				{
-					content.showLine(canvasItem, "left");
-					temp = CanvasUtil.autoCombine(canvasItem, new Point(temp, canvasItem.y), true, "left").x;
+					content.showLine(selectedItem, "left");
+					temp = CanvasUtil.autoCombine(selectedItem, new Point(temp, selectedItem.y), true, "left").x;
 				}
-				canvasItem.x = ComponentUtil.reviseComponent(temp, stat.right);
-				canvasItem.width = stat.right - canvasItem.x;
+				selectedItem.x = ComponentUtil.reviseComponent(temp, stat.right);
+				selectedItem.width = stat.right - selectedItem.x;
 			}
 			
 			/**
@@ -159,10 +168,10 @@
 				var temp:Number = stat.width + plus.x / contentScale;
 				if (config.alignMode)
 				{
-					content.showLine(canvasItem, "right");
-					temp = CanvasUtil.autoCombine(canvasItem, new Point(temp, canvasItem.y), false, "right")["tempW"];
+					content.showLine(selectedItem, "right");
+					temp = CanvasUtil.autoCombine(selectedItem, new Point(temp, selectedItem.y), false, "right")["tempW"];
 				}
-				canvasItem.width = ComponentUtil.reviseComponent(temp, contentW - stat.x);
+				selectedItem.width = ComponentUtil.reviseComponent(temp, contentW - stat.x);
 			}
 			
 			/**
@@ -173,11 +182,11 @@
 				var temp:Number = stat.y + plus.y / contentScale;
 				if (config.alignMode)
 				{
-					content.showLine(canvasItem, "top");
-					temp = CanvasUtil.autoCombine(canvasItem, new Point(canvasItem.x, temp), true, "top").y;
+					content.showLine(selectedItem, "top");
+					temp = CanvasUtil.autoCombine(selectedItem, new Point(selectedItem.x, temp), true, "top").y;
 				}	
-				canvasItem.y = ComponentUtil.reviseComponent(temp, stat.bottom);
-				canvasItem.height = stat.bottom - canvasItem.y;
+				selectedItem.y = ComponentUtil.reviseComponent(temp, stat.bottom);
+				selectedItem.height = stat.bottom - selectedItem.y;
 			}
 			
 			/**
@@ -188,10 +197,10 @@
 				var temp:Number = stat.height + plus.y / contentScale;
 				if (config.alignMode)
 				{
-					content.showLine(canvasItem, "bottom");
-					temp = CanvasUtil.autoCombine(canvasItem, new Point(canvasItem.x, temp), false, "bottom")["tempH"];
+					content.showLine(selectedItem, "bottom");
+					temp = CanvasUtil.autoCombine(selectedItem, new Point(selectedItem.x, temp), false, "bottom")["tempH"];
 				}
-				canvasItem.height = ComponentUtil.reviseComponent(temp, contentH - stat.y);
+				selectedItem.height = ComponentUtil.reviseComponent(temp, contentH - stat.y);
 			}
 			
 			/**
@@ -212,8 +221,8 @@
 			
 				if (config.alignMode)
 				{
-					var changedW:Number = CanvasUtil.autoCombine(canvasItem, new Point(bw, canvasItem.y), false, "right")["tempW"];
-					var changedH:Number = CanvasUtil.autoCombine(canvasItem, new Point(canvasItem.x, bh), false, "bottom")["tempH"];
+					var changedW:Number = CanvasUtil.autoCombine(selectedItem, new Point(bw, selectedItem.y), false, "right")["tempW"];
+					var changedH:Number = CanvasUtil.autoCombine(selectedItem, new Point(selectedItem.x, bh), false, "bottom")["tempH"];
 					var subW:Number = changedW - bw;
 					var subH:Number = changedH - bh;
 					if (subW != 0)
@@ -226,12 +235,12 @@
 						bh = changedH;
 						bw = changedH * ts;
 					}
-					content.showLine(canvasItem, []);
+					content.showLine(selectedItem, []);
 				}
 				fw = ComponentUtil.reviseComponent(bw, contentW - stat.x);
 				fh = ComponentUtil.reviseComponent(bh, contentH - stat.y);
-				canvasItem.width  = fw;
-				canvasItem.height = fh;
+				selectedItem.width  = fw;
+				selectedItem.height = fh;
 			}
 			
 			
@@ -260,13 +269,12 @@
 				}
 				down.x = stage.mouseX;
 				down.y = stage.mouseY;
-				stat.x = canvasItem.x;
-				stat.y = canvasItem.y;
-				stat.width  = canvasItem.width;
-				stat.height = canvasItem.height;
+				stat.x = selectedItem.x;
+				stat.y = selectedItem.y;
+				stat.width  = selectedItem.width;
+				stat.height = selectedItem.height;
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, resize_mouseMoveHandler);
 				stage.addEventListener(MouseEvent.MOUSE_UP, resize_mouseUpHandler);
-				
 			}
 			
 			/**
@@ -284,12 +292,34 @@
 			{
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE, resize_mouseMoveHandler);
 				stage.removeEventListener(MouseEvent.MOUSE_UP, resize_mouseUpHandler);
-				CommandUtil.edtComponent(canvasItem.component, {
-					x: canvasItem.x,
-					y: canvasItem.y, 
-					width : canvasItem.width,
-					height: canvasItem.height
-				});
+				if (!config.isLayoutOpened)
+				{
+					CommandUtil.edtComponent(selectedItem.component, {
+						x: selectedItem.x,
+						y: selectedItem.y, 
+						width : selectedItem.width,
+						height: selectedItem.height
+					});
+				}
+				else
+				{
+					var property:String;
+					property = key == "resizeLeftHandler" || key == "resizeRightHandler"
+						? "width" : "height";
+					ComponentUtil.limitSheetComponents(
+						selectedItem[property] / selectedItem.page[property], property);
+					if (key == "resizeRightBottomHandler")
+					{
+						ComponentUtil.limitSheetComponents(
+							selectedItem["width"] / selectedItem.page["width"], "width");
+					}
+					CommandUtil.edtSheet(selectedItem.page, {
+						x: selectedItem.x,
+						y: selectedItem.y, 
+						width : selectedItem.width,
+						height: selectedItem.height
+					});
+				}
 				content.cleanLine();
 			}
 
@@ -344,7 +374,10 @@
 			 */
 			private function del_clickHandler($e:MouseEvent):void
 			{
-				CommandUtil.delComponent(canvasItem.component);
+				if (!config.isLayoutOpened)
+					CommandUtil.delComponent(selectedItem.component);
+				else
+					CommandUtil.delPage(selectedItem.page);
 			}
 			
 			/**
@@ -352,7 +385,10 @@
 			 */
 			private function down_clickHandler($e:MouseEvent):void
 			{
-				CommandUtil.ordComponent(canvasItem.component, canvasItem.component.order + 1);
+				if (!config.isLayoutOpened)
+					CommandUtil.ordComponent(selectedItem.component, selectedItem.component.order + 1);
+				else 
+					;
 			}
 			
 			/**
@@ -360,7 +396,7 @@
 			 */
 			private function up_clickHandler($e:MouseEvent):void
 			{
-				CommandUtil.ordComponent(canvasItem.component, canvasItem.component.order - 1);
+				CommandUtil.ordComponent(selectedItem.component, selectedItem.component.order - 1);
 			}
 			
 			
@@ -393,6 +429,8 @@
 							stage.removeEventListener(MouseEvent.MOUSE_MOVE, tool_mouseMoveHandler);
 					}
 				}
+				if (MDVars.instance.titleBar)
+					currentState = config.isLayoutOpened ? "PageContent" : "CanvasContent";
 				return Boolean(stage);
 			}
 			
@@ -404,7 +442,7 @@
 			 */
 			
 			[Bindable]
-			public function get canvasItem():CanvasItem
+			public function get selectedItem():*
 			{
 				return ed::canvasItem;
 			}
@@ -412,10 +450,15 @@
 			/**
 			 * @private
 			 */
-			public function set canvasItem($value:CanvasItem):void
+			public function set selectedItem($value:*):void
 			{
-				ed::canvasItem = $value;
-				visible = Boolean(canvasItem);
+				if (!config.isLayoutOpened)
+					ed::canvasItem = $value as CanvasItem;
+				else
+					ed::canvasItem = $value as Layout_PageItem;
+				
+				visible = Boolean(selectedItem);
+				
 			}
 			
 			
@@ -446,9 +489,9 @@
 			/**
 			 * @private
 			 */
-			private function get content():CanvasContent
+			private function get content():*
 			{
-				return viewer.content as CanvasContent;
+				return config.isLayoutOpened ? viewer.content as PageContent : viewer.content as CanvasContent;
 			}
 			
 			private function get isEdit():Boolean
@@ -505,7 +548,7 @@
 			/**
 			 * @private
 			 */
-			ed var canvasItem:CanvasItem;
+			ed var canvasItem:*;
 			
 		]]>
 	</fx:Script>

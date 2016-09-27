@@ -12,7 +12,7 @@
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
-	<s:HGroup gap="5">
+	<s:HGroup id="total" gap="5">
 		<s:HGroup id="HG" gap="5" updateComplete="HG_updateCompleteHandler(event)" resize="HG_resizeHandler(event)">
 			<tabs:TitleTab id="tabLayout" width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
@@ -147,7 +147,8 @@
 				MDConfig.instance.selectedSheet = null;
 				var temp:TitleTab = comboBox.selectedItem as TitleTab;
 				var tempWidth:Number = HG.width;
-				while (temp.width + tempWidth > width - 50)
+				Debugger.log(temp.width + " VS " + tempWidth + " VS " + width);
+				while (HG.numElements > 1 && temp.width + tempWidth > width - 50)
 				{
 					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
 					var tempNamed:Number = removed.named.width >= 43 ? 43 : removed.named.width;
@@ -198,7 +199,7 @@
 			private function repeatById($id:String):Boolean
 			{
 				for each (var id:String in idObj)
-				if (id == $id) return false;
+					if (id == $id) return false;
 				return true;
 			}
 			
@@ -236,7 +237,7 @@
 						var tempWidth:Number = HG.width;
 						var tempNamed:Number;
 						var removed:TitleTab;
-						while (value.width + tempWidth > width - 50)
+						while (HG.numElements > 1 && value.width + tempWidth > width - 50)
 						{
 							removed = HG.removeElementAt(HG.numElements - 1) as TitleTab;
 							dataArrs.addItem(removed);

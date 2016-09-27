@@ -23,6 +23,7 @@
 		<mx:HRule width="100%" height="1"/>
 		
 		<s:VGroup width="100%" gap="25"
+				  enabled="{Boolean(config.editingSheet || config.selectedSheet)}"
 				  paddingBottom="5" paddingLeft="5"
 				  paddingRight="5" paddingTop="5"
 				  mouseEnabled="false">
@@ -145,7 +146,7 @@
 			private function property_changeHandler($e:Event):void
 			{
 				var item:PropertyItem = $e.target as PropertyItem;
-				if (item && sheet)
+				if (item && (sheet || config.isLayoutOpened))
 				{
 					var scope:Object = {};
 					if (item.property == "width" || item.property == "height")
@@ -155,6 +156,14 @@
 							: (Number(item.value) > 1080 ? "1080" : item.value);
 						ComponentUtil.limitSheetComponents(
 							scope[item.property] / sheet[item.property], item.property);
+					}
+					else if (item.property == "x" || item.property == "y")
+					{
+						scope[item.property] = item.property == "x"
+							? (Number(item.value) + sheet.width  > 1920 
+								? 1920 - sheet.width : item.value)
+							: (Number(item.value) + sheet.height > 1080 
+								? 1080 - sheet.height : item.value);
 					}
 					else scope[item.property] = item.value;
 					item.value = scope[item.property];

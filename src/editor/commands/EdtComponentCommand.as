@@ -88,7 +88,8 @@ package editor.commands
 			if ($result.result == "success")
 			{
 				//update view
-				vars.canvas.updateComponent(item);
+				if (!config.isLayoutOpened)
+					vars.canvas.updateComponent(item);
 			}
 			else
 			{

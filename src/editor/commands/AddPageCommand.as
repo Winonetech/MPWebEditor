@@ -92,6 +92,10 @@ package editor.commands
 				//update view
 				vars.sheets.update();
 				
+				//update layout title
+				if (vars.titleBar && config.isLayoutOpened)
+					vars.canvas.content.update();
+				
 				//set selected
 				config.selectedSheet = page;
 			}

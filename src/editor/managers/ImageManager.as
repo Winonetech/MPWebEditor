@@ -10,6 +10,9 @@ package editor.managers
 	
 	import cn.mvc.managers.Manager;
 	
+	import editor.core.MDConfig;
+	import editor.views.Debugger;
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -42,8 +45,6 @@ package editor.managers
 					LOADS[$source] = loader;
 					URLS[loader] = $source;
 				}
-				
-				
 			}
 			return CACHE[$source];
 		}

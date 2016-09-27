@@ -10,6 +10,7 @@ package editor.views
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
 	
+	import editor.core.MDVars;
 	import editor.core.ed;
 	import editor.utils.AppUtil;
 	import editor.utils.CanvasUtil;
@@ -47,27 +48,17 @@ package editor.views
 		}
 		
 		
-//		private function removeC4LC():void
-//		{
-//			for (var i:int = numElements - 1; i >= 0; i--)
-//			{
-//				if (getElementAt(i) is PageContent) 
-//				{
-//					removeElementAt(i);
-//					return;
-//				}
-//			}
-//		}
-		
+		/**
+		 * 
+		 * 内容初始化
+		 * 
+		 */
 		private function initContent():void
 		{
 			ed::selectedItem = lastSelectedItem = null;
-			
-//			removeC4LC();
 			background.graphics.clear();
 			container.removeAllElements();
 			editing.removeAllElements();
-			
 			itemsMap.clear();
 		}
 		
@@ -328,6 +319,7 @@ package editor.views
 					config.selectedSheet = null;
 					config.selectedComponent = item ? item.component : null;
 				}
+				else config.selectedComponent = null;
 			}
 		}
 		

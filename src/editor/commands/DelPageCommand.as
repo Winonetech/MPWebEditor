@@ -78,7 +78,7 @@ package editor.commands
 				
 				//update view
 				vars.sheets.update();
-				
+				vars.canvas.content.update();
 				//clear select, editing
 				if (page == config.selectedSheet) config.selectedSheet = null;
 				if (page == config.editingSheet ) config.editingSheet  = null;

@@ -12,11 +12,15 @@ package editor.utils
 	import cn.mvc.core.NoInstance;
 	
 	import editor.controls.MDFlash;
+	import editor.core.MDConfig;
 	import editor.core.MDProvider;
 	import editor.core.MDVars;
+	import editor.views.Debugger;
 	import editor.views.PageSelector;
 	import editor.views.components.CanvasItem;
 	import editor.views.properties.PropertyItem;
+	import editor.vos.Component;
+	import editor.vos.Sheet;
 
 	
 	public final class ComponentUtil extends NoInstance
@@ -39,6 +43,7 @@ package editor.utils
 				return result ? $component : convertCanvasItem($component.parent);
 			else return null;
 		}
+		
 		
 		
 		/**
@@ -71,17 +76,34 @@ package editor.utils
 			
 			var coor:String = STATE_OBJ[$state][0];
 			var prop:String = STATE_OBJ[$state][1];
-			
-			for each(var item:CanvasItem in dic)
+			var tempP:Number;
+			var tempC:Number;
+			if (!MDConfig.instance.isLayoutOpened)
 			{
-				item.component[prop] = Math.max(1, Math.round(item[prop] * $change));
-				item.component[coor] = Math.round(item[coor] * $change);
-				var scope:Object = {};
-				scope[coor] = item.component[coor];
-				scope[prop] = item.component[prop];
-				CommandUtil.edtComponent(item.component, scope);
+				for each(var item:CanvasItem in dic)
+				{
+					tempP = Math.max(1, Math.round(item[prop] * $change));
+					tempC = Math.round(item[coor] * $change);
+					var scope:Object = {};
+					scope[prop] = tempP;
+					scope[coor] = tempC;
+					CommandUtil.edtComponent(item.component, scope);
+				}
+				content.update();
 			}
-			content.update();
+			else
+			{
+				var sheet:Sheet = MDConfig.instance.selectedSheet;
+				for each (var component:Component in sheet.componentsMap)
+				{
+					tempP = Math.max(1, Math.round(component[prop] * $change));
+					tempC = Math.round(component[coor] * $change);
+					var obj:Object = {};
+					obj[prop] = tempP;
+					obj[coor] = tempC;
+					CommandUtil.edtComponent(component, obj);
+				}
+			}
 		}//function
 		
 		

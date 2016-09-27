@@ -4,6 +4,7 @@ package editor.views
 	import cn.mvc.utils.ColorUtil;
 	
 	import editor.core.MDConfig;
+	import editor.core.MDVars;
 	import editor.utils.CanvasUtil;
 	
 	import flash.display.DisplayObject;
@@ -90,14 +91,14 @@ package editor.views
 					{
 						$rule = vlrule;
 						$rule.x = $data[state];
-						$rule.height = 2000;
+						$rule.height = MDVars.instance.canvas.content.height;
 						
 					}
 					else if (state == "Hor")
 					{
 						$rule = htrule;
 						$rule.y = $data[state];
-						$rule.width = 2000;
+						$rule.width = MDVars.instance.canvas.content.width;
 					}
 					
 					$rule.setStyle("strokeWidth", 2);

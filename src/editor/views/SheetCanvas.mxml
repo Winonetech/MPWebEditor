@@ -24,8 +24,8 @@
 					 mouseEnabled="false"
 					 clipAndEnableScrolling="true">
 				<cs:ToolSelect id="selector" viewer="{viewer}"
-							   visible="{config.editingSheet &amp;&amp; selectedComponent}"
-							   canvasItem="{content.selectedItem}"/>
+							   visible="{(config.isLayoutOpened || config.editingSheet) &amp;&amp; selectedComponent}"
+							   selectedItem="{content.selectedItem}"/>
 				
 			</s:Group>
 			
@@ -35,12 +35,15 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import editor.core.MDConfig;
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.views.components.CanvasItem;
 			import editor.vos.Component;
+			import editor.vos.Page;
 			import editor.vos.Sheet;
 			
+			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			
 			
@@ -138,7 +141,6 @@
 			
 			
 			
-			
 			/**
 			 * @private
 			 */
@@ -175,7 +177,9 @@
 			 */
 			private function canvas_resizeHandler(event:ResizeEvent):void
 			{
-				resizeViewer();
+				if (MDVars.instance.titleBar && config.isLayoutOpened)
+					resizeLayoutViewer();
+				else resizeViewer();
 			}
 			
 			
@@ -186,7 +190,7 @@
 			 */
 			
 			[Bindable]
-			public function get selectedComponent():Component
+			public function get selectedComponent():*
 			{
 				return ed::selectedItem;
 			}
@@ -194,10 +198,10 @@
 			/**
 			 * @private
 			 */
-			public function set selectedComponent($value:Component):void
+			public function set selectedComponent($value:*):void
 			{
+				$value = config.isLayoutOpened ? $value as Page : $value as Component; 
 				ed::selectedItem = $value;
-				
 				if (content) content.selectedComponent = selectedComponent;
 			}
 			
@@ -247,12 +251,13 @@
 			/**
 			 * @private
 			 */
-			ed var selectedItem:Component;
+			ed var selectedItem:*;
 			
 			/**
 			 * @private
 			 */
 			ed var sheet:Sheet;
+			
 			
 		]]>
 	</fx:Script>

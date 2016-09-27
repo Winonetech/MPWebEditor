@@ -145,6 +145,7 @@ package editor.views.components
 							resizeIcon();
 						}
 					};
+					
 					icon.addEventListener(Event.COMPLETE, handler);
 					icon.addEventListener(IOErrorEvent.IO_ERROR, handler);
 					icon.source = componentType.image;
@@ -242,7 +243,6 @@ package editor.views.components
 			if (contentImage)
 			{
 				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
-				
 				contentImage.scaleX = contentImage.scaleY = scale;
 				
 				contentImage.x = width  - 50 * scale;

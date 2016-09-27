@@ -178,6 +178,9 @@
 								if (doubleClickCount == 1)
 								{
 									doubleClickCount = 0;
+									//解决当布局内有元素被选中时，双击页面树回导致ToolSelected显示的bug
+									if (config.isLayoutOpened)
+										config.selectedSheet = null;
 									CommandUtil.openSheet(sheetItem.sheet);
 									return;
 								}
@@ -257,6 +260,7 @@
 				
 				var virtual:Virtual = new Virtual;
 				virtual.source = item;
+				
 				DragManager.doDrag(item, source, $e, virtual);
 			}
 			

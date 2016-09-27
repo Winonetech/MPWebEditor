@@ -7,7 +7,7 @@
 				   mouseOut="bordercontainer2_mouseOutHandler(event)"
 				   mouseOver="bordercontainer1_mouseOverHandler(event)"
 				   add="hgroup1_addHandler(event)" remove="hgroup1_removeHandler(event)"
-				   click="bordercontainer2_clickHandler(event)"		>
+				   click="bordercontainer2_clickHandler(event)">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
@@ -45,16 +45,19 @@
 					if (event.target is Button) closePage();
 					else 
 					{
+						MDConfig.instance.selectedSheet = null;
 						titleBar.isLayoutOpened = false;
 						openPage();
 					}
 				}
-				else titleBar.isLayoutOpened = true;
+				else 
+				{
+					titleBar.isLayoutOpened = true;
+				}
 			}
 			
 			public function closePage():void
 			{
-				delete idObj[this];
 				if (this == titleBar.selected)
 				{
 					var index:uint = titleBar.HG.getElementIndex(this); 
@@ -64,8 +67,7 @@
 						titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
 				}
 				
-				if (titleBar.HG.containsElement(this))	
-					titleBar.HG.removeElement(this);
+				if (titleBar.HG.containsElement(this)) titleBar.HG.removeElement(this);
 				else if (titleBar.dataArrs.contains(this))
 				{
 					titleBar.dataArrs.removeItemAt(titleBar.dataArrs.getItemIndex(this));
@@ -74,8 +76,12 @@
 				
 				if (titleBar.HG.numElements == 1) 
 				{
-					titleBar.tabLayout.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					if (titleBar.total.containsElement(titleBar.comboBox))
+						titleBar.dataArrs[0].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					else 
+						titleBar.tabLayout.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 				}
+				delete idObj[this];
 			}
 			
 			private function openPage():void
