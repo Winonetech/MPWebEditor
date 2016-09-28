@@ -64,7 +64,11 @@
 					index = index == (titleBar.HG.numElements - 1) 
 						? index - 1 : index + 1;
 					if (index != 0)
-						titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
+					{
+						if (!titleBar.total.containsElement(titleBar.comboBox))
+							titleBar.selected = titleBar.HG.getElementAt(index) as TitleTab;
+						else titleBar.selected = null;
+					}
 				}
 				
 				if (titleBar.HG.containsElement(this)) titleBar.HG.removeElement(this);

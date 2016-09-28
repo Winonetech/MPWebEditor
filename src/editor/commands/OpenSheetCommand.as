@@ -8,6 +8,7 @@ package editor.commands
 	 */
 	
 	
+	import editor.utils.TabUtil;
 	import editor.vos.Sheet;
 	
 	import flash.events.MouseEvent;
@@ -47,7 +48,7 @@ package editor.commands
 				config.editingSheet = sheet;
 				
 				config.selectedComponent = null;
-				vars.titleBar.addTitle(sheet);
+				TabUtil.addTitle(sheet);
 			}
 		}
 		

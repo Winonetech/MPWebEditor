@@ -11,6 +11,7 @@ package editor.commands
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.utils.TabUtil;
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.Page;
@@ -83,8 +84,8 @@ package editor.commands
 				if (page == config.selectedSheet) config.selectedSheet = null;
 				if (page == config.editingSheet ) config.editingSheet  = null;
 				
-				if (vars.titleBar.sheet2Tab(page))
-					vars.titleBar.sheet2Tab(page).closePage();
+				if (TabUtil.sheet2Tab(page))
+					TabUtil.sheet2Tab(page).closePage();
 			}
 			else
 			{

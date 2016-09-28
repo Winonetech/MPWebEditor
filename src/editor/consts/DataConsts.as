@@ -17,10 +17,11 @@ package editor.consts
 		
 		public static const PROGRAM:Object = 
 		{
-			domain:"http://192.168.7.3:9000/layout",   
+//			domain:"http://192.168.7.3:9000/layout",   
 //			domain:"http://172.16.1.4:9000/layout",   
+			domain:"http://172.16.0.216:9000/layout",   
 			programId: 10,
-			layoutId: 6,
+			layoutId: 1,
 			programName: null,
 			defaultWidth: "1920",
 			defaultHeight: "1080", 
