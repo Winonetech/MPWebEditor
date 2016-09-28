@@ -100,7 +100,7 @@ package editor.commands
 				if (updatable) 
 				{
 					if (config.isLayoutOpened)
-						vars.canvas.content.updatePage(item);
+						vars.canvas.content.updatePage(item as Page);
 					else vars.canvas.update();
 					config.selectedComponent = null;
 				}

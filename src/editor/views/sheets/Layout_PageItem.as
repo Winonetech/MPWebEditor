@@ -80,6 +80,11 @@ package editor.views.sheets
 		 */
 		private function updateIcon():void
 		{
+			if (icon) 
+			{
+				if (containsElement(icon)) removeElement(icon);
+				icon = null;
+			}
 			icon = new Image;
 			addElement(icon);
 			icon.smooth = true;
