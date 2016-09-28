@@ -94,7 +94,7 @@ package editor.commands
 				
 				//update layout title
 				if (vars.titleBar && config.isLayoutOpened)
-					vars.canvas.content.update();
+					vars.canvas.content.updatePage(page, 1);
 				
 				//set selected
 				config.selectedSheet = page;

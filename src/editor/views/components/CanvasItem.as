@@ -425,7 +425,6 @@ package editor.views.components
 		public function set component($value:Component):void
 		{
 			ed::component = $value;
-			
 			update();
 		}
 		

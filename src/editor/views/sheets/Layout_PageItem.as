@@ -1,11 +1,8 @@
 package editor.views.sheets
 {
 	
-	import cn.mvc.utils.MathUtil;
-	
 	import editor.core.ed;
 	import editor.managers.ImageManager;
-	import editor.utils.AppUtil;
 	import editor.views.Debugger;
 	import editor.vos.Page;
 	
@@ -128,9 +125,12 @@ package editor.views.sheets
 					contentLabel = null;
 				}
 				contentLabel = new Label;
+				addElement(contentLabel);
 				contentLabel.toolTip = contentLabel.text = page.label;
 				contentLabel.setStyle("color", 0);
-				addElement(contentLabel);
+				contentLabel.setStyle("fontSize", 30);
+				contentLabel.maxWidth = width;
+				contentLabel.maxHeight = height;
 				resizeLabel();
 		}
 		
@@ -159,13 +159,8 @@ package editor.views.sheets
 			{
 				var scale:Number = Math.min(Math.min(1, (width  - 20) / 50), Math.min(1, (height - 20) / 50));
 				contentLabel.scaleX = contentLabel.scaleY = scale;
-				contentLabel.x = .5 * width;
-				contentLabel.y = .5 * height;
-				if (page.width == 0 || page.height == 0) 
-				{
-					contentLabel.visible = false;
-				}
-				else contentLabel.setStyle("fontSize", 50);
+				contentLabel.horizontalCenter = "0";
+				contentLabel.verticalCenter   = "0";
 			}
 		}
 		
@@ -183,22 +178,6 @@ package editor.views.sheets
 			resizeLabel();
 		}
 		
-		
-//		/**
-//		 * @private
-//		 */
-//		private function component_doubleClickHandler($e:MouseEvent):void
-//		{
-//			if (timer.running)
-//			{
-//				dispatchEvent(new MouseEvent(MouseEvent.DOUBLE_CLICK));
-//			}
-//			else
-//			{
-//				timer.reset();
-//				timer.start();
-//			}
-//		}
 		
 		
 		/**
@@ -281,7 +260,7 @@ package editor.views.sheets
 		/**
 		 * @private
 		 */
-		private var contentLabel:Label;
+		public var contentLabel:Label;
 		
 		/**
 		 * @private

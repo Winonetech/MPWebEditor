@@ -54,7 +54,6 @@ package editor.views
 			background.graphics.beginFill(0xffffff);
 			background.graphics.drawRect(0, 0, 1920, 1080);
 			background.graphics.endFill();
-			
 			var i:int = 0;
 			for each (var item:Page in provider.program.pages) updatePage(item, 1);
 			if (config.selectedSheet) selectedItem = itemsMap[config.selectedSheet.id];

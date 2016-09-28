@@ -86,7 +86,6 @@ package editor.views
 				background.graphics.beginFill(ColorUtil.colorString2uint(sheet.backgroundColor));
 				background.graphics.drawRect(0, 0, width, height);
 				background.graphics.endFill();
-				
 				for each (var item:Component in sheet.componentsArr) updateComponent(item, 1);
 				
 				if (config.selectedComponent) selectedItem = itemsMap[config.selectedComponent.id];
@@ -434,6 +433,7 @@ package editor.views
 		 */
 		public function set sheet($value:Sheet):void
 		{
+			Debugger.log("cc cc cc cc cc cc");
 			ed::sheet = $value;
 			update();
 		}

@@ -99,7 +99,9 @@ package editor.commands
 				//update view
 				if (updatable) 
 				{
-					vars.canvas.update();
+					if (config.isLayoutOpened)
+						vars.canvas.content.updatePage(item);
+					else vars.canvas.update();
 					config.selectedComponent = null;
 				}
 			}
