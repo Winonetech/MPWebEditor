@@ -433,7 +433,6 @@ package editor.views
 		 */
 		public function set sheet($value:Sheet):void
 		{
-			Debugger.log("cc cc cc cc cc cc");
 			ed::sheet = $value;
 			update();
 		}
