@@ -13,6 +13,7 @@ package editor.vos
 	import cn.mvc.utils.MathUtil;
 	
 	import editor.core.ed;
+	import editor.utils.TabUtil;
 	
 	
 	[Bindable]
@@ -158,9 +159,14 @@ package editor.vos
 				delete pages [$page.id];
 				delete sheets[$page.id];
 				
+				if (TabUtil.sheet2Tab($page))
+					TabUtil.sheet2Tab($page).closePage();
+				
 				if (home == $page) home = children[0];
 				
-				for each (var child:Page in $page.pagesArr) delPage(child);
+				var l:int = $page.pagesArr.length;
+				if (l != 0) 
+					for (var i:int = l - 1; i >= 0; i--) delPage($page.pagesArr[i]);
 			}
 			return result;
 		}

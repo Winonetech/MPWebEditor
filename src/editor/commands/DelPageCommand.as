@@ -76,18 +76,13 @@ package editor.commands
 				//update data
 				config.orders = provider.program.delPage(page);
 				clearComponentsLinkID(page.id);
-				
 				//update view
 				vars.sheets.update();
-				
-				if (vars.titleBar && config.isLayoutOpened)
-					vars.canvas.content.updatePage(page, 2);
+				vars.canvas.content.update();
 				//clear select, editing
 				if (page == config.selectedSheet) config.selectedSheet = null;
 				if (page == config.editingSheet ) config.editingSheet  = null;
 				
-				if (TabUtil.sheet2Tab(page))
-					TabUtil.sheet2Tab(page).closePage();
 			}
 			else
 			{

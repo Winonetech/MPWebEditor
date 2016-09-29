@@ -36,6 +36,7 @@
 	<fx:Script>
 		<![CDATA[
 			import editor.core.MDConfig;
+			import editor.core.MDProvider;
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.views.components.CanvasItem;
@@ -74,8 +75,15 @@
 				else
 				{
 					// 每次切换类型时会进入该方法
-					content = MDVars.instance.titleBar.isLayoutOpened
-						? new PageContent : new CanvasContent;
+					if (config.editingSheet == null)
+					{
+						content = new PageContent;
+					}
+					else
+					{
+						content = new CanvasContent;
+					}
+					
 					content.sheet = sheet;
 				}
 				
