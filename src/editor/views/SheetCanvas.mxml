@@ -75,15 +75,7 @@
 				else
 				{
 					// 每次切换类型时会进入该方法
-					if (config.editingSheet == null)
-					{
-						content = new PageContent;
-					}
-					else
-					{
-						content = new CanvasContent;
-					}
-					
+					content = config.isLayoutOpened ? new PageContent : new CanvasContent;
 					content.sheet = sheet;
 				}
 				

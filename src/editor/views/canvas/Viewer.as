@@ -308,6 +308,7 @@ package editor.views.canvas
 			if (container)
 			{
 				MDConfig.instance.selectedComponent = null;
+				if (MDConfig.instance.isLayoutOpened) MDConfig.instance.selectedSheet = null;
 				container.mouseChildren = !dragOnly;
 			}
 		}
