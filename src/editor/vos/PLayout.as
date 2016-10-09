@@ -8,6 +8,8 @@ package editor.vos
 	 */
 	
 	
+	import mx.messaging.management.Attribute;
+	
 	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.MathUtil;
@@ -144,6 +146,21 @@ package editor.vos
 		}
 		
 		
+		private static var isFirst:Boolean = true;
+		private var tabArr:Array = [];
+		private var comboArr:Array = [];
+		private function loopTree($page:Page):void
+		{
+			var length:uint = $page.pagesArr.length;
+			for (var i:int = 0; i < length; i++)
+			{
+				loopTree($page.pagesArr[i]);
+			}
+			if (MDVars.instance.titleBar.comboBox && 
+				MDVars.instance.titleBar.comboBox.dataProvider.getItemIndex(TabUtil.sheet2Tab($page)) != -1) comboArr.push($page);
+			else tabArr.push($page);
+		}
+		
 		/**
 		 * 
 		 * 删除子页。
@@ -152,25 +169,37 @@ package editor.vos
 		
 		public function delPage($page:Page):Array
 		{
+			if (isFirst)
+			{
+				isFirst = false;
+				loopTree($page);
+				for each (var item:Page in comboArr)
+				{
+					delPage(item);
+				}
+				
+				for each (var item1:Page in tabArr)
+				{
+					delPage(item1);
+				}
+				isFirst = true;
+				comboArr = tabArr = [];				
+				return result;
+			}
+			
 			if ($page && pages[$page.id])
 			{
+				var result:Array = $page.parent ? 
+					$page.parent.ed::delPage($page) : 
+					ed::delChild($page);
 				
 				delete pages [$page.id];
 				delete sheets[$page.id];
 				
+				if (home == $page) home = children[0];
 				
 				if (TabUtil.sheet2Tab($page))
 					TabUtil.sheet2Tab($page).closePage();
-				
-				if (home == $page) home = children[0];
-				
-				var l:int = $page.pagesArr.length;
-				if (l != 0) 
-					for (var i:int = l - 1; i >= 0; i--) delPage($page.pagesArr[i]);
-				
-				var result:Array = $page.parent ? 
-					$page.parent.ed::delPage($page) : 
-					ed::delChild($page);
 			}
 			return result;
 		}
