@@ -21,6 +21,7 @@
 	<ct:MDTextInput id="input" width="100%" includeIn="text" verticalCenter="-2"
 					styleName="normal" text="{value}" restrict="{restrict}"
 					enter="text_changeHandler(event)"
+					change="input_changeHandler(event)"
 					focusOut="text_changeHandler(event)"/>
 	
 	<s:CheckBox id="check" includeIn="bool"
@@ -70,7 +71,6 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import cn.mvc.utils.ColorUtil;
 			
 			import editor.utils.ComponentUtil;
@@ -79,6 +79,7 @@
 			import mx.events.ColorPickerEvent;
 			
 			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
 			
 			
 			/**
@@ -258,6 +259,15 @@
 			 */
 			
 			public var host:Object;
+			
+			private const inputNumLimit:uint  = 4;
+			private const inputTextLimit:uint = 30;
+			protected function input_changeHandler(event:TextOperationEvent):void
+			{
+				if (property != "label" && input.text.length > inputNumLimit) input.text = input.text.substr(0, inputNumLimit);
+				else if (input.text.length > inputTextLimit) input.text = input.text.substr(0, inputTextLimit);
+			}
+			
 		]]>
 	</fx:Script>
 	

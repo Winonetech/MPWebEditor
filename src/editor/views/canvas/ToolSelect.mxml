@@ -73,7 +73,7 @@
 				  click="up_clickHandler(event)"/>
 		
 		<s:Button width="25" height="25" label="Ｘ"
-				  styleName="title" toolTip="删除组件"
+				  styleName="title" toolTip="删除" 
 				  skinClass="editor.skins.ButtonNormalSkin"
 				  click="del_clickHandler(event)"/>
 	</s:BorderContainer>
@@ -92,6 +92,8 @@
 			import editor.views.PageContent;
 			import editor.views.components.CanvasItem;
 			import editor.views.sheets.Layout_PageItem;
+			
+			import mx.events.FlexEvent;
 			
 			
 			/**
@@ -549,6 +551,7 @@
 			 * @private
 			 */
 			ed var canvasItem:*;
+			
 			
 		]]>
 	</fx:Script>
