@@ -12,8 +12,10 @@ package editor.vos
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.MathUtil;
 	
+	import editor.core.MDVars;
 	import editor.core.ed;
 	import editor.utils.TabUtil;
+	import editor.views.Debugger;
 	
 	
 	[Bindable]
@@ -152,12 +154,10 @@ package editor.vos
 		{
 			if ($page && pages[$page.id])
 			{
-				var result:Array = $page.parent ? 
-					$page.parent.ed::delPage($page) : 
-					ed::delChild($page);
 				
 				delete pages [$page.id];
 				delete sheets[$page.id];
+				
 				
 				if (TabUtil.sheet2Tab($page))
 					TabUtil.sheet2Tab($page).closePage();
@@ -167,6 +167,10 @@ package editor.vos
 				var l:int = $page.pagesArr.length;
 				if (l != 0) 
 					for (var i:int = l - 1; i >= 0; i--) delPage($page.pagesArr[i]);
+				
+				var result:Array = $page.parent ? 
+					$page.parent.ed::delPage($page) : 
+					ed::delChild($page);
 			}
 			return result;
 		}

@@ -45,7 +45,7 @@
 				for (var i:int = 1; i < HG.numElements; i++)
 				{
 					temp = HG.getElementAt(i) as TitleTab;
-					if (idObj[temp] != idObj[selected])
+					if (idObj[temp.uid] != idObj[selected.uid])
 					{
 						temp.button.visible = false;
 						temp.setStyle("backgroundColor", 0xffffff);

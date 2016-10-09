@@ -40,7 +40,7 @@ package editor.utils
 		
 		public static function tab2Sheet($tab:TitleTab):Sheet
 		{
-			return MDProvider.instance.program.sheets[idObj[$tab.uid]];
+			return $tab ? MDProvider.instance.program.sheets[idObj[$tab.uid]] : null;
 		}
 		
 		/**

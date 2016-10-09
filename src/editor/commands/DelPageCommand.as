@@ -8,6 +8,11 @@ package editor.commands
 	 */
 	
 	
+	import flash.utils.getQualifiedClassName;
+	
+	import mx.controls.Alert;
+	import mx.events.CloseEvent;
+	
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
@@ -15,9 +20,6 @@ package editor.commands
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.Page;
-	
-	import mx.controls.Alert;
-	import mx.events.CloseEvent;
 	
 	
 	public final class DelPageCommand extends _InternalCommCommand

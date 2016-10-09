@@ -23,7 +23,6 @@
 			
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
-			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
 			protected function bordercontainer1_mouseOverHandler(event:MouseEvent):void
@@ -85,7 +84,7 @@
 					else 
 						titleBar.tabLayout.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 				}
-				delete idObj[uid];
+				delete idObj[this.uid];
 			}
 			
 			private function openPage():void
