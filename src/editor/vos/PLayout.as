@@ -151,14 +151,23 @@ package editor.vos
 		private var comboArr:Array = [];
 		private function loopTree($page:Page):void
 		{
-			var length:uint = $page.pagesArr.length;
+			var length:int = $page.pagesArr.length;
+			if (MDVars.instance.titleBar.comboBox && 
+				MDVars.instance.titleBar.comboBox.dataProvider.getItemIndex(TabUtil.sheet2Tab($page)) != -1) 
+			{
+				Debugger.log("comboArr join-> " + $page.label);
+				comboArr.push($page);
+			}
+			else
+			{
+				Debugger.log("tabArr join-> " + $page.label);
+				tabArr.push($page);
+			}
 			for (var i:int = 0; i < length; i++)
 			{
-				loopTree($page.pagesArr[i]);
+				loopTree($page.pagesArr[i] as Page);
 			}
-			if (MDVars.instance.titleBar.comboBox && 
-				MDVars.instance.titleBar.comboBox.dataProvider.getItemIndex(TabUtil.sheet2Tab($page)) != -1) comboArr.push($page);
-			else tabArr.push($page);
+			
 		}
 		
 		/**
@@ -169,22 +178,25 @@ package editor.vos
 		
 		public function delPage($page:Page):Array
 		{
+			Debugger.log(isFirst);
 			if (isFirst)
 			{
 				isFirst = false;
 				loopTree($page);
-				for each (var item:Page in comboArr)
+				for (var i:int = 0; i < comboArr.length; i++)
 				{
-					delPage(item);
+					Debugger.log("----- combo -----");
+					delPage(comboArr[i]);
 				}
-				
-				for each (var item1:Page in tabArr)
+				comboArr = [];
+				for (var j:int = 0; j < tabArr.length; j++)
 				{
-					delPage(item1);
+					Debugger.log("----- tab -----");
+					delPage(tabArr[j]);
 				}
-				isFirst = true;
-				comboArr = tabArr = [];				
-				return result;
+				tabArr   = [];
+				isFirst  = true;
+				$page    = null;
 			}
 			
 			if ($page && pages[$page.id])
