@@ -252,6 +252,7 @@
 			public var value:Object;
 			
 			
+			
 			/**
 			 * 
 			 * 宿主。
@@ -262,10 +263,10 @@
 			
 			private const inputNumLimit:uint  = 4;
 			private const inputTextLimit:uint = 30;
-			protected function input_changeHandler(event:TextOperationEvent):void
+			public function input_changeHandler(event:TextOperationEvent):void
 			{
 				if (property != "label" && input.text.length > inputNumLimit) input.text = input.text.substr(0, inputNumLimit);
-				else if (input.text.length > inputTextLimit) input.text = input.text.substr(0, inputTextLimit);
+				else if (property == "label" && input.text.length > inputTextLimit) input.text = input.text.substr(0, inputTextLimit);
 			}
 			
 		]]>

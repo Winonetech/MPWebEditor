@@ -14,8 +14,6 @@ package editor.commands
 	import editor.views.Debugger;
 	import editor.vos.Page;
 	
-	import mx.controls.Alert;
-	
 	
 	public final class AltPageCommand extends _InternalCommCommand
 	{

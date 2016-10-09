@@ -9,9 +9,8 @@ package editor.commands
 	
 	
 	import editor.utils.TabUtil;
+	import editor.views.Debugger;
 	import editor.vos.Sheet;
-	
-	import flash.events.MouseEvent;
 	
 	
 	public final class OpenSheetCommand extends _InternalCommand
@@ -30,6 +29,7 @@ package editor.commands
 			super();
 			
 			sheet = $sheet;
+			
 		}
 		
 		

@@ -19,12 +19,12 @@
 	<s:Button left="{named.x + named.width + 20}" right="5" verticalCenter="0"  id="button" visible="{layoutCloseVisible &amp;&amp; closeVisible}" skinClass="editor.skins.ButtonCloseSkin"/>
 	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+			
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
 			import editor.views.Debugger;
 			import editor.vos.Sheet;
-			
-			import mx.events.FlexEvent;
 			
 			protected function bordercontainer1_mouseOverHandler(event:MouseEvent):void
 			{
@@ -85,7 +85,7 @@
 					else 
 						titleBar.tabLayout.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 				}
-				delete idObj[this];
+				delete idObj[uid];
 			}
 			
 			private function openPage():void
@@ -135,6 +135,7 @@
 			{
 				return MDVars.instance.titleBar;
 			}
+			
 			
 		]]>
 	</fx:Script>

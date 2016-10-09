@@ -35,17 +35,15 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import editor.core.MDConfig;
-			import editor.core.MDProvider;
+			
+			import mx.events.ResizeEvent;
+			
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.views.components.CanvasItem;
 			import editor.vos.Component;
 			import editor.vos.Page;
 			import editor.vos.Sheet;
-			
-			import mx.events.FlexEvent;
-			import mx.events.ResizeEvent;
 			
 			
 			/**

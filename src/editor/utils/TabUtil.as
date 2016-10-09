@@ -1,17 +1,17 @@
 package editor.utils
 {
-	import cn.mvc.core.NoInstance;
-	
-	import editor.core.MDConfig;
-	import editor.core.MDProvider;
-	import editor.core.MDVars;
-	import editor.views.tabs.TitleBar;
-	import editor.views.tabs.TitleTab;
-	import editor.vos.Sheet;
-	
 	import mx.collections.ArrayCollection;
 	
 	import spark.components.HGroup;
+	
+	import cn.mvc.core.NoInstance;
+	
+	import editor.core.MDProvider;
+	import editor.core.MDVars;
+	import editor.views.Debugger;
+	import editor.views.tabs.TitleBar;
+	import editor.views.tabs.TitleTab;
+	import editor.vos.Sheet;
 	
 	public final class TabUtil extends NoInstance
 	{
@@ -20,16 +20,17 @@ package editor.utils
 			var temp:TitleTab;
 			for (var i:int = 1; i < HG.numElements; i++)
 			{
-				temp = HG.getElementAt(i) as TitleTab	
-				if ($sheet.id == idObj[temp])
+				temp = HG.getElementAt(i) as TitleTab;
+				if ($sheet.id == idObj[temp.uid])
 				{
 					return temp; 
 				}
 			}
+			
 			for (var j:int; j < dataArrs.length; j++)
 			{
 				temp = dataArrs[j];
-				if ($sheet.id == idObj[temp])
+				if ($sheet.id == idObj[temp.uid])
 				{
 					return temp;
 				}
@@ -39,7 +40,7 @@ package editor.utils
 		
 		public static function tab2Sheet($tab:TitleTab):Sheet
 		{
-			return MDProvider.instance.program.sheets[idObj[$tab]];
+			return MDProvider.instance.program.sheets[idObj[$tab.uid]];
 		}
 		
 		/**
@@ -51,7 +52,7 @@ package editor.utils
 			{
 				var title:TitleTab = new TitleTab;
 				var temp:TitleTab = HG.addElement(title) as TitleTab;
-				idObj[temp] = sheet.id;
+				idObj[temp.uid] = sheet.id;
 			}
 			titleBar.selected = TabUtil.sheet2Tab(sheet);
 		}

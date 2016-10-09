@@ -6,21 +6,6 @@ package editor.views
 	 * 画布内容。
 	 * 
 	 */
-	import cn.mvc.collections.Map;
-	import cn.mvc.utils.ColorUtil;
-	import cn.mvc.utils.MathUtil;
-	
-	import editor.core.MDVars;
-	import editor.core.ed;
-	import editor.utils.AppUtil;
-	import editor.utils.CanvasUtil;
-	import editor.utils.CommandUtil;
-	import editor.utils.ComponentUtil;
-	import editor.views.components.CanvasItem;
-	import editor.vos.Component;
-	import editor.vos.ComponentType;
-	import editor.vos.Sheet;
-	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -31,6 +16,20 @@ package editor.views
 	
 	import spark.components.Group;
 	import spark.components.Image;
+	
+	import cn.mvc.collections.Map;
+	import cn.mvc.utils.ColorUtil;
+	import cn.mvc.utils.MathUtil;
+	
+	import editor.core.ed;
+	import editor.utils.AppUtil;
+	import editor.utils.CanvasUtil;
+	import editor.utils.CommandUtil;
+	import editor.utils.ComponentUtil;
+	import editor.views.components.CanvasItem;
+	import editor.vos.Component;
+	import editor.vos.ComponentType;
+	import editor.vos.Sheet;
 	
 	
 	public final class CanvasContent extends _InternalContent
@@ -125,7 +124,6 @@ package editor.views
 		
 		public function modSheetElement($element:Component):void
 		{
-			
 		}
 		
 		/**
@@ -151,6 +149,7 @@ package editor.views
 				case 1:
 					if(!itemsMap[$component.id])
 					{
+						Debugger.log("**********************");
 						item = new CanvasItem;
 						item.component = $component;
 						container.addElement(item);
