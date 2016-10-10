@@ -12,6 +12,8 @@ package editor.commands
 	
 	import editor.consts.URLConsts;
 	
+	import mx.controls.Alert;
+	
 	import w11k.flash.AngularJSAdapter;
 	
 	
@@ -40,7 +42,12 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			communicate();
+			if(isComponentEmpty())
+			{
+				Alert.show("当前节目无任何组件！", "警告", Alert.OK);
+				commandEnd();
+			}
+			else communicate();
 		}
 		
 		
@@ -51,6 +58,11 @@ package editor.commands
 		override protected function update($result:Object = null):void
 		{
 			AngularJSAdapter.getInstance().call("confirm()");
+		}
+		
+		private function isComponentEmpty():Boolean
+		{
+			return provider.program.components.length == 0;
 		}
 		
 	}
