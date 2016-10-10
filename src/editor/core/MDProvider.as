@@ -113,5 +113,12 @@ package editor.core
 		
 		public var raw:Object ={};
 		
+		
+		/**
+		 * 
+		 * 版面号
+		 * 
+		 */
+		public var publishID:String;
 	}
 }

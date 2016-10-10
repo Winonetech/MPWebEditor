@@ -15,6 +15,13 @@ package editor.utils
 	
 	public final class TabUtil extends NoInstance
 	{
+		
+		
+		/**
+		 * 
+		 * 将Sheet类型转为其对应的TitleTab（如果存在）
+		 * 
+		 */
 		public static function sheet2Tab($sheet:Sheet):TitleTab
 		{
 			var temp:TitleTab;
@@ -38,13 +45,22 @@ package editor.utils
 			return null;
 		}
 		
+		
+		/**
+		 * 
+		 * 将TitleTab类型转为其对应的Sheet（如果存在）
+		 * 
+		 */
 		public static function tab2Sheet($tab:TitleTab):Sheet
 		{
 			return $tab ? MDProvider.instance.program.sheets[idObj[$tab.uid]] : null;
 		}
 		
 		/**
-		 * @private
+		 * 
+		 * 在titleBar上添加一个TitleTab
+		 * 如已存在则视为选中之
+		 * 
 		 */
 		public static function addTitle(sheet:Sheet):void
 		{
@@ -57,6 +73,12 @@ package editor.utils
 			titleBar.selected = TabUtil.sheet2Tab(sheet);
 		}
 		
+		
+		/**
+		 * 
+		 * 根据id值来匹配该Sheet是否有对应的TitleTab
+		 * 
+		 */
 		public static function repeatById($id:String):Boolean
 		{
 			for each (var id:String in idObj)
@@ -64,6 +86,11 @@ package editor.utils
 			return true;
 		}
 		
+		/**
+		 * 
+		 * 根据TitleTab来匹配其是否存在于comboBox内
+		 * 
+		 */
 		public static function repeatByTab($tab:TitleTab):Boolean
 		{
 			for each (var tab:TitleTab in dataArrs)
@@ -71,21 +98,33 @@ package editor.utils
 			return true;	
 		}
 		
+		/**
+		 * @private
+		 */
 		private static function get HG():HGroup
 		{
 			return titleBar.HG;
 		}
 		
+		/**
+		 * @private
+		 */
 		private static function get dataArrs():ArrayCollection
 		{
 			return titleBar.dataArrs;
 		}
 		
+		/**
+		 * @private
+		 */
 		private static function get idObj():Object
 		{
 			return titleBar.idObj;
 		}
 		
+		/**
+		 * @private
+		 */
 		private static var titleBar:TitleBar = MDVars.instance.titleBar;
 		
 	}

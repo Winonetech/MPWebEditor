@@ -43,7 +43,10 @@ package editor.utils
 		public static function fillComplete($scope:Object):void
 		{
 			if ($scope)
-				edtComponent(getComponentById($scope.componentId), {"hasContent" : $scope.hasContent});
+			{
+				getComponentById($scope.componentId).hasContent = $scope.hasContent;
+				vars.canvas.updateComponent(getComponentById($scope.componentId));
+			}
 			else
 				Alert.show("组件参数为空!", "错误：");
 		}

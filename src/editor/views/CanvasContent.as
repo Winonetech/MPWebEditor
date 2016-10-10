@@ -149,7 +149,6 @@ package editor.views
 				case 1:
 					if(!itemsMap[$component.id])
 					{
-						Debugger.log("**********************");
 						item = new CanvasItem;
 						item.component = $component;
 						container.addElement(item);

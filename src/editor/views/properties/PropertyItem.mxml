@@ -29,8 +29,8 @@
 				skinClass="editor.skins.EditorCheckBoxSkin"
 				change="check_changeHandler(event)"/>
 	
-	<s:ComboBox id="combo" includeIn="combo"
-				width="100%" verticalCenter="-2" labelField="label" 
+	<s:ComboBox id="combo" includeIn="combo" labelField="label" 
+				width="100%" verticalCenter="-2" 
 				dataProvider="{comboProvider}"
 				selectedIndex="{comboChange(value as String)}"
 				skinClass="editor.skins.EditorComboBoxSkin"
@@ -159,7 +159,7 @@
 			private function combo_changeHandler(event:IndexChangeEvent):void
 			{
 				var result:* = combo.selectedItem["value"];
-				if (result!= value)
+				if (result != value)
 				{
 					value = result;
 					
@@ -265,8 +265,13 @@
 			private const inputTextLimit:uint = 30;
 			public function input_changeHandler(event:TextOperationEvent):void
 			{
-				if (property != "label" && input.text.length > inputNumLimit) input.text = input.text.substr(0, inputNumLimit);
-				else if (property == "label" && input.text.length > inputTextLimit) input.text = input.text.substr(0, inputTextLimit);
+				if (property != "waitTime")
+				{
+					if (property != "label" && input.text.length > inputNumLimit) 
+						input.text = input.text.substr(0, inputNumLimit);
+					else if (property == "label" && input.text.length > inputTextLimit) 
+						input.text = input.text.substr(0, inputTextLimit);
+				}
 			}
 			
 		]]>

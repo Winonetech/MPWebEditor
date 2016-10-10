@@ -15,6 +15,8 @@ package cn.mvc.utils
 	
 	import cn.mvc.core.NoInstance;
 	
+	import editor.views.Debugger;
+	
 	
 	public final class RegexpUtil extends NoInstance
 	{
@@ -43,7 +45,7 @@ package cn.mvc.utils
 					var a:* = $target.match(r);
 					for each (var i:String in a)
 					{
-						var p:String = removeBrace(i);
+						var p:String = removeBrace(i);    //删除两端括号
 						if (p == "$self")
 						{
 							$target = $target.replace(i, $meta.toString());

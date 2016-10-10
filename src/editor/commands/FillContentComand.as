@@ -22,7 +22,7 @@ package editor.commands
 			super();
 			
 			component["componentCode"] = $componentCode;
-			component["componentId"] = $componentId;
+			component["componentId"]   = $componentId;
 		}
 		
 		

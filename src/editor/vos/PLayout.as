@@ -155,12 +155,10 @@ package editor.vos
 			if (MDVars.instance.titleBar.comboBox && 
 				MDVars.instance.titleBar.comboBox.dataProvider.getItemIndex(TabUtil.sheet2Tab($page)) != -1) 
 			{
-				Debugger.log("comboArr join-> " + $page.label);
 				comboArr.push($page);
 			}
 			else
 			{
-				Debugger.log("tabArr join-> " + $page.label);
 				tabArr.push($page);
 			}
 			for (var i:int = 0; i < length; i++)
@@ -178,20 +176,17 @@ package editor.vos
 		
 		public function delPage($page:Page):Array
 		{
-			Debugger.log(isFirst);
 			if (isFirst)
 			{
 				isFirst = false;
 				loopTree($page);
 				for (var i:int = 0; i < comboArr.length; i++)
 				{
-					Debugger.log("----- combo -----");
 					delPage(comboArr[i]);
 				}
 				comboArr = [];
 				for (var j:int = 0; j < tabArr.length; j++)
 				{
-					Debugger.log("----- tab -----");
 					delPage(tabArr[j]);
 				}
 				tabArr   = [];

@@ -55,6 +55,12 @@
 				}
 			}
 			
+			
+			/**
+			 * 
+			 * 关闭TitleTab
+			 * 
+			 */
 			public function closePage():void
 			{
 				if (this == titleBar.selected)
