@@ -6,17 +6,6 @@ package editor.views
 	 * 画布内容。
 	 * 
 	 */
-	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
-	import mx.core.UIComponent;
-	import mx.events.DragEvent;
-	import mx.managers.DragManager;
-	
-	import spark.components.Group;
-	import spark.components.Image;
-	
 	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
@@ -30,6 +19,17 @@ package editor.views
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
 	import editor.vos.Sheet;
+	
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	
+	import mx.core.UIComponent;
+	import mx.events.DragEvent;
+	import mx.managers.DragManager;
+	
+	import spark.components.Group;
+	import spark.components.Image;
 	
 	
 	public final class CanvasContent extends _InternalContent
@@ -76,10 +76,11 @@ package editor.views
 				width  = sheet.width;
 				height = sheet.height;
 				
-				if (sheet.background != null)
+				if (!(!sheet.background))
 				{
+					Debugger.log(sheet.background);
 					backgroundImg.source = sheet.background;
-					container.addElementAt(backgroundImg, container.numElements);
+					container.addElementAt(backgroundImg, 0);
 				}
 				
 				background.graphics.beginFill(ColorUtil.colorString2uint(sheet.backgroundColor));
@@ -385,7 +386,9 @@ package editor.views
 				ed::selectedItem = $value;
 				
 				if (lastSelectedItem) 
-					container.addElementAt(lastSelectedItem, MathUtil.clamp(lastSelectedItem.order, 0, numElements));
+					container.addElementAt(lastSelectedItem, 
+						MathUtil.clamp(lastSelectedItem.order, container.containsElement(backgroundImg)
+							? 1 : 0, numElements));
 				if (selectedItem) editing.addElement(selectedItem);
 			}
 		}
