@@ -19,11 +19,11 @@
 	<s:Button left="{named.x + named.width + 20}" right="5" verticalCenter="0"  id="button" visible="{layoutCloseVisible &amp;&amp; closeVisible}" skinClass="editor.skins.ButtonCloseSkin"/>
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
-			
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
 			import editor.vos.Sheet;
+			
+			import mx.events.FlexEvent;
 			
 			protected function bordercontainer1_mouseOverHandler(event:MouseEvent):void
 			{
@@ -41,6 +41,7 @@
 			{
 				if (event.currentTarget != titleBar.tabLayout)
 				{
+					MDConfig.instance.selectedComponent = null;
 					if (event.target is Button) closePage();
 					else 
 					{
@@ -95,7 +96,6 @@
 			
 			private function openPage():void
 			{
-				MDConfig.instance.selectedComponent = null;
 				titleBar.selected = this;
 			}
 			
