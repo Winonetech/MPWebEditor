@@ -13,6 +13,7 @@ package editor.commands
 	import editor.consts.URLConsts;
 	
 	import mx.controls.Alert;
+	import mx.events.CloseEvent;
 	
 	import w11k.flash.AngularJSAdapter;
 	
@@ -44,8 +45,7 @@ package editor.commands
 		{
 			if(isComponentEmpty())
 			{
-				Alert.show("当前节目无任何组件！", "警告", Alert.OK);
-				commandEnd();
+				Alert.show("当前节目无任何组件！", "警告", Alert.OK, null, function($e:CloseEvent):void{commandEnd();});
 			}
 			else communicate();
 		}

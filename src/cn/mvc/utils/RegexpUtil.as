@@ -42,7 +42,7 @@ package cn.mvc.utils
 				while (flag < l)
 				{
 					var $meta:* = $args[flag];
-					var a:* = $target.match(r);
+					var a:* = $target.match(r);     //匹配出所有的{...}
 					for each (var i:String in a)
 					{
 						var p:String = removeBrace(i);    //删除两端括号

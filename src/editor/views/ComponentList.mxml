@@ -149,7 +149,10 @@
 			{
 				var item:ComponentListItem = $e.target as ComponentListItem;
 				config.selectedSheet = null;
-				if (item) config.selectedComponent = item.component;
+				if (item) 
+				{
+					config.selectedComponent = item.component;
+				}
 			}
 			
 			/**

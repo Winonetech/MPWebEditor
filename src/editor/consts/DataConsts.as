@@ -17,12 +17,12 @@ package editor.consts
 		
 		public static const PROGRAM:Object = 
 		{
-			domain:"http://192.168.7.3:9000/layout", 
-//			domain:"http://172.16.1.4:9000/layout",   
+//			domain:"http://192.168.7.3:9000/layout", 
+			domain:"http://172.16.1.4:9000/layout",   
 //			domain:"http://172.16.0.216:9000/layout",   
 //			domain:"http://172.16.1.4:9000/content/publish",   
 			programId: 10,
-			layoutId:  4,
+			layoutId:  1,
 			programName: "滑稽",
 			defaultWidth: "1920",
 			defaultHeight: "1080", 

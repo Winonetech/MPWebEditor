@@ -177,7 +177,7 @@ package editor.utils
 			if ($component)
 			{
 				presenter.execute(new DelComponentCommand(config.selectedComponent));
-				presenter.execute(new OrdComponentCommand);
+//				presenter.execute(new OrdComponentCommand);
 			}
 		}
 		
