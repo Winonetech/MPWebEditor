@@ -252,7 +252,7 @@ package editor.utils
 			if ($page && $page != $parent && PageUtil.isAllowAdd($page, $parent))
 			{
 				presenter.execute(new AltPageCommand($page, $parent, $index));
-				presenter.execute(new OrdPageCommand);
+//				presenter.execute(new OrdPageCommand);
 			}
 		}
 		

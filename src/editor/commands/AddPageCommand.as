@@ -68,7 +68,7 @@ package editor.commands
 				//新页面不需要ID数据
 				delete data.id;
 				
-				communicate(JSON.stringify(data));
+				communicate(JSON.stringify(data),false);
 			}
 			else
 			{
@@ -96,7 +96,7 @@ package editor.commands
 					"order" : child.order
 				});
 			}
-			Debugger.log("---------- " + submits);
+
 			submits
 			? communicate(JSON.stringify(submits))
 				: commandEnd(); 
