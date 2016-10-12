@@ -145,10 +145,32 @@ package editor.vos
 			return result;
 		}
 		
-		
+		/**
+		 * 
+		 * 是否是第一次进入
+		 * 
+		 */
 		private static var isFirst:Boolean = true;
-		private var tabArr:Array = [];
+		
+		/**
+		 * 
+		 * 存放push在comboBox内的Page
+		 * 
+		 */
 		private var comboArr:Array = [];
+
+		/**
+		 * 
+		 * 存放未push在comboBox内的Page
+		 * 
+		 */
+		private var tabArr:Array = [];
+		
+		/**
+		 * 
+		 * 遍历页面的子页面 并按照是否push进comboBox进行分类
+		 * 
+		 */
 		private function loopTree($page:Page):void
 		{
 			var length:int = $page.pagesArr.length;
@@ -165,11 +187,23 @@ package editor.vos
 			{
 				loopTree($page.pagesArr[i]);
 			}
-			
 		}
 		
+		
+		/**
+		 * 
+		 * 临时存放返回结果
+		 * 
+		 */
 		private var _result:Array;
+		
+		/**
+		 * 
+		 * 删除目标页面ID
+		 * 
+		 */
 		private var targetDelId:String;
+		
 		/**
 		 * 
 		 * 删除子页。
@@ -181,6 +215,7 @@ package editor.vos
 			if (isFirst)
 			{
 				isFirst = false;
+				_result = [];
 				targetDelId = $page.id;
 				loopTree($page);
 				for (var i:int = 0; i < comboArr.length; i++)
