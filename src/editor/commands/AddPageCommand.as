@@ -8,6 +8,7 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
@@ -59,7 +60,7 @@ package editor.commands
 				
 				if (provider.program)
 				{
-					if (!provider.program.home)page.home = true;
+					if (!provider.program.home) page.home = true;
 				}
 				
 				var data:Object = JSON.parse(page.toJSON());
@@ -76,32 +77,76 @@ package editor.commands
 		}
 		
 		
+		private function ordPage():void
+		{
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider);
+			
+			method = "POST";
+			
+			var orders:Array = config.orders;
+			
+			config.orders = null;
+			
+			var submits:Array, child:Page;
+			for each (child in orders)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			Debugger.log("---------- " + submits);
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd(); 
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 */
 		
 		override protected function update($result:Object = null):void
 		{
-			if ($result is String) $result = JSON.parse($result as String);
-			if ($result && $result.result == "success")
+			if(url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider))
 			{
-				//update data
-				page.id = $result.id;
-				config.orders = provider.program.addPage(page, parent, true);
-				
-				//update view
-				vars.sheets.update();
-				
-				//update layout title
-				if (vars.titleBar && config.isLayoutOpened)
-					vars.canvas.content.updatePage(page, 1);
-				
-				//set selected
-				config.selectedSheet = page;
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result && $result.result == "success")
+				{
+					//update data
+					page.id = $result.id;
+					config.orders = provider.program.addPage(page, parent, true);
+					
+					ordPage();
+					
+					//update view
+					vars.sheets.update();
+					
+					//update layout title
+					if (vars.titleBar && config.isLayoutOpened)
+						vars.canvas.content.updatePage(page, 1);
+					
+					//set selected
+					config.selectedSheet = page;
+					
+				}
+				else
+				{
+					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				}
 			}
-			else
+			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
 			{
-				Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				if ($result == "ok")
+				{
+					if (vars.sheets)
+						vars.sheets.update();
+				}
+				else
+				{
+					Debugger.log("修改顺序出错");
+				}
 			}
 		}
 		

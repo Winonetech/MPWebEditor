@@ -270,7 +270,7 @@ package editor.utils
 		public static function addPage($parent:Page = null, $order:uint = uint.MAX_VALUE, $homeExist:Boolean = false):void
 		{
 			presenter.execute(new AddPageCommand($parent, $order, $homeExist));
-			presenter.execute(new OrdPageCommand);
+//			presenter.execute(new OrdPageCommand);
 		}
 		
 		
@@ -287,7 +287,7 @@ package editor.utils
 			if ($page)
 			{
 				presenter.execute(new DelPageCommand($page));
-				presenter.execute(new OrdPageCommand);
+//				presenter.execute(new OrdPageCommand());
 			}
 		}
 		
