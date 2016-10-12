@@ -8,8 +8,6 @@ package editor.vos
 	 */
 	
 	
-	import mx.messaging.management.Attribute;
-	
 	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.MathUtil;
@@ -18,6 +16,8 @@ package editor.vos
 	import editor.core.ed;
 	import editor.utils.TabUtil;
 	import editor.views.Debugger;
+	
+	import mx.messaging.management.Attribute;
 	
 	
 	[Bindable]
@@ -163,11 +163,13 @@ package editor.vos
 			}
 			for (var i:int = 0; i < length; i++)
 			{
-				loopTree($page.pagesArr[i] as Page);
+				loopTree($page.pagesArr[i]);
 			}
 			
 		}
 		
+		private var _result:Array;
+		private var targetDelId:String;
 		/**
 		 * 
 		 * 删除子页。
@@ -179,6 +181,7 @@ package editor.vos
 			if (isFirst)
 			{
 				isFirst = false;
+				targetDelId = $page.id;
 				loopTree($page);
 				for (var i:int = 0; i < comboArr.length; i++)
 				{
@@ -191,15 +194,23 @@ package editor.vos
 				}
 				tabArr   = [];
 				isFirst  = true;
-				$page    = null;
+				$page = null;
 			}
 			
 			if ($page && pages[$page.id])
 			{
-				var result:Array = $page.parent ? 
-					$page.parent.ed::delPage($page) : 
-					ed::delChild($page);
-				
+				if ($page.id != targetDelId)
+				{
+					$page.parent
+						? $page.parent.ed::delPage($page)
+						: ed::delChild($page);
+				}
+				else 
+				{
+					_result = $page.parent
+						? $page.parent.ed::delPage($page)
+						: ed::delChild($page);
+				}
 				delete pages [$page.id];
 				delete sheets[$page.id];
 				
@@ -208,7 +219,7 @@ package editor.vos
 				if (TabUtil.sheet2Tab($page))
 					TabUtil.sheet2Tab($page).closePage();
 			}
-			return result;
+			return _result;
 		}
 		
 		

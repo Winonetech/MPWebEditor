@@ -74,8 +74,7 @@ package editor.commands
 				http.addEventListener(ResultEvent.RESULT, handlerDefault);
 				http.addEventListener(FaultEvent.FAULT, handlerDefault);
 				
-				Debugger.log("--------------------");
-				Debugger.log(url, method, $data);
+				trace(url, method, $data);
 				
 				if ($data)
 					http.send($data);
@@ -225,7 +224,6 @@ package editor.commands
 		 */
 		public function set url($value:String):void
 		{
-			Debugger.log("-------------- url");
 			http.url = $value;
 		}
 		

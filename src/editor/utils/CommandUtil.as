@@ -287,7 +287,7 @@ package editor.utils
 			if ($page)
 			{
 				presenter.execute(new DelPageCommand($page));
-				presenter.execute(new OrdPageCommand());
+				presenter.execute(new OrdPageCommand);
 			}
 		}
 		
