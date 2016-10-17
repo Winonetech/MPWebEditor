@@ -21,20 +21,6 @@ package editor.commands
 		 * @inheritDoc
 		 */
 		
-		override public function execute():void
-		{
-			commandStart();
-			
-			excuteCommand();
-			
-			commandEnd();
-		}
-		
-		
-		/**
-		 * @inheritDoc
-		 */
-		
 		override protected function excuteCommand():void
 		{
 			vars.adapter.call("setSheetBackground(sheet)", {"sheet" : sheet});
@@ -45,5 +31,6 @@ package editor.commands
 		 * @private
 		 */
 		private var sheet:Object = {};
+		
 	}
 }

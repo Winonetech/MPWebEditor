@@ -8,6 +8,7 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.commands.RevocableCommand;
 	import cn.mvc.core.Command;
 	
 	import editor.core.MDConfig;
@@ -17,7 +18,7 @@ package editor.commands
 	import editor.views.Debugger;
 	
 	
-	internal class _InternalCommand extends Command
+	internal class _InternalCommand extends RevocableCommand
 	{
 		
 		/**
@@ -28,7 +29,7 @@ package editor.commands
 		
 		public function _InternalCommand()
 		{
-			super();
+			super(false);
 		}
 		
 		

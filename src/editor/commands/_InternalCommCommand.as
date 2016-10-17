@@ -168,6 +168,7 @@ package editor.commands
 			http = new HTTPService;
 			http.contentType = "application/json";
 			http.method = "POST";
+			revocable = true;
 		}
 		
 		
