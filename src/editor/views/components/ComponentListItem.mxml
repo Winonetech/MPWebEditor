@@ -91,7 +91,6 @@
 				bottomRule.visible = topRule.visible = false;
 				var c:Component = $e.dragSource.dataForFormat("component") as Component;
 				var f:Component = ($e.target as ComponentListItem).component;
-				trace("f -> " + f.order + " c -> " + c.order);
 				var o:uint = f.order >= c.order
 					?(mouseY < 15 ? f.order : Math.max(f.order - 1, 0))
 					:(mouseY < 15 ? f.order + 1: f.order);

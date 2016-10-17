@@ -12,7 +12,9 @@ package editor.commands
 	import cn.mvc.utils.StringUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.utils.TabUtil;
 	import editor.views.Debugger;
+	import editor.views.tabs.TitleTab;
 	import editor.vos.AD;
 	import editor.vos.Page;
 	import editor.vos.Sheet;
@@ -100,9 +102,15 @@ package editor.commands
 				if (updatable) 
 				{
 					if (config.isLayoutOpened)
+					{
 						vars.canvas.content.updatePage(item as Page);
-					else vars.canvas.update();
+					}
+					else 
+					{
+						vars.canvas.update();
+					}
 					config.selectedComponent = null;
+					
 				}
 			}
 			else
@@ -111,6 +119,8 @@ package editor.commands
 			}
 		}
 		
+		
+		private var lastItem:TitleTab;
 		
 		/**
 		 * @private

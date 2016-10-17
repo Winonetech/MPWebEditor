@@ -14,7 +14,7 @@
 		<s:State name="PageContent"/>
 	</s:states>
 	
-	<s:Rect id="border" width="100%" height="100%">
+	<s:Rect id="border" width="100%" height="100%" visible="{!config.dragOnly}">
 		<s:stroke>
 			<s:SolidColorStroke color="0x999999" weight="1"/>
 		</s:stroke>
@@ -22,36 +22,36 @@
 	
 	<s:Button buttonMode="true" id="resizeLeft"
 			  width="10" height="10"
-			  visible="{isEdit}"
+			  visible="{isEdit &amp;&amp; !config.dragOnly}"
 			  verticalCenter="0" left="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeRight"
 			  width="10" height="10"
-			  visible="{isEdit}"
+			  visible="{isEdit &amp;&amp; !config.dragOnly}"
 			  verticalCenter="0" right="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeTop"
 			  width="10" height="10"
-			  visible="{isEdit}"
+			  visible="{isEdit &amp;&amp; !config.dragOnly}"
 			  horizontalCenter="0" top="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeBottom"
 			  width="10" height="10"
-			  visible="{isEdit}"
+			  visible="{isEdit &amp;&amp; !config.dragOnly}"
 			  horizontalCenter="0" bottom="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeRightBottom"
 			  width="10" height="10"
-			  visible="{isEdit}"
+			  visible="{isEdit &amp;&amp; !config.dragOnly}"
 			  right="0" bottom="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:BorderContainer horizontalCenter="0" verticalCenter="0"
-					   visible="{isEdit}"
+					   visible="{isEdit &amp;&amp; !config.dragOnly}"
 					   mouseChildren="false" mouseEnabled="false"
 					   id="btnsHodler" backgroundAlpha="0" alpha=".1">
 		
@@ -73,7 +73,7 @@
 				  click="up_clickHandler(event)"/>
 		
 		<s:Button width="25" height="25" label="Ｘ"
-				  styleName="title" toolTip="删除组件"
+				  styleName="title" toolTip="删除" 
 				  skinClass="editor.skins.ButtonNormalSkin"
 				  click="del_clickHandler(event)"/>
 	</s:BorderContainer>
@@ -92,6 +92,8 @@
 			import editor.views.PageContent;
 			import editor.views.components.CanvasItem;
 			import editor.views.sheets.Layout_PageItem;
+			
+			import mx.events.FlexEvent;
 			
 			
 			/**
@@ -549,6 +551,7 @@
 			 * @private
 			 */
 			ed var canvasItem:*;
+			
 			
 		]]>
 	</fx:Script>

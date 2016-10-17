@@ -45,6 +45,7 @@ package editor.commands
 			provider.domain        = data.domain;
 			provider.programID     = data.programId;
 			provider.layoutID      = data.layoutId;
+			provider.publishID     = data.publishId;
 			provider.programName   = data.programName;
 			provider.defaultWidth  = data.defaultWidth;
 			provider.defaultHeight = data.defaultHeight;

@@ -8,13 +8,12 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
 	import editor.views.Debugger;
 	import editor.vos.Page;
-	
-	import mx.controls.Alert;
 	
 	
 	public final class AltPageCommand extends _InternalCommCommand
@@ -36,7 +35,6 @@ package editor.commands
 			
 			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
 		}
-		
 		
 		
 		/**
@@ -63,7 +61,33 @@ package editor.commands
 				delete data.pages;
 				delete data.components;
 				
-				communicate(JSON.stringify(data));
+				communicate(JSON.stringify(data),false);
+		}
+		
+		
+		private function altPage():void
+		{
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider);
+			
+			method = "POST";
+			
+			var orders:Array = config.orders;
+			
+			config.orders = null;
+			
+			var submits:Array, child:Page;
+			for each (child in orders)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			Debugger.log("---------- " + submits);
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd(); 
 		}
 		
 		/**
@@ -72,15 +96,32 @@ package editor.commands
 		
 		override protected function update($result:Object = null):void
 		{
-			if ($result is String) $result = JSON.parse($result as String);
-			if ($result.result == "success")
+			if(url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider))
 			{
-				//update view
-				vars.sheets.update();
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == "success")
+				{
+					altPage();
+					
+					//update view
+					vars.sheets.update();
+				}
+				else
+				{
+					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				}
 			}
-			else
+			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
 			{
-				Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				if ($result == "ok")
+				{
+					if (vars.sheets)
+						vars.sheets.update();
+				}
+				else
+				{
+					Debugger.log("修改顺序出错");
+				}
 			}
 		}
 		

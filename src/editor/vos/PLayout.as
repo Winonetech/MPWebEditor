@@ -12,8 +12,12 @@ package editor.vos
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.MathUtil;
 	
+	import editor.core.MDVars;
 	import editor.core.ed;
 	import editor.utils.TabUtil;
+	import editor.views.Debugger;
+	
+	import mx.messaging.management.Attribute;
 	
 	
 	[Bindable]
@@ -141,6 +145,64 @@ package editor.vos
 			return result;
 		}
 		
+		/**
+		 * 
+		 * 是否是第一次进入
+		 * 
+		 */
+		private static var isFirst:Boolean = true;
+		
+		/**
+		 * 
+		 * 存放push在comboBox内的Page
+		 * 
+		 */
+		private var comboArr:Array = [];
+
+		/**
+		 * 
+		 * 存放未push在comboBox内的Page
+		 * 
+		 */
+		private var tabArr:Array = [];
+		
+		/**
+		 * 
+		 * 遍历页面的子页面 并按照是否push进comboBox进行分类
+		 * 
+		 */
+		private function loopTree($page:Page):void
+		{
+			var length:int = $page.pagesArr.length;
+			if (MDVars.instance.titleBar.comboBox && 
+				MDVars.instance.titleBar.comboBox.dataProvider.getItemIndex(TabUtil.sheet2Tab($page)) != -1) 
+			{
+				comboArr.push($page);
+			}
+			else
+			{
+				tabArr.push($page);
+			}
+			for (var i:int = 0; i < length; i++)
+			{
+				loopTree($page.pagesArr[i]);
+			}
+		}
+		
+		
+		/**
+		 * 
+		 * 临时存放返回结果
+		 * 
+		 */
+		private var _result:Array;
+		
+		/**
+		 * 
+		 * 删除目标页面ID
+		 * 
+		 */
+		private var targetDelId:String;
 		
 		/**
 		 * 
@@ -150,25 +212,49 @@ package editor.vos
 		
 		public function delPage($page:Page):Array
 		{
+			if (isFirst)
+			{
+				isFirst = false;
+				_result = [];
+				targetDelId = $page.id;
+				loopTree($page);
+				for (var i:int = 0; i < comboArr.length; i++)
+				{
+					delPage(comboArr[i]);
+				}
+				comboArr = [];
+				for (var j:int = 0; j < tabArr.length; j++)
+				{
+					delPage(tabArr[j]);
+				}
+				tabArr   = [];
+				isFirst  = true;
+				$page = null;
+			}
+			
 			if ($page && pages[$page.id])
 			{
-				var result:Array = $page.parent ? 
-					$page.parent.ed::delPage($page) : 
-					ed::delChild($page);
-				
+				if ($page.id != targetDelId)
+				{
+					$page.parent
+						? $page.parent.ed::delPage($page)
+						: ed::delChild($page);
+				}
+				else 
+				{
+					_result = $page.parent
+						? $page.parent.ed::delPage($page)
+						: ed::delChild($page);
+				}
 				delete pages [$page.id];
 				delete sheets[$page.id];
 				
-				if (TabUtil.sheet2Tab($page))
-					TabUtil.sheet2Tab($page).closePage();
-				
 				if (home == $page) home = children[0];
 				
-				var l:int = $page.pagesArr.length;
-				if (l != 0) 
-					for (var i:int = l - 1; i >= 0; i--) delPage($page.pagesArr[i]);
+				if (TabUtil.sheet2Tab($page))
+					TabUtil.sheet2Tab($page).closePage();
 			}
-			return result;
+			return _result;
 		}
 		
 		

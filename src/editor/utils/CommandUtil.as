@@ -43,7 +43,10 @@ package editor.utils
 		public static function fillComplete($scope:Object):void
 		{
 			if ($scope)
-				edtComponent(getComponentById($scope.componentId), {"hasContent" : $scope.hasContent});
+			{
+				getComponentById($scope.componentId).hasContent = $scope.hasContent;
+				vars.canvas.updateComponent(getComponentById($scope.componentId));
+			}
 			else
 				Alert.show("组件参数为空!", "错误：");
 		}
@@ -174,7 +177,7 @@ package editor.utils
 			if ($component)
 			{
 				presenter.execute(new DelComponentCommand(config.selectedComponent));
-				presenter.execute(new OrdComponentCommand);
+//				presenter.execute(new OrdComponentCommand);
 			}
 		}
 		
@@ -249,7 +252,7 @@ package editor.utils
 			if ($page && $page != $parent && PageUtil.isAllowAdd($page, $parent))
 			{
 				presenter.execute(new AltPageCommand($page, $parent, $index));
-				presenter.execute(new OrdPageCommand);
+//				presenter.execute(new OrdPageCommand);
 			}
 		}
 		
@@ -267,7 +270,7 @@ package editor.utils
 		public static function addPage($parent:Page = null, $order:uint = uint.MAX_VALUE, $homeExist:Boolean = false):void
 		{
 			presenter.execute(new AddPageCommand($parent, $order, $homeExist));
-			presenter.execute(new OrdPageCommand);
+//			presenter.execute(new OrdPageCommand);
 		}
 		
 		
@@ -284,7 +287,7 @@ package editor.utils
 			if ($page)
 			{
 				presenter.execute(new DelPageCommand($page));
-				presenter.execute(new OrdPageCommand());
+//				presenter.execute(new OrdPageCommand());
 			}
 		}
 		

@@ -21,7 +21,6 @@
 		<![CDATA[
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
-			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
 			import mx.events.FlexEvent;
@@ -42,6 +41,7 @@
 			{
 				if (event.currentTarget != titleBar.tabLayout)
 				{
+					MDConfig.instance.selectedComponent = null;
 					if (event.target is Button) closePage();
 					else 
 					{
@@ -56,6 +56,12 @@
 				}
 			}
 			
+			
+			/**
+			 * 
+			 * 关闭TitleTab
+			 * 
+			 */
 			public function closePage():void
 			{
 				if (this == titleBar.selected)
@@ -85,12 +91,11 @@
 					else 
 						titleBar.tabLayout.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 				}
-				delete idObj[this];
+				delete idObj[this.uid];
 			}
 			
 			private function openPage():void
 			{
-				MDConfig.instance.selectedComponent = null;
 				titleBar.selected = this;
 			}
 			
@@ -135,6 +140,7 @@
 			{
 				return MDVars.instance.titleBar;
 			}
+			
 			
 		]]>
 	</fx:Script>

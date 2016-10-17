@@ -6,9 +6,14 @@ package editor.commands
 	import editor.consts.URLConsts;
 	import editor.core.MDProvider;
 	import editor.views.Debugger;
-	import editor.vos.PLayout;
 	import editor.vos.Page;
 
+
+	/**
+	 * 
+	 * 拖动页面时顺序改变命令 
+	 *
+	 */
 	public class OrdPageCommand extends _InternalCommCommand
 	{
 		public function OrdPageCommand($page:Page = null, $order:uint = 0)

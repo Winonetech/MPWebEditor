@@ -10,7 +10,6 @@ package editor.views
 	import cn.mvc.utils.ColorUtil;
 	import cn.mvc.utils.MathUtil;
 	
-	import editor.core.MDVars;
 	import editor.core.ed;
 	import editor.utils.AppUtil;
 	import editor.utils.CanvasUtil;
@@ -77,10 +76,11 @@ package editor.views
 				width  = sheet.width;
 				height = sheet.height;
 				
-				if (sheet.background != null)
+				if (!(!sheet.background))
 				{
+					Debugger.log(sheet.background);
 					backgroundImg.source = sheet.background;
-					container.addElementAt(backgroundImg, container.numElements);
+					container.addElementAt(backgroundImg, 0);
 				}
 				
 				background.graphics.beginFill(ColorUtil.colorString2uint(sheet.backgroundColor));
@@ -125,7 +125,6 @@ package editor.views
 		
 		public function modSheetElement($element:Component):void
 		{
-			
 		}
 		
 		/**
@@ -387,7 +386,9 @@ package editor.views
 				ed::selectedItem = $value;
 				
 				if (lastSelectedItem) 
-					container.addElementAt(lastSelectedItem, MathUtil.clamp(lastSelectedItem.order, 0, numElements));
+					container.addElementAt(lastSelectedItem, 
+						MathUtil.clamp(lastSelectedItem.order, container.containsElement(backgroundImg)
+							? 1 : 0, numElements));
 				if (selectedItem) editing.addElement(selectedItem);
 			}
 		}

@@ -12,7 +12,9 @@
 		<s:State name="normal"/>
 		<s:State name="much"/>
 	</s:states>
+	
 	<s:HGroup id="total" gap="5">
+		
 		<s:HGroup id="HG" gap="5" updateComplete="HG_updateCompleteHandler(event)" resize="HG_resizeHandler(event)">
 			<tabs:TitleTab id="tabLayout" width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
@@ -24,12 +26,9 @@
 	<fx:Script>
 		<![CDATA[
 			import editor.core.MDConfig;
-			import editor.core.MDProvider;
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.TabUtil;
-			import editor.views.Debugger;
-			import editor.views.PageContent;
 			import editor.vos.Sheet;
 			
 			import mx.collections.ArrayCollection;
@@ -45,7 +44,7 @@
 				for (var i:int = 1; i < HG.numElements; i++)
 				{
 					temp = HG.getElementAt(i) as TitleTab;
-					if (idObj[temp] != idObj[selected])
+					if (idObj[temp.uid] != idObj[selected.uid])
 					{
 						temp.button.visible = false;
 						temp.setStyle("backgroundColor", 0xffffff);
@@ -218,8 +217,6 @@
 			
 			public var state:String;
 			
-			private var oldWidth:Number;
-			
 			private var count:int = 0;
 			
 			private var isResize:Boolean;
@@ -227,7 +224,7 @@
 			/**
 			 * 
 			 * 标签被push的缓冲值
-			 * 缓冲值建议大于 37 
+			 * 缓冲值建议大于37 
 			 * 
 			 */
 			private static const BUFFER:uint = 50;

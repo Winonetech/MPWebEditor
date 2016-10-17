@@ -3,6 +3,8 @@ package editor.consts
 	
 	import cn.mvc.consts.Consts;
 	
+	import editor.core.MDConfig;
+	
 	
 	public final class URLConsts extends Consts
 	{
@@ -22,7 +24,8 @@ package editor.consts
 		 * 
 		 */
 		
-		public static const URL_LAYOUT:String = "{domain}/layout/{layoutID}";
+		public static const URL_LAYOUT:String = MDConfig.instance.mode == "fill" 
+			? "{domain}/layout/{publishID}/{layoutID}" : "{domain}/layout/{layoutID}";
 		
 		
 		/**
