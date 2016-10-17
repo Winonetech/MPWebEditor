@@ -15,8 +15,6 @@ package cn.mvc.utils
 	
 	import cn.mvc.core.NoInstance;
 	
-	import editor.views.Debugger;
-	
 	
 	public final class RegexpUtil extends NoInstance
 	{
