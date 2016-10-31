@@ -109,7 +109,7 @@ package editor.commands
 					vars.components.update();
 					
 					//clear selected
-					if (config.selectedComponent== component)
+					if (config.selectedComponent == component)
 						config.selectedComponent = null;
 					
 				}

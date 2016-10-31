@@ -108,7 +108,7 @@ package cn.mvc.commands
 		
 		/**
 		 * 
-		 * 是否允许撤销与反撤销。<br>
+		 * 是否允许加入到撤销与反撤销执行队列中。<br>
 		 * 
 		 * @default true
 		 * 

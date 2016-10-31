@@ -16,11 +16,15 @@
 		<s:State name="mouseOver"/>
 	</s:states>
 	<s:Label id="named" left="5" verticalCenter="0" color="0xFFFFFF" text="{label || selectedSheet.label}"/>
-	<s:Button left="{named.x + named.width + 20}" right="5" verticalCenter="0"  id="button" visible="{layoutCloseVisible &amp;&amp; closeVisible}" skinClass="editor.skins.ButtonCloseSkin"/>
+	<s:Button left="{named.x + named.width + 20}" right="5" verticalCenter="0"  id="button" 
+			  visible="{layoutCloseVisible &amp;&amp; closeVisible}" skinClass="editor.skins.ButtonCloseSkin"/>
 	<fx:Script>
 		<![CDATA[
 			import editor.core.MDConfig;
 			import editor.core.MDVars;
+			import editor.core.ed;
+			import editor.utils.TabUtil;
+			import editor.views._InternalContent;
 			import editor.vos.Sheet;
 			
 			import mx.events.FlexEvent;

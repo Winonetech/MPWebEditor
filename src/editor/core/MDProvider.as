@@ -104,6 +104,12 @@ package editor.core
 		
 		public var program:PLayout;
 		
+		/**
+		 * 
+		 * 用户名 
+		 * 
+		 */
+		public var userName:String;
 		
 		/**
 		 * 

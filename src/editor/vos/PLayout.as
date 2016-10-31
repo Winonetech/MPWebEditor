@@ -74,6 +74,26 @@ package editor.vos
 		
 		/**
 		 * 
+		 * 删除所有组件 
+		 * 
+		 */
+		public function delAllComponent($sheet:Sheet):void
+		{
+			if($sheet)
+			{
+				for each(var $component:Component in $sheet.componentsArr)
+				{
+					delete components[$component.id];
+				}
+				
+				$sheet.componentsMap.clear();
+				$sheet.componentsArr.splice(0);
+			}
+		}
+		
+		
+		/**
+		 * 
 		 * 更改元素顺序。
 		 * 
 		 */

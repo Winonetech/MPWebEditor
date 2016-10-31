@@ -29,6 +29,20 @@
 			  paddingLeft="30" gap="50"
 			  mouseEnabled="false">
 		
+		<s:HGroup verticalAlign="middle" mouseEnabled="false" gap="25">
+			
+			<!-- 撤销 -->
+			<s:Button height="20" id="undo" toolTip="撤销" includeIn="edit"
+					  skinClass="editor.skins.UndoButtonSkin"
+					  click="undo_clickHandler(event)"/>
+			
+			<!-- 重做 -->
+			<s:Button height="20" id="redo" toolTip="恢复" includeIn="edit"
+					  skinClass="editor.skins.RedoButtonSkin"
+					  click="redo_clickHandler(event)"/>
+			
+		</s:HGroup>
+		
 		<s:HGroup verticalAlign="middle" mouseEnabled="false">
 			
 			<s:Label text="缩放比例：" styleName="normal"
@@ -83,6 +97,10 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import cn.mvc.commands.RevocableCommand;
+			import cn.mvc.core.Command;
+			import cn.mvc.events.CommandEvent;
+			import cn.mvc.queue.RevocableCommandQueue;
 			
 			import editor.core.MDConfig;
 			import editor.core.MDProvider;
@@ -155,12 +173,57 @@
 			/**
 			 * @private
 			 */
+			private function undo_clickHandler(event:MouseEvent):void
+			{
+				
+			}
+			
+			/**
+			 * @private
+			 */
+			private function redo_clickHandler(event:MouseEvent):void
+			{
+
+			}
+			
+			/**
+			 * @private
+			 */
 			private function toolbar_addedToStageHandler(event:Event):void
 			{
 				stage.addEventListener(FullScreenEvent.FULL_SCREEN, function(e:FullScreenEvent):void
 				{
 					fullBtn.label = (stage.displayState == StageDisplayState.NORMAL) ? "全屏" : "退出全屏";
 				});
+			}
+			
+			
+			/**
+			 * 
+			 * 设置撤销重做按钮背景色 
+			 * 
+			 */
+			public function updateBackgroundColor():void
+			{
+				var item:RevocableCommandQueue = new RevocableCommandQueue;
+				
+				if(item.commandsUndo.length != 0)
+				{
+					undo.setStyle("backgroundColor",0xffffff);
+				}
+				else
+				{
+					undo.setStyle("backgroundColor",0x999999);
+				}
+				
+				if(item.commandsRedo.length != 0)
+				{
+					redo.setStyle("backgroundColor",0xffffff);
+				}
+				else
+				{
+					redo.setStyle("backgroundColor",0x999999);
+				}
 			}
 			
 			
@@ -174,11 +237,13 @@
 			public var viewer:Viewer;
 			
 			
+			
+			public var $event:CommandEvent;
+			
 			/**
 			 * @private
 			 */
 			private var control:Boolean;
-			
 			
 			/**
 			 * 
@@ -197,6 +262,8 @@
 			
 			[Bindable]
 			private var config:MDConfig = MDConfig.instance;
+			
+			
 			
 		]]>
 	</fx:Script>

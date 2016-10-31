@@ -11,6 +11,7 @@ package editor.core
 	import cn.mvc.core.Command;
 	import cn.mvc.core.Presenter;
 	import cn.mvc.errors.SingleTonError;
+	import cn.mvc.queue.RevocableCommandQueue;
 	import cn.mvc.queue.SequenceQueue;
 	
 	import editor.commands.InitEnvironmentCommand;
@@ -95,10 +96,22 @@ package editor.core
 		}
 		
 		
+		public function redo():void
+		{
+			queue.redo();
+		}
+		
+		
+		public function undo():void
+		{
+			queue.undo();
+		}
+		
+		
 		/**
 		 * @private
 		 */
-		private var queue:SequenceQueue = new SequenceQueue;
+		private var queue:RevocableCommandQueue = new RevocableCommandQueue;
 		
 		/**
 		 * @private

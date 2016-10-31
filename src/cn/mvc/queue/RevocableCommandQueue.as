@@ -311,13 +311,13 @@ package cn.mvc.queue
 		 * 可撤销命令队列。
 		 * @private
 		 */
-		private var commandsUndo:Vector.<RevocableCommand>;
+		public var commandsUndo:Vector.<RevocableCommand>;
 		
 		/**
 		 * 可重做命令队列。
 		 * @private
 		 */
-		private var commandsRedo:Vector.<RevocableCommand>;
+		public var commandsRedo:Vector.<RevocableCommand>;
 		
 		
 		/**

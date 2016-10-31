@@ -475,11 +475,6 @@ package editor.views
 		 */
 		private var background:UIComponent = new UIComponent;
 		
-		
-		/**
-		 * @private
-		 */
-		
 		/**
 		 * @private
 		 */

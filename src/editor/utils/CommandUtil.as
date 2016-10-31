@@ -8,7 +8,11 @@ package editor.utils
 	 */
 	
 	
+	import cn.mvc.collections.Map;
+	import cn.mvc.commands.RevocableCommand;
+	import cn.mvc.core.Command;
 	import cn.mvc.core.NoInstance;
+	import cn.mvc.queue.RevocableCommandQueue;
 	import cn.mvc.utils.MathUtil;
 	
 	import editor.commands.*;
@@ -177,7 +181,22 @@ package editor.utils
 			if ($component)
 			{
 				presenter.execute(new DelComponentCommand(config.selectedComponent));
-//				presenter.execute(new OrdComponentCommand);
+			}
+		}
+		
+		
+		/**
+		 * 
+		 * 删除所有组件 
+		 * 
+		 * @param $sheet:Sheet 当前正在编辑的页面
+		 * 
+		 */
+		public static function delAllComponent($sheet:Sheet):void
+		{
+			if($sheet)
+			{
+				presenter.execute(new DelAllComponentCommand($sheet));
 			}
 		}
 		
@@ -252,7 +271,6 @@ package editor.utils
 			if ($page && $page != $parent && PageUtil.isAllowAdd($page, $parent))
 			{
 				presenter.execute(new AltPageCommand($page, $parent, $index));
-//				presenter.execute(new OrdPageCommand);
 			}
 		}
 		
@@ -270,7 +288,6 @@ package editor.utils
 		public static function addPage($parent:Page = null, $order:uint = uint.MAX_VALUE, $homeExist:Boolean = false):void
 		{
 			presenter.execute(new AddPageCommand($parent, $order, $homeExist));
-//			presenter.execute(new OrdPageCommand);
 		}
 		
 		
@@ -287,7 +304,6 @@ package editor.utils
 			if ($page)
 			{
 				presenter.execute(new DelPageCommand($page));
-//				presenter.execute(new OrdPageCommand());
 			}
 		}
 		

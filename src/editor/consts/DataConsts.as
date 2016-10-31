@@ -21,11 +21,12 @@ package editor.consts
 			domain:"http://172.16.1.4:9000/layout",   
 //			domain:"http://172.16.0.216:9000/layout",   
 //			domain:"http://172.16.1.4:9000/content/publish",   
-			programId: 10,
-			layoutId:  3,
+			programId: 25,
+			layoutId:  2,
 			programName: "滑稽",
 			defaultWidth: "1920",
-			defaultHeight: "1080", 
+			defaultHeight: "1080",
+			userName:"曼陀罗",
 			mode:"edit"
 		};
 		

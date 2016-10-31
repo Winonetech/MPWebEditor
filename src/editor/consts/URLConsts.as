@@ -15,7 +15,7 @@ package editor.consts
 		 * 
 		 */
 		
-		public static const URL_LAYOUT_APPLY:String = "{domain}/layout/apply/{programID}/{layoutID}";
+		public static const URL_LAYOUT_APPLY:String = "{domain}/layout/apply/{programID}/{layoutID}/{userName}";
 		
 		
 		/**
@@ -80,6 +80,22 @@ package editor.consts
 		 */
 		
 		public static const URL_COMPONENT_DEL:String = "{domain}/component/del/{id}";
+		
+		
+		/**
+		 * 
+		 * 当前正在编辑页面的地址 
+		 * 
+		 */
+		public static const URL_PAGE_DAC:String = "{domain}/page/empty/{id}";
+		
+		
+		/**
+		 * 
+		 * 当前正在编辑广告的地址 
+		 * 
+		 */
+		public static const URL_AD_DAC:String = "{domain}/ad/empty/{id}";
 		
 		
 		/**
