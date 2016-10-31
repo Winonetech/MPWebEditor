@@ -74,6 +74,7 @@
 			import cn.mvc.utils.ColorUtil;
 			
 			import editor.utils.ComponentUtil;
+			import editor.views.Debugger;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.ColorPickerEvent;
@@ -271,6 +272,7 @@
 						input.text = input.text.substr(0, inputNumLimit);
 					else if (property == "label" && input.text.length > inputTextLimit) 
 						input.text = input.text.substr(0, inputTextLimit);
+					Debugger.log("------> " + input.text);
 				}
 			}
 			

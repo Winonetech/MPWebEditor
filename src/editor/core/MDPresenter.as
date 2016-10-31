@@ -111,7 +111,7 @@ package editor.core
 		/**
 		 * @private
 		 */
-		private var queue:RevocableCommandQueue = new RevocableCommandQueue;
+		public var queue:RevocableCommandQueue = new RevocableCommandQueue;
 		
 		/**
 		 * @private

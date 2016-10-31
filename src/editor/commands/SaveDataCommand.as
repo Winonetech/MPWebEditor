@@ -48,7 +48,10 @@ package editor.commands
 				Alert.show("当前节目无任何组件！", "警告", Alert.OK, null,
 					function($e:CloseEvent):void{commandEnd();});
 			}
-			else communicate();
+			else 
+			{
+				communicate();
+			}
 		}
 		
 		

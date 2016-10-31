@@ -18,15 +18,15 @@ package editor.consts
 		public static const PROGRAM:Object = 
 		{
 //			domain:"http://192.168.7.3:9000/layout", 
-			domain:"http://172.16.1.4:9000/layout",   
-//			domain:"http://172.16.0.216:9000/layout",   
+//			domain:"http://172.16.1.4:9000/layout",   
+			domain:"http://172.16.0.17:9000/layout",   
 //			domain:"http://172.16.1.4:9000/content/publish",   
 			programId: 25,
 			layoutId:  2,
 			programName: "滑稽",
 			defaultWidth: "1920",
 			defaultHeight: "1080",
-			userName:"曼陀罗",
+			userName:"YuanZhang",
 			mode:"edit"
 		};
 		

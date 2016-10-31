@@ -31,7 +31,7 @@
 	<sh:SheetLabel id="sheetLabel" left="40" maxWidth="88" label="{sheet.label}"
 				   color="{sheet.editing ? 0xFF0000 : 0xFFFFFF}"/>
 	
-	<sh:PageGroup left="25" top="30" includeIn="expand"
+	<sh:PageGroup id="pageGroup" left="25" top="30" includeIn="expand"
 				  selectable="{selectable}"
 				  forceExpand="{forceExpand}"
 				  dataProvider="{page.pagesArr}"
@@ -40,6 +40,7 @@
 		<![CDATA[
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
+			import editor.views.Debugger;
 			import editor.vos.Page;
 			import editor.vos.Sheet;
 			
@@ -52,7 +53,6 @@
 			override protected function createChildren():void
 			{
 				super.createChildren();
-				
 				if (selectable)
 				{
 					addEventListener(DragEvent.DRAG_ENTER, item_dragEnterHandler);
@@ -76,6 +76,7 @@
 			
 			/**
 			 * @private
+			 * 抬起来挪动时触发
 			 */
 			private function item_dragEnterHandler($e:DragEvent):void
 			{
@@ -93,6 +94,7 @@
 			
 			/**
 			 * @private
+			 * 放下去的时候触发
 			 */
 			private function item_dragDropHandler($e:DragEvent):void
 			{
@@ -174,9 +176,7 @@
 				if (expand != $value)
 				{
 					ed::expand = $value;
-					
 					currentState = expand ? "expand" : "packup";
-					
 					if (selectable) page.expand = $value;
 				}
 				
@@ -254,6 +254,7 @@
 			 */
 			ed var expand:Boolean;
 
+			
 		]]>
 	</fx:Script>
 </sh:SheetItem>

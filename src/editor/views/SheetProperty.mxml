@@ -152,20 +152,20 @@
 					if (item.property == "width" || item.property == "height")
 					{
 						scope[item.property] = item.property == "width"
-							? (Number(item.value) + sheet.x > 1920 
-								? 1920 - sheet.x : item.value)
-							: (Number(item.value) + sheet.y > 1080
-								? 1080 - sheet.y : item.value);
+							? (Number(item.value) + sheet.x > 19200 
+								? 19200 - sheet.x : item.value)
+							: (Number(item.value) + sheet.y > 10800
+								? 10800 - sheet.y : item.value);
 						ComponentUtil.limitSheetComponents(
 							scope[item.property] / sheet[item.property], item.property);
 					}
 					else if (item.property == "x" || item.property == "y")
 					{
 						scope[item.property] = item.property == "x"
-							? (Number(item.value) + sheet.width  > 1920 
-								? 1920 - sheet.width : item.value)
-							: (Number(item.value) + sheet.height > 1080 
-								? 1080 - sheet.height : item.value);
+							? (Number(item.value) + sheet.width  > 19200 
+								? 19200 - sheet.width : item.value)
+							: (Number(item.value) + sheet.height > 10800 
+								? 10800 - sheet.height : item.value);
 					}
 					else scope[item.property] = item.value;
 					item.value = scope[item.property];

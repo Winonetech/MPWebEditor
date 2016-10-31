@@ -45,6 +45,15 @@ package editor.commands
 		}
 		
 		
+		override protected function processUndo():void
+		{
+			Debugger.log("---------undo---------");
+		}
+		
+		override protected function processRedo():void
+		{
+			Debugger.log("---------redo---------");
+		}
 		/**
 		 * @inheritDoc
 		 */

@@ -18,7 +18,7 @@
 			private function init():void
 			{
 				MDPresenter.instance.start(this, parameters.debug == "true");
-//				addElement(Debugger.instance);
+				addElement(Debugger.instance);
 			}
 			
 		]]>

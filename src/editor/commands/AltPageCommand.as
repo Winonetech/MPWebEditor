@@ -29,9 +29,9 @@ package editor.commands
 		{
 			super();
 			
-			page   = $page;
-			parent = $parent;
-			index  = $index;
+			page     = $page;
+			parent   = $parent;
+			index    = $index;
 			
 			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
 		}
@@ -44,7 +44,6 @@ package editor.commands
 		override protected function excuteCommand():void
 		{
 			config.orders = provider.program.altPage(page, parent, index);
-			
 			if (parent)
 			{
 				page.parentID = parent.id;
@@ -56,12 +55,12 @@ package editor.commands
 				page.parentID = null;
 			}
 				
-				var data:Object = JSON.parse(page.toJSON());
-				
-				delete data.pages;
-				delete data.components;
-				
-				communicate(JSON.stringify(data),false);
+			var data:Object = JSON.parse(page.toJSON());
+			
+			delete data.pages;
+			delete data.components;
+			
+			config.orders ? communicate(JSON.stringify(data),false) : commandEnd();
 		}
 		
 		
@@ -84,7 +83,6 @@ package editor.commands
 					"order" : child.order
 				});
 			}
-			Debugger.log("---------- " + submits);
 			submits
 			? communicate(JSON.stringify(submits))
 				: commandEnd(); 
@@ -102,9 +100,8 @@ package editor.commands
 				if ($result.result == "success")
 				{
 					altPage();
-					
 					//update view
-					vars.sheets.update();
+//					vars.sheets.update();
 				}
 				else
 				{
@@ -115,7 +112,7 @@ package editor.commands
 			{
 				if ($result == "ok")
 				{
-					if (vars.sheets)
+//					if (vars.sheets)
 						vars.sheets.update();
 				}
 				else
@@ -156,5 +153,7 @@ package editor.commands
 		 * @private
 		 */
 		private var index:uint;
+		
+		
 	}
 }

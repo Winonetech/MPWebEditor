@@ -39,14 +39,14 @@
 			
 			<s:Scroller width="100%" height="100%" id="scroller" mouseEnabled="false">
 				
-				<s:VGroup id="group" gap="0" paddingBottom="10" click="item_clickHandler(event)">
+				<s:VGroup id="group" gap="0" paddingBottom="10" click="item_clickHandler(event)"
+						  mouseDown="group_mouseDownHandler(event)">
 					
 					<sh:ADItem sheet="{program.ad}"/>
 					
 					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"
 								  dragEnter="group_dragEnterHandler(event)"
-								  dragDrop="group_dragDropHandler(event)"
-								  mouseDown="group_mouseDownHandler(event)"/>
+								  dragDrop="group_dragDropHandler(event)"/>
 					
 				</s:VGroup>
 				
@@ -204,9 +204,13 @@
 			 */
 			private function group_mouseDownHandler($e:MouseEvent):void
 			{
-				if (isEdit && $e.target is PageItem)
+				if (isEdit)
 				{
-					mouseMoved = dragStarted = false;
+					mouseMoved = false;
+					
+					if (!($e.target is PageItem)) return;   //如果不是版面页面则直接结束该方法。
+					
+					dragStarted = false;
 					
 					item = $e.target as PageItem;
 					down.x = mouseX;
@@ -240,11 +244,11 @@
 			private function group_mouseUpHandler($e:MouseEvent):void
 			{
 				stopScroll();
-				
 				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
 				
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE, group_mouseMoveHandler);
 				stage.removeEventListener(MouseEvent.MOUSE_UP, group_mouseUpHandler);
+				
 			}
 			
 			/**

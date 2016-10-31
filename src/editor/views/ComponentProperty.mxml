@@ -83,13 +83,14 @@
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import editor.consts.ComponentCodeConsts;
 			import editor.consts.DataConsts;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
 			import editor.utils.ComponentUtil;
 			import editor.vos.Component;
+			
+			import mx.controls.Alert;
 			
 			
 			/**
@@ -105,26 +106,42 @@
 					{
 						case "x":
 						{
-							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
-								config.editingSheet.width - config.selectedComponent.width);
+							if (item.value > config.editingSheet.width - config.selectedComponent.width)
+							{
+								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
+								prop[item.property] = config.selectedComponent.x;
+							}
+							else prop[item.property] = int(item.value);
 							break;
 						}
 						case "y":
 						{
-							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
-								config.editingSheet.height - config.selectedComponent.height);
+							if (item.value > config.editingSheet.height - config.selectedComponent.height)
+							{
+								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
+								prop[item.property] = config.selectedComponent.y;
+							}
+							else prop[item.property] = int(item.value);
 							break;
 						}
 						case "width":
 						{
-							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
-								config.editingSheet.width - config.selectedComponent.x);
+							if (item.value > config.editingSheet.width - config.selectedComponent.x)
+							{
+								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
+								prop[item.property] = config.selectedComponent.width;
+							}
+							else prop[item.property] = int(item.value);
 							break;
 						}
 						case "height":
 						{
-							prop[item.property] = ComponentUtil.reviseComponent(int(item.value),
-								config.editingSheet.height - config.selectedComponent.y);
+							if (item.value > config.editingSheet.height - config.selectedComponent.y)
+							{
+								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
+								prop[item.property] = config.selectedComponent.height;
+							}
+							else prop[item.property] = int(item.value);
 							break;
 						}
 						default:

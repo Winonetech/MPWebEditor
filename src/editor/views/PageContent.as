@@ -30,6 +30,15 @@ package editor.views
 			super();
 		}
 		
+		private function findMax($property:String):Number
+		{
+			var max:Number = 0.0;
+			for each (var $page:Page in MDProvider.instance.program.pages)
+			{
+				if ($page[$property] > max) max = $page[$property]; 
+			}
+			return max;
+		}
 		
 		/**
 		 * 
@@ -48,11 +57,11 @@ package editor.views
 			
 			itemsMap.clear();
 			
-			width  = 1920;
-			height = 1080;
+			width  = findMax("width")  < 1920 ? 1920 : findMax("width");
+			height = findMax("height") < 1080 ? 1080 : findMax("height");
 			
 			background.graphics.beginFill(0xffffff);
-			background.graphics.drawRect(0, 0, 1920, 1080);
+			background.graphics.drawRect(0, 0, width, height);
 			background.graphics.endFill();
 			for each (var item:Page in provider.program.pages) updatePage(item, 1);
 			if (config.selectedSheet) selectedItem = itemsMap[config.selectedSheet.id];

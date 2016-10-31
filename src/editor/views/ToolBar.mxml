@@ -29,18 +29,15 @@
 			  paddingLeft="30" gap="50"
 			  mouseEnabled="false">
 		
-		<s:HGroup verticalAlign="middle" mouseEnabled="false" gap="25">
+		<s:HGroup verticalAlign="middle" mouseEnabled="false" gap="25" creationComplete="hgroup1_creationCompleteHandler(event)">
 			
-			<!-- 撤销 -->
 			<s:Button height="20" id="undo" toolTip="撤销" includeIn="edit"
 					  skinClass="editor.skins.UndoButtonSkin"
 					  click="undo_clickHandler(event)"/>
 			
-			<!-- 重做 -->
 			<s:Button height="20" id="redo" toolTip="恢复" includeIn="edit"
 					  skinClass="editor.skins.RedoButtonSkin"
 					  click="redo_clickHandler(event)"/>
-			
 		</s:HGroup>
 		
 		<s:HGroup verticalAlign="middle" mouseEnabled="false">
@@ -101,11 +98,17 @@
 			import cn.mvc.core.Command;
 			import cn.mvc.events.CommandEvent;
 			import cn.mvc.queue.RevocableCommandQueue;
+			import cn.mvc.utils.RegexpUtil;
 			
+			import editor.consts.URLConsts;
 			import editor.core.MDConfig;
+			import editor.core.MDPresenter;
 			import editor.core.MDProvider;
 			import editor.utils.CommandUtil;
 			import editor.views.canvas.Viewer;
+			
+			import mx.events.FlexEvent;
+			import mx.rpc.http.HTTPService;
 			
 			
 			/**
@@ -160,7 +163,22 @@
 			private function save_clickHandler(event:MouseEvent):void
 			{
 				CommandUtil.saveData();
+				
+				
+//				var http:HTTPService = new HTTPService;
+//				http.url = RegexpUtil.replaceTag(URLConsts.URL_LAYOUT_APPLY, provider);
+//				http.method = "POST";
+//				http.headers = {"userName":"YuanZhang"};
+//				http.send();
+				
+//				var req:URLRequest = new URLRequest;
+//				req.url = RegexpUtil.replaceTag(URLConsts.URL_LAYOUT_APPLY, provider);
+//				req.method = URLRequestMethod.POST;
+//				req.requestHeaders.push(new URLRequestHeader("userName", "YuanZhang"));
+//				var loader:URLLoader=new URLLoader(req);
+//				loader.load(req);
 			}
+			
 			
 			/**
 			 * @private
@@ -175,7 +193,7 @@
 			 */
 			private function undo_clickHandler(event:MouseEvent):void
 			{
-				
+				MDPresenter.instance.undo();
 			}
 			
 			/**
@@ -183,7 +201,7 @@
 			 */
 			private function redo_clickHandler(event:MouseEvent):void
 			{
-
+				MDPresenter.instance.redo();
 			}
 			
 			/**
@@ -203,29 +221,16 @@
 			 * 设置撤销重做按钮背景色 
 			 * 
 			 */
-			public function updateBackgroundColor():void
+			private function updateBcgColor():void
 			{
-				var item:RevocableCommandQueue = new RevocableCommandQueue;
-				
-				if(item.commandsUndo.length != 0)
-				{
-					undo.setStyle("backgroundColor",0xffffff);
-				}
-				else
-				{
-					undo.setStyle("backgroundColor",0x999999);
-				}
-				
-				if(item.commandsRedo.length != 0)
-				{
-					redo.setStyle("backgroundColor",0xffffff);
-				}
-				else
-				{
-					redo.setStyle("backgroundColor",0x999999);
-				}
+				undo.enabled = queue.undoable;
+				redo.enabled = queue.redoable;
 			}
 			
+			private function get queue():RevocableCommandQueue
+			{
+				return MDPresenter.instance.queue;
+			}
 			
 			/**
 			 * 
@@ -264,6 +269,12 @@
 			private var config:MDConfig = MDConfig.instance;
 			
 			
+			
+			protected function hgroup1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				updateBcgColor();
+			}
 			
 		]]>
 	</fx:Script>

@@ -101,14 +101,14 @@ package editor.commands
 				//update view
 				if (updatable) 
 				{
-					if (config.isLayoutOpened)
-					{
-						vars.canvas.content.updatePage(item as Page);
-					}
-					else 
-					{
+//					if (config.isLayoutOpened)
+//					{
+//						vars.canvas.content.updatePage(item as Page);
+//					}
+//					else 
+//					{
 						vars.canvas.update();
-					}
+//					}
 					config.selectedComponent = null;
 					
 				}

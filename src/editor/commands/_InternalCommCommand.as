@@ -252,7 +252,7 @@ package editor.commands
 		/**
 		 * @private
 		 */
-		private var http:HTTPService;
+		protected var http:HTTPService;
 		
 		/**
 		 * @private
