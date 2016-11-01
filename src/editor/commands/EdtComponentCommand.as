@@ -49,9 +49,9 @@ package editor.commands
 		
 		override protected function processUndo():void
 		{	
-			for (var key:String in lastOne)
+			for (var key:String in last)
 			{
-				item[key] = lastOne[key];
+				item[key] = last[key];
 			}
 			
 			var data:Object = JSON.parse(item.toJSON());
@@ -66,7 +66,18 @@ package editor.commands
 		
 		override protected function processRedo():void
 		{
-			Debugger.log("---------redo---------");
+			for (var key:String in pres)
+			{
+				item[key] = pres[key];
+			}
+			
+			var data:Object = JSON.parse(item.toJSON());
+			
+			data.label = item.label;
+			
+			data.componentTypeCode = item.componentTypeCode;
+			
+			communicate(JSON.stringify(data));
 		}
 		/**
 		 * @inheritDoc
@@ -83,7 +94,8 @@ package editor.commands
 						{
 							updatable = true;
 						}
-						lastOne[key] = item[key];
+						last[key] = item[key];
+						pres[key] = scope[key];
 						item[key] = scope[key];
 				} catch(e:Error) {trace(e.getStackTrace())}
 			}
@@ -118,8 +130,6 @@ package editor.commands
 				if (!config.isLayoutOpened)
 					vars.canvas.updateComponent(item);
 				
-//				pres = $result;
-				
 				vars.editorView.toolBar.uptBtnBcgColor();
 			}
 			else
@@ -144,9 +154,9 @@ package editor.commands
 		 */
 		private var scope:Object;
 		
-		private var lastOne:Object = {};
+		private var last:Object = {};
 		
-		private var pres:Object;
+		private var pres:Object = {};
 		
 	}
 }

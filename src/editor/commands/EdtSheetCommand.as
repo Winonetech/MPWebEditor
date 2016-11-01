@@ -53,6 +53,28 @@ package editor.commands
 		}
 		
 		
+		
+		override protected function processRedo():void
+		{
+			for (var key:String in pres)
+			{
+				item[key] = pres[key];
+			}
+			
+			var data:Object = JSON.parse(item.toJSON());
+			
+			delete data.pages;
+			delete data.components;
+			
+			if (StringUtil.empty(data.label))
+				data.label = (item is AD) ? "广告" : "页面";
+			
+			communicate(JSON.stringify(data));
+		}
+		
+		
+		
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -64,7 +86,11 @@ package editor.commands
 			for (var key:String in scope)
 			{
 				try {
-					if (!updatable && String(item[key]) != String(scope[key])) updatable = true;
+					if (!updatable && String(item[key]) != String(scope[key])) 
+					{
+						updatable = true;
+					}
+					pres[key] = scope[key];
 					item[key] = scope[key];
 				} catch(e:Error) {trace(e.getStackTrace())}
 			}
@@ -111,6 +137,7 @@ package editor.commands
 //					}
 					config.selectedComponent = null;
 					
+					vars.editorView.toolBar.uptBtnBcgColor();
 				}
 			}
 			else
@@ -136,6 +163,10 @@ package editor.commands
 		 * @private
 		 */
 		private var updatable:Boolean;
+		
+		private var last:Object = {};
+		
+		private var pres:Object = {};
 		
 	}
 }
