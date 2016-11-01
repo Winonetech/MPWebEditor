@@ -218,10 +218,10 @@
 			
 			/**
 			 * 
-			 * 设置撤销重做按钮背景色 
+			 * 更新撤销重做按钮背景色 
 			 * 
 			 */
-			private function updateBcgColor():void
+			public function uptBtnBcgColor():void
 			{
 				undo.enabled = queue.undoable;
 				redo.enabled = queue.redoable;
@@ -272,8 +272,7 @@
 			
 			protected function hgroup1_creationCompleteHandler(event:FlexEvent):void
 			{
-				// TODO Auto-generated method stub
-				updateBcgColor();
+				uptBtnBcgColor();
 			}
 			
 		]]>

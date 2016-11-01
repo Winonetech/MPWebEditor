@@ -31,6 +31,8 @@ package editor.commands
 		{
 			super();
 			
+			revocable = false;
+			
 			method = "GET";
 			
 			url = RegexpUtil.replaceTag(URLConsts.URL_LAYOUT_APPLY, provider);

@@ -8,11 +8,15 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.events.CommandEvent;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.utils.CommandUtil;
 	import editor.views.Debugger;
 	import editor.vos.Component;
+	
+	import mx.rpc.http.HTTPService;
 	
 	
 	public final class EdtComponentCommand extends _InternalCommCommand
@@ -37,18 +41,28 @@ package editor.commands
 		public function EdtComponentCommand($component:Component, $scope:Object)
 		{
 			super();
-			
 			item  = $component;
 			scope = $scope;
-			
 			url = RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_AMD, provider);
 		}
 		
 		
 		override protected function processUndo():void
-		{
-			Debugger.log("---------undo---------");
+		{	
+			for (var key:String in lastOne)
+			{
+				item[key] = lastOne[key];
+			}
+			
+			var data:Object = JSON.parse(item.toJSON());
+			
+			data.label = item.label;
+			
+			data.componentTypeCode = item.componentTypeCode;
+			
+			communicate(JSON.stringify(data));
 		}
+		
 		
 		override protected function processRedo():void
 		{
@@ -65,8 +79,12 @@ package editor.commands
 			for (var key:String in scope)
 			{
 				try {
-					if(!updatable && item[key]!= scope[key]) updatable = true;
-					item[key] = scope[key];
+						if(!updatable && item[key]!= scope[key]) 
+						{
+							updatable = true;
+						}
+						lastOne[key] = item[key];
+						item[key] = scope[key];
 				} catch(e:Error) {trace(e.getStackTrace())}
 			}
 			
@@ -99,6 +117,10 @@ package editor.commands
 				//update view
 				if (!config.isLayoutOpened)
 					vars.canvas.updateComponent(item);
+				
+//				pres = $result;
+				
+				vars.editorView.toolBar.uptBtnBcgColor();
 			}
 			else
 			{
@@ -121,6 +143,10 @@ package editor.commands
 		 * @private
 		 */
 		private var scope:Object;
+		
+		private var lastOne:Object = {};
+		
+		private var pres:Object;
 		
 	}
 }

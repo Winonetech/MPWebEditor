@@ -32,7 +32,6 @@ package editor.commands
 		public function _InternalCommCommand()
 		{
 			super();
-			
 			initializeEnvironment();
 		}
 		
