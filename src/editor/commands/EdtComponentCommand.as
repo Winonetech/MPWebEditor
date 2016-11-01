@@ -68,7 +68,18 @@ package editor.commands
 		
 		override protected function processRedo():void
 		{
-			Debugger.log("---------redo---------");
+			for (var key:String in pres)
+			{
+				item[key] = pres[key];
+			}
+			
+			var data:Object = JSON.parse(item.toJSON());
+			
+			data.label = item.label;
+			
+			data.componentTypeCode = item.componentTypeCode;
+			
+			communicate(JSON.stringify(data));
 		}
 		/**
 		 * @inheritDoc
@@ -86,6 +97,7 @@ package editor.commands
 							updatable = true;
 						}
 						last[key] = item[key];
+						pres[key] = scope[key];
 						item[key] = scope[key];
 				} catch(e:Error) {trace(e.getStackTrace())}
 			}
@@ -119,8 +131,6 @@ package editor.commands
 				//update view
 				if (!config.isLayoutOpened)
 					vars.canvas.updateComponent(item);
-//				pres = $result;
-				
 				vars.editorView.toolBar.uptBtnBcgColor();
 			}
 			else
