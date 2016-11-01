@@ -20,6 +20,8 @@ package cn.mvc.queue
 	import cn.mvc.events.RevocableCommandEvent;
 	import cn.mvc.utils.ArrayUtil;
 	
+	import editor.core.MDVars;
+	
 	
 	/**
 	 * 
@@ -186,6 +188,8 @@ package cn.mvc.queue
 			command.removeEventListener(CommandEvent.COMMAND_END, command_executeHandler);
 			//命令执行完毕，加入撤销队列。
 			pushCommandToUndos(command);
+			
+			MDVars.instance.editorView.toolBar.uptBtnBcgColor();
 		}
 		
 		/**

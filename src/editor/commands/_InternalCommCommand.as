@@ -267,6 +267,5 @@ package editor.commands
 		 * @private
 		 */
 		private var end:Boolean;
-		
 	}
 }

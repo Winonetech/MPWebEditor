@@ -52,6 +52,24 @@ package editor.commands
 				: URLConsts.URL_AD_MOD, provider);
 		}
 		
+		override protected function processUndo():void
+		{
+			for (var key:String in last)
+			{
+				item[key] = last[key];
+			}
+			
+			var data:Object = JSON.parse(item.toJSON());
+			
+			delete data.pages;
+			delete data.components;
+			
+			if (StringUtil.empty(data.label))
+				data.label = (item is AD) ? "广告" : "页面";
+			
+			communicate(JSON.stringify(data));
+		}
+		
 		
 		/**
 		 * @inheritDoc
@@ -65,9 +83,11 @@ package editor.commands
 			{
 				try {
 					if (!updatable && String(item[key]) != String(scope[key])) updatable = true;
+					last[key] = item[key];
 					item[key] = scope[key];
 				} catch(e:Error) {trace(e.getStackTrace())}
 			}
+			
 			
 			if (updatable)
 			{
@@ -84,6 +104,7 @@ package editor.commands
 			else
 			{
 				commandEnd();
+				presenter.queue.commandsUndo.shift();
 			}
 			
 		}
@@ -137,5 +158,9 @@ package editor.commands
 		 */
 		private var updatable:Boolean;
 		
+		
+		private var last:Object = {};
+		
+		private var pres:Object = {};
 	}
 }

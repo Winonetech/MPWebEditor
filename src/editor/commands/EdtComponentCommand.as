@@ -38,20 +38,22 @@ package editor.commands
 		 * 
 		 */
 		
-		public function EdtComponentCommand($component:Component, $scope:Object)
+		public function EdtComponentCommand($component:Component, $scope:Object, $revocable:Boolean = true)
 		{
 			super();
 			item  = $component;
 			scope = $scope;
+			
+			revocable = $revocable;
 			url = RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_AMD, provider);
 		}
 		
 		
 		override protected function processUndo():void
 		{	
-			for (var key:String in lastOne)
+			for (var key:String in last)
 			{
-				item[key] = lastOne[key];
+				item[key] = last[key];
 			}
 			
 			var data:Object = JSON.parse(item.toJSON());
@@ -83,7 +85,7 @@ package editor.commands
 						{
 							updatable = true;
 						}
-						lastOne[key] = item[key];
+						last[key] = item[key];
 						item[key] = scope[key];
 				} catch(e:Error) {trace(e.getStackTrace())}
 			}
@@ -117,7 +119,6 @@ package editor.commands
 				//update view
 				if (!config.isLayoutOpened)
 					vars.canvas.updateComponent(item);
-				
 //				pres = $result;
 				
 				vars.editorView.toolBar.uptBtnBcgColor();
@@ -144,9 +145,8 @@ package editor.commands
 		 */
 		private var scope:Object;
 		
-		private var lastOne:Object = {};
+		private var last:Object = {};
 		
-		private var pres:Object;
-		
+		private var pres:Object = {};
 	}
 }

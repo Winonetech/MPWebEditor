@@ -119,7 +119,8 @@ package editor.utils
 			presenter.execute(new ShowViewCommand);
 			presenter.execute(new ShowSheetsCommand);
 			presenter.execute(new ShowComponentTypesCommand);
-			presenter.execute(new AddPageCommand(null, 0, true));
+			presenter.execute(new AddPageCommand(null, 0, true, false));
+			presenter.queue.commandsUndo.length = presenter.queue.commandsRedo.length = 0;
 			presenter.execute(new OpenSheetCommand);
 		}
 		
@@ -250,10 +251,10 @@ package editor.utils
 		 * 
 		 */
 		
-		public static function edtComponent($component:Component, $scope:Object = null):void
+		public static function edtComponent($component:Component, $scope:Object = null, $revocable:Boolean = true):void
 		{
 			if ($component && $scope)
-				presenter.execute(new EdtComponentCommand($component, $scope));
+				presenter.execute(new EdtComponentCommand($component, $scope, $revocable));
 		}
 		
 		

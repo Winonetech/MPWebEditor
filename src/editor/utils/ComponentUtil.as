@@ -87,7 +87,7 @@ package editor.utils
 					var scope:Object = {};
 					scope[prop] = tempP;
 					scope[coor] = tempC;
-					CommandUtil.edtComponent(item.component, scope);
+					CommandUtil.edtComponent(item.component, scope, false);
 				}
 				content.update();
 			}
@@ -101,7 +101,7 @@ package editor.utils
 					var obj:Object = {};
 					obj[prop] = tempP;
 					obj[coor] = tempC;
-					CommandUtil.edtComponent(component, obj);
+					CommandUtil.edtComponent(component, obj, false);
 				}
 			}
 		}//function

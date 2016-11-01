@@ -30,13 +30,14 @@ package editor.commands
 		 * 
 		 */
 		
-		public function AddPageCommand($parent:Page, $order:uint, $homeExist:Boolean)
+		public function AddPageCommand($parent:Page, $order:uint, $homeExist:Boolean, $revocable:Boolean = true)
 		{
 			super();
 			
-			parent = $parent;
-			order  = $order;
-			home   = $homeExist;
+			parent    = $parent;
+			order     = $order;
+			home      = $homeExist;
+			revocable = $revocable;
 			
 			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
 		}
