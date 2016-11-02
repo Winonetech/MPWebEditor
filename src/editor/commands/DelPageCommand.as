@@ -34,11 +34,12 @@ package editor.commands
 		 * 
 		 */
 		
-		public function DelPageCommand($page:Page)
+		public function DelPageCommand($page:Page, $revocable:Boolean = true)
 		{
 			super();
 			
 			page = $page;
+			revocable = $revocable;
 			
 			method = "GET";
 			
@@ -54,11 +55,13 @@ package editor.commands
 		{
 			if (page)
 			{
-				Alert.show("确定删除 " + page.label + " 吗？", "提示",
-					Alert.OK|Alert.CANCEL, null,
-					function(e:CloseEvent):void {
-						e.detail == Alert.OK ? communicate(null, false) : commandEnd();
-				});
+				if (revocable)
+					Alert.show("确定删除 " + page.label + " 吗？", "提示",
+						Alert.OK|Alert.CANCEL, null,
+						function(e:CloseEvent):void {
+							e.detail == Alert.OK ? communicate(null, false) : commandEnd();
+					});
+				else communicate(null, false);
 			}
 			else
 			{
