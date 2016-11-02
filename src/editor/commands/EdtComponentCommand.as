@@ -131,7 +131,7 @@ package editor.commands
 				//update view
 				if (!config.isLayoutOpened)
 					vars.canvas.updateComponent(item);
-				vars.editorView.toolBar.uptBtnBcgColor();
+//				vars.editorView.toolBar.uptBtnBcgColor();
 			}
 			else
 			{

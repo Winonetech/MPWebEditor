@@ -67,10 +67,11 @@ package editor.utils
 		 * 
 		 * @param $change : 缩放比例因子（改变后的值  / 改变前的值）
 		 * @param $state  : 页面改变的属性。可能值为："width"或"height"
+		 * @param $sheet  : 需要修改的页面。默认值为null。注意：一般情况下无需设定该参数，仅用于撤销机制。
 		 * 
 		 */
 		
-		public static function limitSheetComponents($change:Number, $state:String):void
+		public static function limitSheetComponents($change:Number, $state:String, $sheet:Sheet = null):void
 		{
 			var dic:Map = content.itemsMap;
 			
@@ -93,7 +94,7 @@ package editor.utils
 			}
 			else
 			{
-				var sheet:Sheet = MDConfig.instance.selectedSheet;
+				var sheet:Sheet = $sheet || MDConfig.instance.selectedSheet;
 				for each (var component:Component in sheet.componentsMap)
 				{
 					tempP = Math.max(1, Math.round(component[prop] * $change));

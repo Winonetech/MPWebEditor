@@ -272,6 +272,7 @@ package editor.vos
 		/**
 		 * 
 		 * 元素数组。
+		 * 该数组中存放数组的顺序与order相当。即为ComponentList的倒序。
 		 * 
 		 */
 		

@@ -12,6 +12,7 @@ package editor.commands
 	import cn.mvc.utils.StringUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.utils.ComponentUtil;
 	import editor.utils.TabUtil;
 	import editor.views.Debugger;
 	import editor.views.tabs.TitleTab;
@@ -56,8 +57,11 @@ package editor.commands
 		{
 			for (var key:String in last)
 			{
+				if (last[key] != pres[key]) ComponentUtil.limitSheetComponents(
+					 pres[key]/last[key], key, item);
 				item[key] = last[key];
 			}
+			
 			
 			var data:Object = JSON.parse(item.toJSON());
 			
@@ -77,6 +81,10 @@ package editor.commands
 			for (var key:String in pres)
 			{
 				item[key] = pres[key];
+				
+				if (last[key] != pres[key]) ComponentUtil.limitSheetComponents(
+					last[key] / pres[key], key, item);
+				item[key] = last[key];
 			}
 			
 			var data:Object = JSON.parse(item.toJSON());
@@ -88,6 +96,7 @@ package editor.commands
 				data.label = (item is AD) ? "广告" : "页面";
 			
 			communicate(JSON.stringify(data));
+			
 		}
 		
 		
@@ -127,7 +136,6 @@ package editor.commands
 			else
 			{
 				commandEnd();
-				presenter.queue.commandsUndo.shift();
 			}
 			
 		}
@@ -151,11 +159,9 @@ package editor.commands
 //					}
 //					else 
 //					{
-						vars.canvas.update();
+					vars.canvas.update();
 //					}
 					config.selectedComponent = null;
-					
-					vars.editorView.toolBar.uptBtnBcgColor();
 				}
 			}
 			else

@@ -40,11 +40,12 @@ package editor.commands
 			url = RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_ORD, provider);
 		}
 		
-		
-		override protected function processRedo():void
+		override protected function processUndo():void
 		{
+			var temp:Array = provider.program.ordComponent(sheet, component, last);
+			
 			var submits:Array, child:Component;
-			for each (child in pres)
+			for each (child in temp)
 			{
 				submits = submits || [];
 				ArrayUtil.push(submits, {
@@ -52,10 +53,29 @@ package editor.commands
 					"order" : child.order
 				});
 			}
-			
-			communicate(JSON.stringify(submits));
+			submits
+			? communicate(JSON.stringify(submits))
+			: commandEnd();
 		}
 		
+					
+		override protected function processRedo():void
+		{
+			var temp:Array = provider.program.ordComponent(sheet, component, pres);
+			
+			var submits:Array, child:Component;
+			for each (child in temp)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd();
+		}
 		
 		/**
 		 * @inheritDoc
@@ -63,9 +83,10 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			orders = sheet ? provider.program.ordComponent(sheet, component, order) : config.orders;
+			last = component.order;
+			pres = order;
 			
-			pres = provider.program.ordComponent(sheet, component, order);
+			orders = sheet ? provider.program.ordComponent(sheet, component, order) : config.orders;
 			
 			config.orders = null;
 			
@@ -78,7 +99,6 @@ package editor.commands
 					"order" : child.order
 				});
 			}
-			
 			submits
 				? communicate(JSON.stringify(submits))
 				: commandEnd();
@@ -93,6 +113,7 @@ package editor.commands
 		{
 			if ($result == "ok")
 			{
+
 				if (vars.components)
 					vars.components.update();
 				if (vars.canvas)
@@ -111,10 +132,7 @@ package editor.commands
 		private var orders:Array;
 		
 		
-		private var last:Array;
-		
-		
-		private var pres:Array;
+		private var pres:uint;
 		
 		/**
 		 * @private
@@ -131,5 +149,9 @@ package editor.commands
 		 */
 		private var order:uint;
 		
+		/**
+		 * @private
+		 */
+		private var last:uint;
 	}
 }

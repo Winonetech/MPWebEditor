@@ -188,7 +188,6 @@ package cn.mvc.queue
 			command.removeEventListener(CommandEvent.COMMAND_END, command_executeHandler);
 			//命令执行完毕，加入撤销队列。
 			pushCommandToUndos(command);
-			
 			MDVars.instance.editorView.toolBar.uptBtnBcgColor();
 		}
 		
@@ -213,6 +212,7 @@ package cn.mvc.queue
 			//命令撤销完毕，加入可重做队列。
 			pushCommandToRedos(command as RevocableCommand);
 			dispatchEvent(new RevocableCommandEvent(RevocableCommandEvent.UNDO_END, command));
+			MDVars.instance.editorView.toolBar.uptBtnBcgColor();
 		}
 		
 		/**
@@ -236,6 +236,7 @@ package cn.mvc.queue
 			//命令重做完毕，加入撤销队列。
 			pushCommandToUndos(command);
 			dispatchEvent(new RevocableCommandEvent(RevocableCommandEvent.UNDO_END, command));
+			MDVars.instance.editorView.toolBar.uptBtnBcgColor();
 		}
 		
 		

@@ -37,12 +37,38 @@ package editor.commands
 		}
 		
 		
+		override protected function processUndo():void
+		{
+			config.orders = provider.program.altPage(page, last["parent"], last["order"]);
+			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
+			if (last["parent"])
+			{
+				page.parentID = last["parent"].id;
+				page.layoutID = null;
+			}
+			else
+			{
+				page.layoutID = provider.layoutID;
+				page.parentID = null;
+			}
+			
+			var data:Object = JSON.parse(page.toJSON());
+			
+			delete data.pages;
+			delete data.components;
+			
+			communicate(JSON.stringify(data), false);
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
 		
 		override protected function excuteCommand():void
 		{
+			last["order"] = page.order;
+			last["parent"] = page.parent;
+			
 			config.orders = provider.program.altPage(page, parent, index);
 			if (parent)
 			{
@@ -60,7 +86,7 @@ package editor.commands
 			delete data.pages;
 			delete data.components;
 			
-			config.orders ? communicate(JSON.stringify(data),false) : commandEnd();
+			communicate(JSON.stringify(data), false);
 		}
 		
 		
@@ -101,7 +127,7 @@ package editor.commands
 				{
 					altPage();
 					//update view
-//					vars.sheets.update();
+					vars.sheets.update();
 				}
 				else
 				{
@@ -154,6 +180,7 @@ package editor.commands
 		 */
 		private var index:uint;
 		
+		private var last:Object = {};
 		
 	}
 }
