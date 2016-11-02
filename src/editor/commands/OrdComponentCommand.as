@@ -41,12 +41,33 @@ package editor.commands
 		}
 		
 		
+		override protected function processUndo():void
+		{
+			var temp:Array = provider.program.ordComponent(sheet, component, last);
+			
+			var submits:Array, child:Component;
+			for each (child in temp)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			
+			submits
+			? communicate(JSON.stringify(submits))
+			: commandEnd();
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
 		
 		override protected function excuteCommand():void
 		{
+			last = component.order;
+			
 			orders = sheet ? provider.program.ordComponent(sheet, component, order) : config.orders;
 			
 			config.orders = null;
@@ -60,7 +81,6 @@ package editor.commands
 					"order" : child.order
 				});
 			}
-			
 			submits
 				? communicate(JSON.stringify(submits))
 				: commandEnd();
@@ -75,6 +95,7 @@ package editor.commands
 		{
 			if ($result == "ok")
 			{
+
 				if (vars.components)
 					vars.components.update();
 				if (vars.canvas)
@@ -107,5 +128,9 @@ package editor.commands
 		 */
 		private var order:uint;
 		
+		/**
+		 * @private
+		 */
+		private var last:uint;
 	}
 }

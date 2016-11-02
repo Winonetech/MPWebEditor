@@ -25,8 +25,6 @@
 			
 			public function update():void
 			{
-				Debugger.log(".......... update ................");
-				
 				removeAllElements();
 				
 				for each (var item:Page in dataProvider)
