@@ -58,7 +58,7 @@ package editor.commands
 			for (var key:String in last)
 			{
 				if (last[key] != pres[key]) ComponentUtil.limitSheetComponents(
-					 pres[key]/last[key], key, item);
+					 last[key] / pres[key], key, item);
 				item[key] = last[key];
 			}
 			
@@ -80,11 +80,9 @@ package editor.commands
 		{
 			for (var key:String in pres)
 			{
-				item[key] = pres[key];
-				
 				if (last[key] != pres[key]) ComponentUtil.limitSheetComponents(
-					last[key] / pres[key], key, item);
-				item[key] = last[key];
+					pres[key] / last[key], key, item);
+				item[key] = pres[key];
 			}
 			
 			var data:Object = JSON.parse(item.toJSON());
