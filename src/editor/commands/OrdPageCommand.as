@@ -45,6 +45,25 @@ package editor.commands
 				: commandEnd();
 		}
 		
+		
+		override protected function processRedo():void
+		{
+			var temp:Array = orderPages(page, pres);
+			
+			var submits:Array, child:Page;
+			for each (child in temp)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd();
+		}
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -52,6 +71,7 @@ package editor.commands
 		override protected function excuteCommand():void
 		{
 			last = page.order;
+			pres = order;
 			
 			orders = page ? orderPages(page, order) : config.orders;
 			
@@ -100,6 +120,8 @@ package editor.commands
 		private var orders:Array;
 		
 		private var last:uint;
+		
+		private var pres:uint;
 		
 	}
 }

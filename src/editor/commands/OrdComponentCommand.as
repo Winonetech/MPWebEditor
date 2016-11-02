@@ -40,7 +40,6 @@ package editor.commands
 			url = RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_ORD, provider);
 		}
 		
-		
 		override protected function processUndo():void
 		{
 			var temp:Array = provider.program.ordComponent(sheet, component, last);
@@ -54,10 +53,28 @@ package editor.commands
 					"order" : child.order
 				});
 			}
-			
 			submits
 			? communicate(JSON.stringify(submits))
 			: commandEnd();
+		}
+		
+					
+		override protected function processRedo():void
+		{
+			var temp:Array = provider.program.ordComponent(sheet, component, pres);
+			
+			var submits:Array, child:Component;
+			for each (child in temp)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd();
 		}
 		
 		/**
@@ -67,6 +84,7 @@ package editor.commands
 		override protected function excuteCommand():void
 		{
 			last = component.order;
+			pres = order;
 			
 			orders = sheet ? provider.program.ordComponent(sheet, component, order) : config.orders;
 			
@@ -112,6 +130,9 @@ package editor.commands
 		 * @private
 		 */
 		private var orders:Array;
+		
+		
+		private var pres:uint;
 		
 		/**
 		 * @private

@@ -120,7 +120,6 @@ package editor.utils
 			presenter.execute(new ShowSheetsCommand);
 			presenter.execute(new ShowComponentTypesCommand);
 			presenter.execute(new AddPageCommand(null, 0, true, false));
-			presenter.queue.commandsUndo.length = presenter.queue.commandsRedo.length = 0;
 			presenter.execute(new OpenSheetCommand);
 		}
 		
