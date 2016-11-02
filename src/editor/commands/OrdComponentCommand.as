@@ -41,6 +41,22 @@ package editor.commands
 		}
 		
 		
+		override protected function processRedo():void
+		{
+			var submits:Array, child:Component;
+			for each (child in pres)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			
+			communicate(JSON.stringify(submits));
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -48,6 +64,8 @@ package editor.commands
 		override protected function excuteCommand():void
 		{
 			orders = sheet ? provider.program.ordComponent(sheet, component, order) : config.orders;
+			
+			pres = provider.program.ordComponent(sheet, component, order);
 			
 			config.orders = null;
 			
@@ -91,6 +109,12 @@ package editor.commands
 		 * @private
 		 */
 		private var orders:Array;
+		
+		
+		private var last:Array;
+		
+		
+		private var pres:Array;
 		
 		/**
 		 * @private
