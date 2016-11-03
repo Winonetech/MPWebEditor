@@ -16,6 +16,8 @@ package editor.commands
 	import editor.views.Debugger;
 	import editor.vos.Page;
 	
+	import flash.geom.PerspectiveProjection;
+	
 	
 	public final class AddPageCommand extends _InternalCommCommand
 	{
@@ -40,6 +42,12 @@ package editor.commands
 			revocable = $revocable;
 			
 			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
+		}
+		
+		
+		override protected function processUndo():void
+		{
+			presenter.execute(new DelPageCommand(page, false));
 		}
 		
 		

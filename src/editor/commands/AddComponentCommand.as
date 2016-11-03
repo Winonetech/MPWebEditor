@@ -48,7 +48,11 @@ package editor.commands
 			
 			url = RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_AMD, provider);
 		}
-		
+
+		override protected function processUndo():void
+		{
+			presenter.execute(new DelComponentCommand(component, false));
+		}
 		
 		/**
 		 * @inheritDoc

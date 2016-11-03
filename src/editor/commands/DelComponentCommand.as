@@ -31,12 +31,13 @@ package editor.commands
 		 * 
 		 */
 		
-		public function DelComponentCommand($component:Component)
+		public function DelComponentCommand($component:Component, $revocable:Boolean = true)
 		{
 			super();
 			
 			sheet = config.editingSheet;
 			component = $component;   
+			revocable = $revocable;
 			
 			method = "GET";
 			
@@ -50,11 +51,13 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			Alert.show("确定删除 " + component.label + " 吗？", "提示",
-				Alert.OK|Alert.CANCEL, null,
-				function(e:CloseEvent):void {
-					e.detail == Alert.OK ? communicate(null, false) : commandEnd();
-			});
+			if (revocable)
+				Alert.show("确定删除 " + component.label + " 吗？", "提示",
+					Alert.OK|Alert.CANCEL, null,
+					function(e:CloseEvent):void {
+						e.detail == Alert.OK ? communicate(null, false) : commandEnd();
+				});
+			else communicate(null, false);
 		}
 		
 		
