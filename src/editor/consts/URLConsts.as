@@ -106,5 +106,13 @@ package editor.consts
 		
 		public static const URL_COMPONENT_ORD:String = "{domain}/component/update/orderIndex";
 		
+		/**
+		 * 
+		 * 撤销删除组件地址。
+		 * 
+		 */
+		
+		public static const URL_COMPONENT_DEL_UNDO:String = "{domain}/page/recoveryDelComponent/{sheetID}";
+		
 	}
 }

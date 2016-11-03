@@ -85,7 +85,7 @@ package editor.commands
 				item[key] = pres[key];
 			}
 			
-			var data:Object = JSON.parse(item.toJSON());
+			var data:Object = JSON.parse(item.toJSON());    //parse = String -> Object
 			
 			delete data.pages;
 			delete data.components;

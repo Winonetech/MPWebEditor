@@ -46,6 +46,7 @@ package editor.commands
 			
 			revocable = $revocable;
 			url = RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_AMD, provider);
+			
 		}
 		
 		

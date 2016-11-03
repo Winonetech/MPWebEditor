@@ -45,6 +45,22 @@ package editor.commands
 		}
 		
 		
+		override protected function processUndo():void
+		{
+			url = RegexpUtil.replaceTag(
+				RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_DEL_UNDO,
+					component), provider);
+		
+			method = "POST";
+			var submits:Array = [];
+			ArrayUtil.push(submits, {"id" : component.id});
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd();
+		}
+		
+		
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -77,7 +93,6 @@ package editor.commands
 			config.orders = null;
 			
 			var submits:Array, child:Component;
-			
 			for each (child in orders)
 			{
 				submits = submits || [];
@@ -134,6 +149,27 @@ package editor.commands
 				else
 				{
 					Debugger.log("修改顺序出错");
+				}
+			}
+			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_DEL_UNDO, component), provider))
+			{
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == 2)
+				{
+					config.orders = provider.program.addComponent(
+						provider.program.sheets[component.sheetID], component, true); 
+					ordComponent();
+					//update view
+					vars.canvas.updateComponent(component, 2);
+					vars.components.update();
+					
+					//clear selected
+					if (config.selectedComponent == component)
+						config.selectedComponent = null;
+				}
+				else
+				{
+					Debugger.log("撤销删除组件出错");
 				}
 			}
 			
