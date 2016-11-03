@@ -108,11 +108,27 @@ package editor.consts
 		
 		/**
 		 * 
-		 * 撤销删除组件地址。
+		 * 撤销删除Page页面组件地址。
 		 * 
 		 */
 		
-		public static const URL_COMPONENT_DEL_UNDO:String = "{domain}/page/recoveryDelComponent/{sheetID}";
+		public static const URL_PAGE_COMPONENT_DEL_UNDO:String = "{domain}/page/recoveryDelComponent/{sheetID}";
 		
+		/**
+		 * 
+		 * 撤销删除AD页面组件地址。
+		 * 
+		 */
+		
+		public static const URL_AD_COMPONENT_DEL_UNDO:String = "{domain}/ad/recoveryDelComponent/{sheetID}";
+	
+		/**
+		 * 
+		 * 撤销删除页面地址。
+		 * 
+		 */
+		
+		public static const URL_PAGE_DEL_UNDO:String = "{domain}/page/recoveryDelPage/{id}";
+
 	}
 }

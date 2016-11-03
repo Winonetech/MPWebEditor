@@ -8,6 +8,7 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
@@ -47,6 +48,15 @@ package editor.commands
 		}
 		
 		
+		override protected function processUndo():void
+		{
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO, page), provider);
+			method = "POST";
+
+			communicate(JSON.stringify(arr4Comm), false);
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -70,7 +80,7 @@ package editor.commands
 		}
 		
 		
-		private function delPage():void
+		private function addPage():void
 		{
 			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider);
 			
@@ -95,23 +105,24 @@ package editor.commands
 				: commandEnd(); 
 		}
 		
-		
 		/**
 		 * @inheritDoc
 		 */
 		
 		override protected function update($result:Object = null):void
 		{
-			if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL, page), provider))
+			if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL, page), provider))
 			{
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == "success")
 				{
+					getChildArr(page);
+					
 					//update data
 					config.orders = provider.program.delPage(page);
 					clearComponentsLinkID(page.id);
 					
-					delPage();
+					addPage();
 					//update view
 					vars.sheets.update();
 					vars.canvas.content.update();
@@ -125,7 +136,7 @@ package editor.commands
 					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
 				}
 			}
-			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
+			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
 			{
 				if ($result == "ok")
 				{
@@ -137,8 +148,48 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
+			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO, page), provider))
+			{
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == 2)
+				{
+					
+					returnPage(page);
+					
+					vars.sheets.update();
+					vars.canvas.content.update();
+					//clear select, editing
+					if (page == config.selectedSheet) config.selectedSheet = null;
+					if (page == config.editingSheet ) config.editingSheet  = null;
+				}
+				else 
+				{
+					Debugger.log("撤销删除页面出错");
+				}
+				
+				arr4Comm    = [];
+				map4Backups.clear();
+			}
 		}
 		
+		
+		
+		private function returnPage($page:Page):void
+		{
+			$page.order = map4Backups[$page.id]["order"];
+			
+			config.orders = provider.program.addPage($page, $page.parent, true);
+			
+			addPage();
+			
+			recoverComponentsLinkID($page);
+			for (var i:int = 0; i < map4Backups[$page.id]["arr"].length; i++)
+			{
+				returnPage(map4Backups[$page.id]["arr"][i]); 
+			}
+			
+	
+		}
 		
 		/**
 		 * @private
@@ -152,11 +203,44 @@ package editor.commands
 			}
 		}
 		
+		private function recoverComponentsLinkID($page:Page):void
+		{
+			for each (var component:Component in $page.componentsMap)
+			{
+				if (component.linkID)
+					component.link = provider.program.pages[component.linkID];
+			}
+		}
 		
+		
+		/**
+		 *
+		 * 遍历获取子页面。
+		 * 
+		 */
+		
+		private function getChildArr($page:Page):void
+		{
+			arr4Comm.push({"id" : $page.id});
+			map4Backups[$page.id] = {"arr" : $page.pagesArr.concat(), "order" : $page.order};
+			for (var i:uint = 0; i < $page.pagesArr.length; i++)
+			{
+				getChildArr($page.pagesArr[i]); 
+			}
+			
+			if ($page == page)
+			{
+				arr4Comm.shift();   //删除父页面
+			}
+			
+		}
 		/**
 		 * @private
 		 */
 		private var page:Page;
 		
+		private var map4Backups:Map = new Map;
+		
+		private var arr4Comm:Array = [];
 	}
 }
