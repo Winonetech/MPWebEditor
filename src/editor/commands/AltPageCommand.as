@@ -60,14 +60,45 @@ package editor.commands
 			communicate(JSON.stringify(data), false);
 		}
 		
+		
+		override protected function processRedo():void
+		{
+			config.orders = provider.program.altPage(page, pres["parent"], pres["order"]);
+			
+			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
+			
+			if (pres["parent"])
+			{
+				page.parentID = pres["parent"].id;
+				page.layoutID = null;
+			}
+			else
+			{
+				page.layoutID = provider.layoutID;
+				page.parentID = null;
+			}
+			
+			var data:Object = JSON.parse(page.toJSON());
+			
+			delete data.pages;
+			delete data.components;
+			
+			communicate(JSON.stringify(data), false);
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 */
 		
 		override protected function excuteCommand():void
 		{
+			
 			last["order"] = page.order;
 			last["parent"] = page.parent;
+			
+			pres["order"] = index;
+			pres["parent"] = parent;
 			
 			config.orders = provider.program.altPage(page, parent, index);
 			if (parent)
@@ -181,6 +212,8 @@ package editor.commands
 		private var index:uint;
 		
 		private var last:Object = {};
+		
+		private var pres:Object = {};
 		
 	}
 }
