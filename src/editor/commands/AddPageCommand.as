@@ -8,6 +8,7 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
@@ -48,6 +49,18 @@ package editor.commands
 		override protected function processUndo():void
 		{
 			presenter.execute(new DelPageCommand(page, false));
+		}
+		
+		
+		override protected function processRedo():void
+		{
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,page),provider);
+			
+			method = "POST";
+			
+			var submits:Array = [];
+			ArrayUtil.push(submits, {"id" : page.id});
+			communicate(JSON.stringify(submits));
 		}
 		
 		
@@ -123,9 +136,12 @@ package editor.commands
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result && $result.result == "success")
 				{
+					
 					//update data
 					page.id = $result.id;
 					config.orders = provider.program.addPage(page, parent, true);
+					
+					map4Backups[page.id] = {"order" : page.order};
 					
 					ordPage();
 					
@@ -157,6 +173,27 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
+			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,page),provider))
+			{
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == 2)
+				{
+					page.order = map4Backups[page.id]["order"];
+					
+					config.orders = provider.program.addPage(page, page.parent, true);
+					
+					ordPage();
+					
+					vars.sheets.update();
+					vars.canvas.content.update();
+					
+					config.selectedSheet = page;
+				}
+				else 
+				{
+					Debugger.log("添加已删除页面出错");
+				}
+			}
 		}
 		
 		
@@ -180,5 +217,8 @@ package editor.commands
 		 */
 		private var home:Boolean;
 		
+		private var submits:Array;
+		
+		private var map4Backups:Map = new Map;
 	}
 }

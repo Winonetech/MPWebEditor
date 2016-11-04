@@ -19,6 +19,7 @@ package editor.commands
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
+	import editor.vos.Page;
 	import editor.vos.Sheet;
 	
 	
@@ -57,7 +58,9 @@ package editor.commands
 		
 		override protected function processRedo():void
 		{
-			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_DEL_UNDO, component), provider);
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag((sheet is Page)
+				? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
+				: URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider);
 			method = "POST";
 			var submits:Array = [];
 			ArrayUtil.push(submits, {"id" : component.id});
@@ -113,7 +116,8 @@ package editor.commands
 					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
 				}
 			}
-			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_DEL_UNDO, component), provider))
+			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_COMPONENT_DEL_UNDO, component), provider) 
+				 || url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider))
 			{
 				if($result is String) $result = JSON.parse($result as String);
 				if($result.result == 2)
