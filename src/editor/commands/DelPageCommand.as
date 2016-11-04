@@ -167,8 +167,6 @@ package editor.commands
 					Debugger.log("撤销删除页面出错");
 				}
 				
-				arr4Comm    = [];
-				map4Backups.clear();
 			}
 		}
 		
@@ -202,6 +200,7 @@ package editor.commands
 					if (component.linkID == $id) component.link = null;
 			}
 		}
+		
 		
 		private function recoverComponentsLinkID($page:Page):void
 		{

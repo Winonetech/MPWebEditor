@@ -44,9 +44,7 @@
 					
 					<sh:ADItem sheet="{program.ad}"/>
 					
-					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"
-								  dragEnter="group_dragEnterHandler(event)"
-								  dragDrop="group_dragDropHandler(event)"/>
+					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"/>
 					
 				</s:VGroup>
 				
@@ -215,7 +213,6 @@
 					item = $e.target as PageItem;
 					down.x = mouseX;
 					down.y = mouseY;
-					
 					stage.addEventListener(MouseEvent.MOUSE_MOVE, group_mouseMoveHandler);
 					stage.addEventListener(MouseEvent.MOUSE_UP, group_mouseUpHandler);
 					item.addEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
@@ -233,7 +230,6 @@
 					mouseMoved = true;
 					
 					startScroll();
-					
 					itemDispatchDown($e);
 				}
 			}
@@ -245,10 +241,8 @@
 			{
 				stopScroll();
 				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
-				
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE, group_mouseMoveHandler);
 				stage.removeEventListener(MouseEvent.MOUSE_UP, group_mouseUpHandler);
-				
 			}
 			
 			/**
@@ -258,7 +252,6 @@
 			{
 				item.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, false));
 				item.removeEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
-				
 				var source:DragSource = new DragSource;
 				source.addData(item.sheet, "page");
 				
@@ -268,22 +261,22 @@
 				DragManager.doDrag(item, source, $e, virtual);
 			}
 			
-			/**
-			 * @private
-			 */
-			private function group_dragEnterHandler($e:DragEvent):void
-			{
-				if ($e.dragSource.dataForFormat("page") as Page)
-					DragManager.acceptDragDrop($e.currentTarget as UIComponent);
-			}
-			
-			/**
-			 * @private
-			 */
-			private function group_dragDropHandler($e:DragEvent):void
-			{
-				CommandUtil.altPage($e.dragSource.dataForFormat("page") as Page);
-			}
+//			/**
+//			 * @private
+//			 */
+//			private function group_dragEnterHandler($e:DragEvent):void
+//			{
+//				if ($e.dragSource.dataForFormat("page") as Page)
+//					DragManager.acceptDragDrop($e.currentTarget as UIComponent);
+//			}
+//			
+//			/**
+//			 * @private
+//			 */
+//			private function group_dragDropHandler($e:DragEvent):void
+//			{
+//				CommandUtil.altPage($e.dragSource.dataForFormat("page") as Page);
+//			}
 			
 			/**
 			 * @private

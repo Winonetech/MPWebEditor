@@ -296,35 +296,49 @@
 				stage.removeEventListener(MouseEvent.MOUSE_UP, resize_mouseUpHandler);
 				if (!config.isLayoutOpened)
 				{
-					CommandUtil.edtComponent(selectedItem.component, {
-						x: selectedItem.x,
-						y: selectedItem.y, 
-						width : selectedItem.width,
-						height: selectedItem.height
-					});
+					if (isChanged("component"))
+					{
+						CommandUtil.edtComponent(selectedItem.component, {
+							x : selectedItem.x,
+							y : selectedItem.y, 
+							width : selectedItem.width,
+							height: selectedItem.height
+						});
+					}
 				}
 				else
 				{
-					var property:String;
-					property = key == "resizeLeftHandler" || key == "resizeRightHandler"
-						? "width" : "height";
-					ComponentUtil.limitSheetComponents(
-						selectedItem[property] / selectedItem.page[property], property);
-					if (key == "resizeRightBottomHandler")
+					if (isChanged("page"))
 					{
+						var property:String;
+						property = key == "resizeLeftHandler" || key == "resizeRightHandler"
+							? "width" : "height";
 						ComponentUtil.limitSheetComponents(
-							selectedItem["width"] / selectedItem.page["width"], "width");
+							selectedItem[property] / selectedItem.page[property], property);
+						if (key == "resizeRightBottomHandler")
+						{
+							ComponentUtil.limitSheetComponents(
+								selectedItem["width"] / selectedItem.page["width"], "width");
+						}
+						CommandUtil.edtSheet(selectedItem.page, {
+							x: selectedItem.x,
+							y: selectedItem.y, 
+							width : selectedItem.width,
+							height: selectedItem.height
+						});
 					}
-					CommandUtil.edtSheet(selectedItem.page, {
-						x: selectedItem.x,
-						y: selectedItem.y, 
-						width : selectedItem.width,
-						height: selectedItem.height
-					});
 				}
 				content.cleanLine();
 			}
-
+			
+			
+			private function isChanged($str:String):Boolean
+			{
+				return selectedItem[$str].x != selectedItem.x         ||
+					   selectedItem[$str].y != selectedItem.y         ||
+					   selectedItem[$str].width != selectedItem.width ||
+					   selectedItem[$str].height != selectedItem.height;
+			}
 			
 			/**
 			 * @private

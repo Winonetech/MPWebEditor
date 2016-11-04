@@ -208,7 +208,7 @@ package editor.views
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, item_mouseMoveHandler);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, item_mouseUpHandler);
 			
-			if (dragging && moving)
+			if (dragging && moving && isChanged(dragging, "page"))
 			{
 				var plus:Point = new Point(mouseX, mouseY).subtract(down);
 				CommandUtil.edtSheet(dragging.page, {

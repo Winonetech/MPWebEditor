@@ -55,6 +55,14 @@ package editor.views
 		}
 		
 		
+		protected function isChanged($dragging:*, $str:String):Boolean
+		{
+			return $dragging[$str].x != $dragging.x         ||
+				   $dragging[$str].y != $dragging.y         ||
+				   $dragging[$str].width != $dragging.width ||
+				   $dragging[$str].height != $dragging.height;	
+		}
+		
 		/**
 		 * @private
 		 */

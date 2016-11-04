@@ -48,7 +48,6 @@ package editor.commands
 		override protected function processUndo():void
 		{
 			var isPage:Boolean = !(!provider.program.pages[component.sheetID])
-			Debugger.log(isPage);
 			url = RegexpUtil.replaceTag(
 				RegexpUtil.replaceTag(isPage 
 					? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 

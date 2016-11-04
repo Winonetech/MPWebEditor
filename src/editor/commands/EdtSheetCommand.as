@@ -57,7 +57,7 @@ package editor.commands
 		{
 			for (var key:String in last)
 			{
-				if (last[key] != pres[key]) ComponentUtil.limitSheetComponents(
+				if (key != "x" && key != "y" && last[key] != pres[key]) ComponentUtil.limitSheetComponents(
 					 last[key] / pres[key], key, item);
 				item[key] = last[key];
 			}
@@ -111,7 +111,10 @@ package editor.commands
 			for (var key:String in scope)
 			{
 				try {
-					if (!updatable && String(item[key]) != String(scope[key])) updatable = true;
+					if (!updatable && String(item[key]) != String(scope[key])) 
+					{
+						updatable = true;
+					}
 					last[key] = item[key];
 					pres[key] = scope[key];
 					item[key] = scope[key];

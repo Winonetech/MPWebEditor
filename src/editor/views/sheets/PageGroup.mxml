@@ -44,7 +44,7 @@
 			 * 
 			 */
 			
-			public function get dataProvider():Object
+			public function get dataProvider():Array
 			{
 				return ed::dataProvider;
 			}
@@ -52,12 +52,22 @@
 			/**
 			 * @private
 			 */
-			public function set dataProvider($value:Object):void
+			public function set dataProvider($value:Array):void
 			{
+//				Debugger.log("");
+//				Debugger.log("==================================");
+//				Debugger.log();
+//				for each (var temp:Page in $value)
+//				{
+//					Debugger.log("| " + temp.label + " |");
+//				}
+//				Debugger.log("==================================");
+//				Debugger.log("");
 				ed::dataProvider = $value;
 				update();
 			}
 			
+			private static var flag:Boolean = true;
 			
 			/**
 			 * 
@@ -86,7 +96,7 @@
 			/**
 			 * @private
 			 */
-			ed var dataProvider:Object;
+			ed var dataProvider:Array;
 			
 		]]>
 	</fx:Script>
