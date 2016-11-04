@@ -47,19 +47,24 @@ package editor.commands
 		
 		override protected function processUndo():void
 		{
-			var isPage:Boolean = !(!provider.program.pages[component.sheetID])
+			var isPage:Boolean = !(!provider.program.pages[component.sheetID]);
 			url = RegexpUtil.replaceTag(
 				RegexpUtil.replaceTag(isPage 
 					? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
 					: URLConsts.URL_AD_COMPONENT_DEL_UNDO,
 					component), provider);
-		
+
 			method = "POST";
 			var submits:Array = [];
 			ArrayUtil.push(submits, {"id" : component.id});
 			submits
 			? communicate(JSON.stringify(submits), false)
 				: commandEnd();
+		}
+		
+		override protected function processRedo():void
+		{
+			presenter.execute(new DelComponentCommand(component, false));
 		}
 		
 		

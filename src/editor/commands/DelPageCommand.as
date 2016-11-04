@@ -56,6 +56,10 @@ package editor.commands
 			communicate(JSON.stringify(arr4Comm), false);
 		}
 		
+		override protected function processRedo():void
+		{
+			presenter.execute(new DelPageCommand(page, false));
+		}
 		
 		/**
 		 * @inheritDoc
@@ -185,8 +189,6 @@ package editor.commands
 			{
 				returnPage(map4Backups[$page.id]["arr"][i]); 
 			}
-			
-	
 		}
 		
 		/**
@@ -231,8 +233,8 @@ package editor.commands
 			{
 				arr4Comm.shift();   //删除父页面
 			}
-			
 		}
+		
 		/**
 		 * @private
 		 */

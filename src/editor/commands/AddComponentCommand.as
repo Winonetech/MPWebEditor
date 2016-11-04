@@ -8,6 +8,7 @@ package editor.commands
 	 */
 	
 	
+	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
@@ -18,6 +19,7 @@ package editor.commands
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
+	import editor.vos.Page;
 	import editor.vos.Sheet;
 	
 	
@@ -54,6 +56,19 @@ package editor.commands
 			presenter.execute(new DelComponentCommand(component, false));
 		}
 		
+		override protected function processRedo():void
+		{
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag((sheet is Page)
+				? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
+				: URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider);
+			method = "POST";
+			var submits:Array = [];
+			ArrayUtil.push(submits, {"id" : component.id});
+			communicate(JSON.stringify(submits));
+			
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -64,7 +79,7 @@ package editor.commands
 				MDConfig.instance.editingSheet.width - 45),ComponentUtil.reviseComponent(y - 30,
 				MDConfig.instance.editingSheet.height - 30));
 			component.componentType = componentType;
-			config.selectedSheet = null;	
+			config.selectedSheet = null;
 			var data:Object = JSON.parse(component.toJSON());
 			
 			delete data.id;
@@ -79,24 +94,42 @@ package editor.commands
 		
 		override protected function update($result:Object = null):void
 		{
-			if ($result is String) $result = JSON.parse($result as String);
-			if ($result.result == "success")
+			if(url == RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_AMD, provider))
 			{
-				//update data
-				component.id = $result.id;
-				component.componentType = componentType;
-				provider.program.addComponent(sheet, component, true);
-				
-				//update view
-				vars.canvas.updateComponent(component, 1);
-				vars.components.update();
-				
-				//set selected
-				config.selectedComponent = component;
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == "success")
+				{
+					//update data
+					component.id = $result.id;
+					component.componentType = componentType;
+					provider.program.addComponent(sheet, component, true);
+					
+					//update view
+					vars.canvas.updateComponent(component, 1);
+					vars.components.update();
+					
+					//set selected
+					config.selectedComponent = component;
+				}
+				else
+				{
+					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				}
 			}
-			else
+			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_COMPONENT_DEL_UNDO, component), provider) 
+				 || url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider))
 			{
-				Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				if($result is String) $result = JSON.parse($result as String);
+				if($result.result == 2)
+				{
+					provider.program.addComponent(sheet, component, true);
+					vars.canvas.updateComponent(component, 1);
+					vars.components.update();
+				}
+				else
+				{
+					Debugger.log("添加已撤销组件出错");
+				}
 			}
 		}
 		
