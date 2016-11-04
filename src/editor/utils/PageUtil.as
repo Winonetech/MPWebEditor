@@ -31,6 +31,12 @@ package editor.utils
 		}
 		
 		
+		public static function isSelf($page:Page, $parent:Page):Boolean
+		{
+			return !($page.parent == $parent);
+		}
+		
+		
 		/**
 		 * 
 		 * 判定$selected是否允许添加到$container中。

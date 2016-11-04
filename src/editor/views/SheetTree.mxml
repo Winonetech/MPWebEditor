@@ -44,9 +44,7 @@
 					
 					<sh:ADItem sheet="{program.ad}"/>
 					
-					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"
-								  dragEnter="group_dragEnterHandler(event)"
-								  dragDrop="group_dragDropHandler(event)"/>
+					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"/>
 					
 				</s:VGroup>
 				
@@ -268,22 +266,22 @@
 				DragManager.doDrag(item, source, $e, virtual);
 			}
 			
-			/**
-			 * @private
-			 */
-			private function group_dragEnterHandler($e:DragEvent):void
-			{
-				if ($e.dragSource.dataForFormat("page") as Page)
-					DragManager.acceptDragDrop($e.currentTarget as UIComponent);
-			}
-			
-			/**
-			 * @private
-			 */
-			private function group_dragDropHandler($e:DragEvent):void
-			{
-				CommandUtil.altPage($e.dragSource.dataForFormat("page") as Page);
-			}
+//			/**
+//			 * @private
+//			 */
+//			private function group_dragEnterHandler($e:DragEvent):void
+//			{
+//				if ($e.dragSource.dataForFormat("page") as Page)
+//					DragManager.acceptDragDrop($e.currentTarget as UIComponent);
+//			}
+//			
+//			/**
+//			 * @private
+//			 */
+//			private function group_dragDropHandler($e:DragEvent):void
+//			{
+//				CommandUtil.altPage($e.dragSource.dataForFormat("page") as Page);
+//			}
 			
 			/**
 			 * @private

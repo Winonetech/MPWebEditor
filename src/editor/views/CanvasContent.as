@@ -300,7 +300,6 @@ package editor.views
 				});
 			}
 			dragging = null;
-			
 			ruleContainer.cleanLine();
 		}
 		
@@ -335,12 +334,15 @@ package editor.views
 						CanvasUtil.getRect(item), 
 						CanvasUtil.getExceptRects(itemsMap, item), 
 						new Rectangle(0, 0, width, height));
-					CommandUtil.edtComponent(item.component, {
-						x: rectangle.x,
-						y: rectangle.y,
-						width : rectangle.width,
-						height: rectangle.height
-					});
+					if(rectangle)
+					{
+						CommandUtil.edtComponent(item.component, {
+							x: rectangle.x,
+							y: rectangle.y,
+							width : rectangle.width,
+							height: rectangle.height
+						});
+					}
 				}
 				else if (AppUtil.isFillMode())
 				{

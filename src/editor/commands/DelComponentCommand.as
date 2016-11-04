@@ -48,9 +48,9 @@ package editor.commands
 		override protected function processUndo():void
 		{
 			var isPage:Boolean = !(!provider.program.pages[component.sheetID]);
-			Debugger.log(isPage);
+			
 			url = RegexpUtil.replaceTag(
-				RegexpUtil.replaceTag(isPage 
+				  RegexpUtil.replaceTag(isPage 
 					? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
 					: URLConsts.URL_AD_COMPONENT_DEL_UNDO,
 					component), provider);
@@ -160,10 +160,8 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
-			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(
-				URLConsts.URL_PAGE_COMPONENT_DEL_UNDO, component), provider) 
-				|| url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(
-				URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider))
+			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_COMPONENT_DEL_UNDO, component), provider) 
+				  || url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider))
 			{
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == 2)
