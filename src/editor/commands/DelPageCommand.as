@@ -47,6 +47,13 @@ package editor.commands
 		}
 		
 		
+		
+		override protected function processRedo():void
+		{
+			presenter.execute(new DelPageCommand(page, false));
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 */

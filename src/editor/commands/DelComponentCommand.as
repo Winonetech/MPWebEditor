@@ -48,8 +48,7 @@ package editor.commands
 		override protected function processUndo():void
 		{
 			url = RegexpUtil.replaceTag(
-				RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_DEL_UNDO,
-					component), provider);
+				  RegexpUtil.replaceTag(URLConsts.URL_COMPONENT_DEL_UNDO, component), provider);
 		
 			method = "POST";
 			var submits:Array = [];
@@ -57,6 +56,11 @@ package editor.commands
 			submits
 			? communicate(JSON.stringify(submits))
 				: commandEnd();
+		}
+		
+		override protected function processRedo():void
+		{
+			presenter.execute(new DelComponentCommand(component, false));
 		}
 		
 		
@@ -160,7 +164,7 @@ package editor.commands
 						provider.program.sheets[component.sheetID], component, true); 
 					ordComponent();
 					//update view
-					vars.canvas.updateComponent(component, 2);
+					vars.canvas.updateComponent(component, 1);
 					vars.components.update();
 					
 					//clear selected
