@@ -138,7 +138,6 @@ package editor.views
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
 			addEventListener(MouseEvent.CLICK, item_clickHandler);
-			addEventListener(MouseEvent.DOUBLE_CLICK, item_doubleClickHandler);
 		}
 		
 		
@@ -233,30 +232,6 @@ package editor.views
 					config.selectedSheet = item ? item.page : null;
 				else 
 					config.selectedSheet = null;
-			}
-		}
-		
-		/**
-		 * @private
-		 */
-		private function item_doubleClickHandler($e:MouseEvent):void
-		{
-			var item:Layout_PageItem = PageUtil.convertPageItem($e.target);
-			if (item)
-			{
-				if (AppUtil.isEditMode())
-				{
-					var rectangle:Rectangle = CanvasUtil.getMaxmizeRect(
-						CanvasUtil.getRect(item), 
-						CanvasUtil.getExceptRects(itemsMap, item), 
-						new Rectangle(0, 0, width, height));
-					CommandUtil.edtSheet(item.page, {
-						x: rectangle.x,
-						y: rectangle.y,
-						width : rectangle.width,
-						height: rectangle.height
-					});
-				}
 			}
 		}
 		

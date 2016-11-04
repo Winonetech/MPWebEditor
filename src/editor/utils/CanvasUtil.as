@@ -230,7 +230,9 @@ package editor.utils
 			var ta:Number = t.length > 1 ? Math.max.apply(null,t) : $container.top;
 			var ba:Number = b.length > 1 ? Math.min.apply(null,b) : $container.bottom;
 			
-			return new Rectangle(la, ta, ra - la, ba - ta);
+			if($selectedComponent.right == ra && $selectedComponent.left == la && $selectedComponent.top == ta && $selectedComponent.bottom == ba)
+				return null;
+			else return new Rectangle(la, ta, ra - la, ba - ta);
 		}		
 		
 		

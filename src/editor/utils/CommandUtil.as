@@ -268,7 +268,7 @@ package editor.utils
 		
 		public static function altPage($page:Page, $index:uint = uint.MAX_VALUE, $parent:Page = null):void
 		{
-			if ($page && $page != $parent && PageUtil.isAllowAdd($page, $parent))
+			if ($page && $page != $parent && PageUtil.isAllowAdd($page, $parent) && PageUtil.isSelf($page, $parent))
 			{
 				presenter.execute(new AltPageCommand($page, $parent, $index));
 			}
