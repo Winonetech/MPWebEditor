@@ -57,7 +57,7 @@ package editor.commands
 		{
 			for (var key:String in last)
 			{
-				if (key != "x" && key != "y" && last[key] != pres[key]) ComponentUtil.limitSheetComponents(
+				if ((key == "width" || key == "height") && last[key] != pres[key]) ComponentUtil.limitSheetComponents(
 					 last[key] / pres[key], key, item);
 				item[key] = last[key];
 			}
@@ -80,7 +80,7 @@ package editor.commands
 		{
 			for (var key:String in pres)
 			{
-				if (last[key] != pres[key]) ComponentUtil.limitSheetComponents(
+				if ((key == "width" || key == "height") && last[key] != pres[key]) ComponentUtil.limitSheetComponents(
 					pres[key] / last[key], key, item);
 				item[key] = pres[key];
 			}
