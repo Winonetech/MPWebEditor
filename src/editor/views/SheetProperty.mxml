@@ -135,7 +135,6 @@
 			private function home_changeHandler($e:Event):void
 			{
 				var preHome:Page = MDProvider.instance.program.home;			
-				MDProvider.instance.program.home = sheet as Page;				
 				CommandUtil.edtSheet(preHome, {home:false});
 				CommandUtil.edtSheet(sheet, {home:true});
 			}

@@ -4,7 +4,7 @@
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
 			  xmlns:sh="editor.views.sheets.*"
 			  icon="PG" selected="{sheet.selected}" 
-			  currentStateChange="sheetitem1_currentStateChangeHandler(event)"
+			  currentStateChange="updatePageGroup(event)"
 			  creationComplete="changeBackgroundIndex(event)"
 			  click="expand_clickHandler(event)">
 	<sh:states>
@@ -143,7 +143,7 @@
 			public var flagT:Boolean;
 			public var flagB:Boolean;
 			
-			private function sheetitem1_currentStateChangeHandler(event:StateChangeEvent):void
+			private function updatePageGroup(event:StateChangeEvent):void
 			{
 				currentState == "packup" ? pageGroup.removeAllElements() : pageGroup.update();
 			}
@@ -190,7 +190,6 @@
 					currentState = expand ? "expand" : "packup";
 					if (selectable) page.expand = $value;
 				}
-				
 			}
 			
 			
