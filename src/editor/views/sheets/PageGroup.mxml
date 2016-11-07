@@ -32,7 +32,7 @@
 					var pageItem:PageItem = new PageItem;
 					pageItem.selectable = selectable;
 					pageItem.forceExpand = forceExpand;
-					pageItem.sheet = item;
+					pageItem.sheet = item;    //此时不会触发set dataProperty
 					addElement(pageItem);
 				}
 			}
@@ -56,7 +56,6 @@
 			{
 //				Debugger.log("");
 //				Debugger.log("==================================");
-//				Debugger.log();
 //				for each (var temp:Page in $value)
 //				{
 //					Debugger.log("| " + temp.label + " |");

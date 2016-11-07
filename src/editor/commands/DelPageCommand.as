@@ -216,15 +216,14 @@ package editor.commands
 		{
 			for each (var component:Component in $page.componentsMap)
 			{
-				if (component.linkID)
-					component.link = provider.program.pages[component.linkID];
+				component.link   = $page;
 			}
 		}
 		
 		
 		/**
 		 *
-		 * 备份。
+		 * 进行备份操作。
 		 * 
 		 */
 		

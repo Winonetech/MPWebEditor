@@ -4,9 +4,9 @@
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
 			  xmlns:sh="editor.views.sheets.*"
 			  icon="PG" selected="{sheet.selected}" 
+			  currentStateChange="sheetitem1_currentStateChangeHandler(event)"
 			  creationComplete="changeBackgroundIndex(event)"
 			  click="expand_clickHandler(event)">
-	
 	<sh:states>
 		
 		<s:State name="packup"/>
@@ -14,24 +14,25 @@
 		<s:State name="expand"/>
 		
 	</sh:states>
-	
 	<mx:HRule y="0" height="1" width="100%" id="topRule" visible="false"/>
 	
 	<mx:HRule y="30" height="1" width="100%" id="bottomRule" visible="false"/>
 	
 	
 	<s:Label id="label" left="3" top="2" height="28"
+			 text.expand="-" text.packup="+"
 			 textAlign="center" verticalAlign="middle"
-			 text.expand="－" text.packup="＋"
 			 styleName="expand" visible="{expandable &amp;&amp; !forceExpand}"
-			 mouseChildren="false" mouseEnabled="false"/>
+			 mouseChildren="false" mouseEnabled="false"
+			 />
 	
-	<sh:SheetIcon left="15" label="{icon}" color="{page.home ? 0xFF0000 : 0xFFFFFF}"/>
+	<sh:SheetIcon left="15" label="{icon}" color="{page.home ? 0xFF0000 : 0xFFFFFF}"
+				  />
 	
 	<sh:SheetLabel id="sheetLabel" left="40" maxWidth="88" label="{sheet.label}"
 				   color="{sheet.editing ? 0xFF0000 : 0xFFFFFF}"/>
 	
-	<sh:PageGroup id="pageGroup" left="25" top="30" includeIn="expand"
+	<sh:PageGroup id="pageGroup" left="25" top="30"
 				  selectable="{selectable}"
 				  forceExpand="{forceExpand}"
 				  dataProvider="{page.pagesArr}"
@@ -47,6 +48,7 @@
 			import mx.core.UIComponent;
 			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
 			import mx.managers.DragManager;
 			
 			
@@ -134,9 +136,18 @@
 				flagT = topRule.visible;
 				
 				flagB = bottomRule.visible;
+				
+				label.text = expand ? "-" : "+";
+				if(!expand) pageGroup.removeAllElements();
 			}
 			public var flagT:Boolean;
 			public var flagB:Boolean;
+			
+			private function sheetitem1_currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				currentState == "packup" ? pageGroup.removeAllElements() : pageGroup.update();
+			}
+			
 			/**
 			 * @private
 			 */
@@ -210,6 +221,7 @@
 			
 			override public function set sheet($value:Sheet):void
 			{
+				
 				super.sheet = $value;
 				page = sheet as Page;
 				
@@ -253,7 +265,6 @@
 			 * @private
 			 */
 			ed var expand:Boolean;
-
 			
 		]]>
 	</fx:Script>
