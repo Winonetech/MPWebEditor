@@ -54,12 +54,12 @@ package editor.commands
 		
 		override protected function processRedo():void
 		{
-			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,page),provider);
+			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,provider);
 			
 			method = "POST";
 			
 			var submits:Array = [];
-			ArrayUtil.push(submits, {"id" : page.id});
+			ArrayUtil.push(submits, {"pageIds" : [page.id], "componentIds" : []});
 			communicate(JSON.stringify(submits));
 		}
 		
@@ -173,7 +173,7 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
-			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,page),provider))
+			else if (url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,provider))
 			{
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == 2)

@@ -50,7 +50,7 @@ package editor.commands
 		
 		override protected function processUndo():void
 		{
-			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO, page), provider);
+			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO, provider);
 			method = "POST";
 
 			communicate(JSON.stringify(arr4Comm), false);
@@ -121,6 +121,8 @@ package editor.commands
 				if ($result.result == "success")
 				{
 					getChildArr(page);
+//					lastHome = provider.program.home;
+					ArrayUtil.push(arr4Comm, {"pageIds" : arrPageId, "componentIds" : arrComponentId});
 					
 					//update data
 					config.orders = provider.program.delPage(page);
@@ -152,19 +154,25 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
-			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO, page), provider))
+			else if (url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO, provider))
 			{
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == 2)
 				{
 					
 					returnPage(page);
+//					provider.program.home = provider.program.home || lastHome;
+					
+					if(provider.program)
+					{
+						if(!provider.program.home) page.home = true;
+					}
 					
 					vars.sheets.update();
 					vars.canvas.content.update();
 					//clear select, editing
-					if (page == config.selectedSheet) config.selectedSheet = null;
-					if (page == config.editingSheet ) config.editingSheet  = null;
+					config.selectedSheet = page;
+					
 				}
 				else 
 				{
@@ -215,23 +223,19 @@ package editor.commands
 		
 		/**
 		 *
-		 * 遍历获取子页面。
 		 * 进行备份操作。
 		 * 
 		 */
 		
 		private function getChildArr($page:Page):void
 		{
-			arr4Comm.push({"id" : $page.id});
+			arrPageId.push($page.id);
+			for (var temp:String in $page.componentsMap) arrComponentId.push(temp);
+			
 			map4Backups[$page.id] = {"arr" : $page.pagesArr.concat(), "order" : $page.order};
 			for (var i:uint = 0; i < $page.pagesArr.length; i++)
 			{
 				getChildArr($page.pagesArr[i]); 
-			}
-			
-			if ($page == page)
-			{
-				arr4Comm.shift();   //删除父页面
 			}
 		}
 		
@@ -243,5 +247,11 @@ package editor.commands
 		private var map4Backups:Map = new Map;
 		
 		private var arr4Comm:Array = [];
+		
+		private var arrPageId:Array = [];
+		
+		private var arrComponentId:Array = [];
+		
+		private var lastHome:Page;
 	}
 }
