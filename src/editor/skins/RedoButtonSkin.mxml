@@ -49,7 +49,7 @@
         <s:State name="disabled" />
     </s:states>
     
-    <s:Image includeIn="down,over" source="@Embed('../../flash/cache/assets/images/redo_white.png')"/>
-    <s:Image excludeFrom="down,over" source="@Embed('../../flash/cache/assets/images/redo_gray.png')"/>
+    <s:Image alpha.over=".7" alpha.disabled=".2" alpha.down=".3" 
+			 source="@Embed('../../flash/cache/assets/images/redo_white.png')"/>
 	
 </s:SparkButtonSkin>

@@ -40,17 +40,29 @@ package editor.commands
 			
 			method = "GET";
 			
-			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag((sheet is Page)
-				? URLConsts.URL_PAGE_DAC
+			url = RegexpUtil.replaceTag(
+				RegexpUtil.replaceTag(
+				(sheet is Page) 
+				? URLConsts.URL_PAGE_DAC 
 				: URLConsts.URL_AD_DAC, sheet), provider);
 		}
 		
 		
 		override protected function processUndo():void
 		{
-//			url = 
+			url = RegexpUtil.replaceTag((sheet is Page) 
+				? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
+				: URLConsts.URL_AD_COMPONENT_DEL_UNDO, provider);
+			
+			method = "POST";
+			
+			
+			var submits:Array = [];
+			ArrayUtil.push(submits, {"ids" : ""});
+			submits
+			? communicate(JSON.stringify(submits), false)
+				: commandEnd();
 		}
-		
 		
 		/**
 		 * @inheritDoc
@@ -60,7 +72,8 @@ package editor.commands
 		{
 			if(sheet && sheet.componentsArr.length != 0)
 			{
-				Alert.show("确定删除" + sheet.label + "的所有组件吗？", "提示",
+
+				Alert.show("确定删除  " + sheet.label + "  的所有组件吗？", "提示",
 					Alert.OK|Alert.CANCEL, null,
 					function(e:CloseEvent):void {
 						e.detail == Alert.OK ? communicate() : commandEnd();
@@ -84,6 +97,7 @@ package editor.commands
 			if ($result is String) $result = JSON.parse($result as String);
 			if ($result.result == "success")
 			{
+
 				for (var temp:String in sheet.componentsMap) arrComponentId.push(temp);
 				
 				provider.program.delAllComponent(sheet);
