@@ -128,7 +128,7 @@ package editor.consts
 		 * 
 		 */
 		
-		public static const URL_PAGE_DEL_UNDO:String = "{domain}/page/recoveryDelPage/{id}";
+		public static const URL_PAGE_DEL_UNDO:String = "{domain}/page/recoveryDelPage";
 
 	}
 }
