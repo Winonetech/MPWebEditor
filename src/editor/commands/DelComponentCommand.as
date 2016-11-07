@@ -48,15 +48,13 @@ package editor.commands
 		override protected function processUndo():void
 		{
 			var isPage:Boolean = !(!provider.program.pages[component.sheetID]);
-			url = RegexpUtil.replaceTag(
-				  RegexpUtil.replaceTag(isPage 
+			url = RegexpUtil.replaceTag(isPage 
 					? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
-					: URLConsts.URL_AD_COMPONENT_DEL_UNDO,
-					component), provider);
+					: URLConsts.URL_AD_COMPONENT_DEL_UNDO, provider);
 
 			method = "POST";
 			var submits:Array = [];
-			ArrayUtil.push(submits, {"id" : component.id});
+			ArrayUtil.push(submits, {"ids" : [component.id]});
 			submits
 			? communicate(JSON.stringify(submits), false)
 				: commandEnd();
@@ -158,8 +156,8 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
-			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_COMPONENT_DEL_UNDO, component), provider) 
-				  || url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_AD_COMPONENT_DEL_UNDO, component), provider))
+			else if (url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_COMPONENT_DEL_UNDO, provider) 
+				  || url == RegexpUtil.replaceTag(URLConsts.URL_AD_COMPONENT_DEL_UNDO  , provider))
 			{
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == 2)

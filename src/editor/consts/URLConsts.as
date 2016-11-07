@@ -112,7 +112,7 @@ package editor.consts
 		 * 
 		 */
 		
-		public static const URL_PAGE_COMPONENT_DEL_UNDO:String = "{domain}/page/recoveryDelComponent/{sheetID}";
+		public static const URL_PAGE_COMPONENT_DEL_UNDO:String = "{domain}/page/recoveryDelComponent";
 		
 		/**
 		 * 
@@ -120,7 +120,7 @@ package editor.consts
 		 * 
 		 */
 		
-		public static const URL_AD_COMPONENT_DEL_UNDO:String = "{domain}/ad/recoveryDelComponent/{sheetID}";
+		public static const URL_AD_COMPONENT_DEL_UNDO:String = "{domain}/ad/recoveryDelComponent";
 	
 		/**
 		 * 
