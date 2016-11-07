@@ -44,10 +44,10 @@ package editor.vos
 		
 		public function addComponent($sheet:Sheet, $component:Component, $order:Boolean = false):Array
 		{
-			if ($sheet && $component &&!components[$component.id])
+			if ($sheet && $component && !components[$component.id])
 			{
 				components[$component.id] = $component;
-				
+				$component.link = $sheet as Page;
 				var result:Array = $sheet.ed::addComponent($component, $order);
 			}
 			return result;

@@ -109,7 +109,8 @@
 							if (item.value > config.editingSheet.width - config.selectedComponent.width)
 							{
 								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
-								prop[item.property] = config.selectedComponent.x;
+								item.value = config.selectedComponent.x;
+								return;
 							}
 							else prop[item.property] = int(item.value);
 							break;
@@ -119,7 +120,8 @@
 							if (item.value > config.editingSheet.height - config.selectedComponent.height)
 							{
 								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
-								prop[item.property] = config.selectedComponent.y;
+								item.value = config.selectedComponent.y;
+								return;
 							}
 							else prop[item.property] = int(item.value);
 							break;
@@ -129,7 +131,8 @@
 							if (item.value > config.editingSheet.width - config.selectedComponent.x)
 							{
 								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
-								prop[item.property] = config.selectedComponent.width;
+								item.value = config.selectedComponent.width;
+								return;
 							}
 							else prop[item.property] = int(item.value);
 							break;
@@ -139,7 +142,8 @@
 							if (item.value > config.editingSheet.height - config.selectedComponent.y)
 							{
 								Alert.show("修改组件超过边界范围，请重新修改！", "警告", Alert.OK);
-								prop[item.property] = config.selectedComponent.height;
+								item.value = config.selectedComponent.height;
+								return;
 							}
 							else prop[item.property] = int(item.value);
 							break;

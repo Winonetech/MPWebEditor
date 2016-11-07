@@ -208,8 +208,7 @@ package editor.commands
 		{
 			for each (var component:Component in $page.componentsMap)
 			{
-				if (component.linkID)
-					component.link = provider.program.pages[component.linkID];
+				component.link   = $page;
 			}
 		}
 		
@@ -217,6 +216,7 @@ package editor.commands
 		/**
 		 *
 		 * 遍历获取子页面。
+		 * 进行备份操作。
 		 * 
 		 */
 		
