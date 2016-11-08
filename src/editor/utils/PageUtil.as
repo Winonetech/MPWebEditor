@@ -31,11 +31,6 @@ package editor.utils
 		}
 		
 		
-		public static function isSelf($page:Page, $parent:Page):Boolean
-		{
-			return !($page.parent == $parent);
-		}
-		
 		
 		/**
 		 * 
@@ -51,6 +46,7 @@ package editor.utils
 			{
 				if ($container)
 				{
+					if ($selected.parent == $container) return false;
 					tempS = $selected;
 					tempC = $container.parent;
 					while (tempS != tempC)
