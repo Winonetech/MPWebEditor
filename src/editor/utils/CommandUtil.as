@@ -27,6 +27,7 @@ package editor.utils
 	import editor.vos.Sheet;
 	
 	import mx.controls.Alert;
+	import mx.events.CloseEvent;
 	
 	import spark.components.RichEditableText;
 	
@@ -180,7 +181,12 @@ package editor.utils
 		{
 			if ($component)
 			{
-				presenter.execute(new DelComponentCommand(config.selectedComponent));
+				Alert.show("确定删除 " + $component.label + " 吗？", "提示",
+					Alert.OK|Alert.CANCEL, null,
+					function(e:CloseEvent):void {
+						if (e.detail == Alert.OK) 
+							presenter.execute(new DelComponentCommand(config.selectedComponent));
+					});
 			}
 		}
 		
@@ -194,9 +200,14 @@ package editor.utils
 		 */
 		public static function delAllComponent($sheet:Sheet):void
 		{
-			if($sheet)
+			if($sheet && $sheet.componentsArr.length != 0)
 			{
-				presenter.execute(new DelAllComponentCommand($sheet));
+				Alert.show("确定删除  " + $sheet.label + "  的所有组件吗？", "提示",
+					Alert.OK|Alert.CANCEL, null,
+					function(e:CloseEvent):void {
+						if (e.detail == Alert.OK) 
+							presenter.execute(new DelAllComponentCommand($sheet));
+					});
 			}
 		}
 		
@@ -303,7 +314,11 @@ package editor.utils
 		{
 			if ($page)
 			{
-				presenter.execute(new DelPageCommand($page));
+				Alert.show("确定删除 " + $page.label + " 吗？", "提示",
+					Alert.OK|Alert.CANCEL, null,
+					function(e:CloseEvent):void {
+						if (e.detail == Alert.OK) presenter.execute(new DelPageCommand($page));
+					});
 			}
 		}
 		

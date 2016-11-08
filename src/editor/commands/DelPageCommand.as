@@ -9,10 +9,14 @@ package editor.commands
 	
 	
 	import cn.mvc.collections.Map;
+	import cn.mvc.core.Command;
+	import cn.mvc.events.CommandEvent;
+	import cn.mvc.events.RevocableCommandEvent;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.core.MDVars;
 	import editor.utils.TabUtil;
 	import editor.views.Debugger;
 	import editor.vos.Component;
@@ -67,20 +71,7 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			if (page)
-			{
-				if (revocable)
-					Alert.show("确定删除 " + page.label + " 吗？", "提示",
-						Alert.OK|Alert.CANCEL, null,
-						function(e:CloseEvent):void {
-							e.detail == Alert.OK ? communicate(null, false) : commandEnd();
-					});
-				else communicate(null, false);
-			}
-			else
-			{
-				commandEnd();
-			}
+			page ? communicate(null, false) : commandEnd();
 		}
 		
 		

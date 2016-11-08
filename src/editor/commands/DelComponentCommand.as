@@ -73,13 +73,7 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			if (revocable)
-				Alert.show("确定删除 " + component.label + " 吗？", "提示",
-					Alert.OK|Alert.CANCEL, null,
-					function(e:CloseEvent):void {
-						e.detail == Alert.OK ? communicate(null, false) : commandEnd();
-				});
-			else communicate(null, false);
+			component ? communicate(null, false) : commandEnd();
 		}
 		
 		

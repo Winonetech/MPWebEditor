@@ -36,7 +36,7 @@ package editor.commands
 		{
 			super();
 			
-			sheet     = config.editingSheet;
+			sheet  = config.editingSheet;
 			
 			method = "GET";
 			
@@ -70,22 +70,8 @@ package editor.commands
 		
 		override protected function excuteCommand():void
 		{
-			if(sheet && sheet.componentsArr.length != 0)
-			{
-
-				Alert.show("确定删除  " + sheet.label + "  的所有组件吗？", "提示",
-					Alert.OK|Alert.CANCEL, null,
-					function(e:CloseEvent):void {
-						e.detail == Alert.OK ? communicate() : commandEnd();
-					});
-			}
-			else
-			{
-				commandEnd();
-			}
+			(sheet && sheet.componentsArr.length != 0) ? communicate() : commandEnd();
 		}
-		
-		
 		
 		
 		/**
@@ -97,7 +83,6 @@ package editor.commands
 			if ($result is String) $result = JSON.parse($result as String);
 			if ($result.result == "success")
 			{
-
 				for (var temp:String in sheet.componentsMap) arrComponentId.push(temp);
 				
 				provider.program.delAllComponent(sheet);
