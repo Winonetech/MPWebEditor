@@ -7,6 +7,7 @@ package editor.commands
 	 * 
 	 */
 	
+	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
@@ -56,13 +57,17 @@ package editor.commands
 			
 			method = "POST";
 			
-			
-			var submits:Array = [];
-			ArrayUtil.push(submits, {"ids" : ""});
-			submits
-			? communicate(JSON.stringify(submits), false)
+			arrComponentId.length != 0
+				? communicate(JSON.stringify({"pageId":sheet.id, "ids": arrComponentId}), false)
 				: commandEnd();
 		}
+		
+		
+		override protected function processRedo():void
+		{
+			presenter.execute(new DelAllComponentCommand(sheet));
+		}
+		
 		
 		/**
 		 * @inheritDoc
@@ -86,35 +91,56 @@ package editor.commands
 		}
 		
 		
-		
-		
 		/**
 		 * @inheritDoc
 		 */
 		
 		override protected function update($result:Object = null):void
 		{
-			if ($result is String) $result = JSON.parse($result as String);
-			if ($result.result == "success")
+			if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag((sheet is Page) 
+					? URLConsts.URL_PAGE_DAC : URLConsts.URL_AD_DAC, sheet), provider))
 			{
-
-				for (var temp:String in sheet.componentsMap) arrComponentId.push(temp);
-				
-				provider.program.delAllComponent(sheet);
-				
-				if (vars.components)
-					vars.components.delAllUpdate();
-				
-				if (vars.canvas)
-					vars.canvas.update();
-				
-				config.selectedComponent = null;
-				
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == "success")
+				{
+					
+					for (var temp:String in sheet.componentsMap) arrComponentId.push(temp);
+					arr4backup = sheet.componentsArr.concat();
+					
+					provider.program.delAllComponent(sheet);
+					
+					if (vars.components)
+						vars.components.delAllUpdate();
+					
+					if (vars.canvas)
+						vars.canvas.update();
+					
+					config.selectedComponent = null;
+					
+				}
+				else
+				{
+					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				}
 			}
-			else
+			else if (url == RegexpUtil.replaceTag((sheet is Page) 
+				? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
+				: URLConsts.URL_AD_COMPONENT_DEL_UNDO, provider))
 			{
-				Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == 2)
+				{
+					var l:int = arr4backup.length - 1;	
+					for (l; l >= 0; l--)
+					{
+						provider.program.addComponent(sheet, arr4backup[l]);
+						vars.canvas.updateComponent(arr4backup[l], 1);
+						vars.components.update();
+					}
+					
+				}
 			}
+			
 		}
 		
 		
@@ -124,5 +150,7 @@ package editor.commands
 		private var sheet:Sheet;
 		
 		private var arrComponentId:Array = [];
+		
+		private var arr4backup:Array;
 	}
 }

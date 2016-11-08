@@ -194,7 +194,7 @@ package editor.utils
 		 */
 		public static function delAllComponent($sheet:Sheet):void
 		{
-			if($sheet)
+			if($sheet && $sheet.componentsArr.length != 0)
 			{
 				presenter.execute(new DelAllComponentCommand($sheet));
 			}
