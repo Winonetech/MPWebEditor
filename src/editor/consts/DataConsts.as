@@ -18,8 +18,8 @@ package editor.consts
 		public static const PROGRAM:Object = 
 		{
 //			domain:"http://192.168.7.3:9000/layout", 
-//			domain:"http://172.16.1.4:9002/layout",   
-			domain:"http://172.16.0.17:9000/layout",   
+			domain:"http://172.16.1.4:9002/layout",   
+//			domain:"http://172.16.0.17:9000/layout",   
 //			domain:"http://172.16.1.4:9000/content/publish",   
 			programId: 25,
 			layoutId:  2,

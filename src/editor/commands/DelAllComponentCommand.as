@@ -117,13 +117,13 @@ package editor.commands
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == 2)
 				{
-					var l:int = arr4backup.length - 1;	
-					for (l; l >= 0; l--)
+					var l:int = arr4backup.length;	
+					for (var i:uint = 0; i < l; i++)
 					{
-						provider.program.addComponent(sheet, arr4backup[l]);
-						vars.canvas.updateComponent(arr4backup[l], 1);
-						vars.components.update();
+						provider.program.addComponent(sheet, arr4backup[i], true);
 					}
+						vars.canvas.update();
+						vars.components.update();
 					
 				}
 			}
