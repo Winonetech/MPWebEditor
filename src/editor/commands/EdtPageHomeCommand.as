@@ -1,13 +1,34 @@
 package editor.commands
 {
+	
+	
+	/**
+	 * 
+	 * 修改页面主页。
+	 * 
+	 */
+	
+	
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.core.MDProvider;
 	import editor.views.Debugger;
 	import editor.vos.Page;
 
 	public final class EdtPageHomeCommand extends _InternalCommCommand
 	{
+		
+		/**
+		 * 
+		 * 修改页面主页。
+		 * 
+		 * @param $changed:Page      被改变主页的页面。
+		 * @param $changing:Page     欲改变主页的页面。
+		 * @param $revocable:Boolean 是否推送进撤销队列。默认值为:true
+		 * 
+		 */
+		
 		public function EdtPageHomeCommand($changed:Page, $changing:Page, $revocable:Boolean = true)
 		{
 			super();
@@ -65,7 +86,7 @@ package editor.commands
 				//update view
 				if (updatable) 
 				{
-					vars.canvas.update();
+					provider.program.home = changing;
 				}
 			}
 			else
