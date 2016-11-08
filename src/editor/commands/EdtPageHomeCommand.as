@@ -41,6 +41,18 @@ package editor.commands
 		}
 		
 		
+		override protected function processUndo():void
+		{
+			presenter.execute(new EdtPageHomeCommand(changing, changed, false));
+		}
+		
+		
+		override protected function processRedo():void
+		{
+			presenter.execute(new EdtPageHomeCommand(changed, changing, false));
+		}
+		
+		
 		override protected function excuteCommand():void
 		{
 			updatable = false;
@@ -83,7 +95,6 @@ package editor.commands
 			if ($result is String) $result = JSON.parse($result as String);
 			if ($result.result == "success")
 			{
-				//update view
 				if (updatable) 
 				{
 					provider.program.home = changing;
@@ -101,5 +112,6 @@ package editor.commands
 		private var changed:Page;
 		
 		private var changing:Page;
+		
 	}
 }

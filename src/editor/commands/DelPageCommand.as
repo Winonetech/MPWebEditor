@@ -153,9 +153,10 @@ package editor.commands
 					returnPage(page);
 //					provider.program.home = provider.program.home || lastHome;
 					
-					if(provider.program)
+					//执行撤销后设置首页
+					if(provider.program && (provider.program.home != page))
 					{
-						if(!provider.program.home) page.home = true;
+						presenter.execute(new EdtPageHomeCommand(provider.program.home, page, false));
 					}
 					
 					vars.sheets.update();
