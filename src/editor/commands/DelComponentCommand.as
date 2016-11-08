@@ -53,11 +53,8 @@ package editor.commands
 					: URLConsts.URL_AD_COMPONENT_DEL_UNDO, provider);
 
 			method = "POST";
-			var submits:Array = [];
-			ArrayUtil.push(submits, {"ids" : [component.id]});
-			submits
-			? communicate(JSON.stringify(submits), false)
-				: commandEnd();
+			
+			communicate(JSON.stringify({"pageId" : sheet.id, "ids" : [component.id]}), false)
 		}
 		
 		override protected function processRedo():void
