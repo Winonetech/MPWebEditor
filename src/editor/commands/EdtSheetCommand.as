@@ -41,12 +41,14 @@ package editor.commands
 		 * 
 		 */
 		
-		public function EdtSheetCommand($sheet:Sheet, $scope:Object)
+		public function EdtSheetCommand($sheet:Sheet, $scope:Object, $revovabel:Boolean = true)
 		{
 			super();
 			
 			item  = $sheet;
 			scope = $scope;
+			
+			revocable = $revovabel;
 			
 			url = RegexpUtil.replaceTag((item is Page) 
 				? URLConsts.URL_PAGE_AMD 

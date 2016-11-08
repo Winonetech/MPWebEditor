@@ -34,6 +34,21 @@ package editor.utils
 	
 	public class CommandUtil extends NoInstance
 	{
+	
+		
+	
+		/**
+		 * 
+		 * 修改页面主页。
+		 * 
+		 * @param $changed:Page  被改变主页的页面。
+		 * @param $changing:Page 欲改变主页的页面。
+		 * 
+		 */
+		public static function EdtPageHome($changed:Page, $changing:Page):void
+		{
+			presenter.execute(new EdtPageHomeCommand($changed, $changing));
+		}
 		
 		
 		/**
@@ -340,10 +355,10 @@ package editor.utils
 		 * 
 		 */
 		
-		public static function edtSheet($sheet:Sheet, $scope:Object = null):void
+		public static function edtSheet($sheet:Sheet, $scope:Object = null, $revovabel:Boolean = true):void
 		{
 			if ($sheet && $scope)
-				presenter.execute(new EdtSheetCommand($sheet, $scope))
+				presenter.execute(new EdtSheetCommand($sheet, $scope, $revovabel))
 		}
 		
 		

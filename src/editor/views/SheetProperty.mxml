@@ -137,8 +137,7 @@
 				if (!(sheet as Page).home)
 				{
 					var preHome:Page = MDProvider.instance.program.home;			
-					CommandUtil.edtSheet(preHome, {home:false});
-					CommandUtil.edtSheet(sheet, {home:true});
+					CommandUtil.EdtPageHome(preHome, sheet as Page);
 				}
 			}
 			

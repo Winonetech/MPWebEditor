@@ -143,6 +143,12 @@
 			public var flagT:Boolean;
 			public var flagB:Boolean;
 			
+			
+			/**
+			 * 
+			 * pageGroup的显示与更新。
+			 * 
+			 */
 			private function updatePageGroup(event:StateChangeEvent):void
 			{
 				currentState == "packup" ? pageGroup.removeAllElements() : pageGroup.update();

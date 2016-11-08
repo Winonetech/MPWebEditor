@@ -112,7 +112,6 @@ package editor.commands
 				if ($result.result == "success")
 				{
 					getChildArr(page);
-//					lastHome = provider.program.home;
 					ArrayUtil.push(arr4Comm, {"pageIds" : arrPageId, "componentIds" : arrComponentId});
 					
 					//update data

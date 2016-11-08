@@ -12,6 +12,9 @@ package editor.vos
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.MathUtil;
 	
+	import editor.commands.EdtSheetCommand;
+	import editor.commands.EdtPageHomeCommand;
+	import editor.core.MDPresenter;
 	import editor.core.MDVars;
 	import editor.core.ed;
 	import editor.utils.TabUtil;
@@ -269,7 +272,12 @@ package editor.vos
 				delete pages [$page.id];
 				delete sheets[$page.id];
 				
-				if (home == $page) home = children[0];
+				if (home == $page) 
+				{
+					home = children[0];
+					MDPresenter.instance.execute(new EdtPageHomeCommand($page, home, false));
+				}
+				
 				
 				if (TabUtil.sheet2Tab($page))
 					TabUtil.sheet2Tab($page).closePage();
