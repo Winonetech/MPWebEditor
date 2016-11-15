@@ -173,7 +173,7 @@
 			 */
 			private function saveTemplate_clickHandler(event:MouseEvent):void
 			{
-				CommandUtil.saveTemplateDate();
+//				CommandUtil.saveTemplateDate();
 			}
 			
 			/**

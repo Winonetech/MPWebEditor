@@ -406,11 +406,11 @@ package editor.utils
 		 * 保存模版 
 		 * 
 		 */
-		public static function saveTemplateDate():void
-		{
-			presenter.execute(new FullScreenCommand(true));
-			presenter.execute(new SaveTemplateDateCommand); 
-		}
+//		public static function saveTemplateDate():void
+//		{
+//			presenter.execute(new FullScreenCommand(true));
+//			presenter.execute(new SaveTemplateDateCommand); 
+//		}
 		
 		
 		
