@@ -12,8 +12,8 @@ package editor.vos
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.MathUtil;
 	
-	import editor.commands.EdtSheetCommand;
 	import editor.commands.EdtPageHomeCommand;
+	import editor.commands.EdtSheetCommand;
 	import editor.core.MDPresenter;
 	import editor.core.MDVars;
 	import editor.core.ed;
@@ -50,7 +50,6 @@ package editor.vos
 			if ($sheet && $component && !components[$component.id])
 			{
 				components[$component.id] = $component;
-				$component.link = $sheet as Page;
 				var result:Array = $sheet.ed::addComponent($component, $order);
 			}
 			return result;
@@ -159,7 +158,7 @@ package editor.vos
 						var arrAdd:Array = ed::addChild($page, true);
 						if ($parent) $parent.expand = true;
 						
-						if (home == $page) home = children[0];
+						if (home == $page) MDPresenter.instance.execute(new EdtPageHomeCommand($page, children[0], false));
 						var result:Array;
 						
 						result = arrAdd ? (arrDel ? arrDel.concat(arrAdd) : arrAdd) : (arrDel ? arrDel : null);

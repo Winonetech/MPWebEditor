@@ -63,10 +63,7 @@ package editor.commands
 				? URLConsts.URL_PAGE_COMPONENT_DEL_UNDO 
 				: URLConsts.URL_AD_COMPONENT_DEL_UNDO, provider);
 			method = "POST";
-			var submits:Array = [];
-			ArrayUtil.push(submits, {"id" : component.id});
-			communicate(JSON.stringify(submits));
-			
+			communicate(JSON.stringify({"pageId":sheet.id, "ids":[component.id]}));
 		}
 		
 		

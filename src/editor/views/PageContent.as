@@ -57,8 +57,12 @@ package editor.views
 			
 			itemsMap.clear();
 			
-			width  = findMax("width")  < 1920 ? 1920 : findMax("width");
-			height = findMax("height") < 1080 ? 1080 : findMax("height");
+			if(findMax("width") > width || findMax("height") > height)
+			{
+				width  = findMax("width")  < 1920 ? 1920 : findMax("width");
+				height = findMax("height") < 1080 ? 1080 : findMax("height");
+			}
+			
 			
 			background.graphics.beginFill(0xffffff);
 			background.graphics.drawRect(0, 0, width, height);
@@ -152,7 +156,7 @@ package editor.views
 			if (item)
 			{
 				//编辑模式下立即停止冒泡。
-				if (AppUtil.isEditMode()) $e.stopImmediatePropagation();
+				if (AppUtil.isEditMode() || AppUtil.isTemplate()) $e.stopImmediatePropagation();
 				dragging = item;
 				stat.x = dragging.x;
 				stat.y = dragging.y;
@@ -171,7 +175,7 @@ package editor.views
 		{
 			
 			var mouse:Point = new Point(mouseX, mouseY);
-			if (config.mode == "edit" && moving)
+			if ((config.mode == "edit" || "template") && moving)
 			{
 				if (dragging)
 				{

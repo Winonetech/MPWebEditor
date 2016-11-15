@@ -18,6 +18,15 @@ package editor.consts
 		public static const URL_LAYOUT_APPLY:String = "{domain}/layout/apply/{programID}/{layoutID}/{userName}";
 		
 		
+		
+		/**
+		 * 
+		 * 保存模版地址
+		 * 
+		 */
+		public static const URL_LAYOUT_SAVETEMPLATE:String = "{domain}/page";
+		
+		
 		/**
 		 * 
 		 * 获取布局地址。

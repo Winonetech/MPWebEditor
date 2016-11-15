@@ -12,6 +12,7 @@
 		<s:State name="edit"/>
 		<s:State name="fill"/>
 		<s:State name="view"/>
+		<s:State name="template"/>
 	</s:states>
 	
 	<s:layout>
@@ -31,11 +32,11 @@
 		
 		<s:HGroup verticalAlign="middle" mouseEnabled="false" gap="25" creationComplete="hgroup1_creationCompleteHandler(event)">
 			
-			<s:Button height="20" id="undo" toolTip="撤销" includeIn="edit"
+			<s:Button height="20" id="undo" toolTip="撤销" includeIn="edit,template"
 					  skinClass="editor.skins.UndoButtonSkin"
 					  click="undo_clickHandler(event)"/>
 			
-			<s:Button height="20" id="redo" toolTip="恢复" includeIn="edit"
+			<s:Button height="20" id="redo" toolTip="恢复" includeIn="edit,template"
 					  skinClass="editor.skins.RedoButtonSkin"
 					  click="redo_clickHandler(event)"/>
 		</s:HGroup>
@@ -61,13 +62,13 @@
 					change="showGrid_changeHandler(event)"/>
 		
 		<s:CheckBox id="check" label="拖拽模式"  color="0xFFFFFF"
-					includeIn="edit"
+					includeIn="edit,template"
 					selected="{config.dragOnly}"
 					skinClass="editor.skins.EditorCheckBoxSkin"
 					change="dragOnly_changHandler(event)"/>
 		
 		<s:CheckBox id="alignMode" label="对齐模式" color="0xFFFFFF"
-					includeIn="edit"
+					includeIn="edit,template"
 					selected="{config.alignMode}"
 					skinClass="editor.skins.EditorCheckBoxSkin"
 					change="alignMode_changeHandler(event)"/>
@@ -82,11 +83,13 @@
 					  click="full_clickHandler(event)"/>
 			
 			<!-- 保存按钮 -->
-			<s:Button height="30" styleName="title" label="应用"
-					  id="saveBtn" toolTip="应用发布"
-					  includeIn="edit"
+			<s:Button height="30" styleName="title" 
+					  label.edit="应用" label.template="保存"
+					  id="saveBtn" toolTip.edit="应用发布" toolTip.template="保存为模版"
+					  includeIn="edit,template"
 					  skinClass="editor.skins.ButtonNormalSkin"
-					  click="save_clickHandler(event)"/>
+					  click.edit="save_clickHandler(event)"
+					  click.template="saveTemplate_clickHandler(event)"/>
 			
 		</s:HGroup>
 		
@@ -163,22 +166,15 @@
 			private function save_clickHandler(event:MouseEvent):void
 			{
 				CommandUtil.saveData();
-				
-				
-//				var http:HTTPService = new HTTPService;
-//				http.url = RegexpUtil.replaceTag(URLConsts.URL_LAYOUT_APPLY, provider);
-//				http.method = "POST";
-//				http.headers = {"userName":"YuanZhang"};
-//				http.send();
-				
-//				var req:URLRequest = new URLRequest;
-//				req.url = RegexpUtil.replaceTag(URLConsts.URL_LAYOUT_APPLY, provider);
-//				req.method = URLRequestMethod.POST;
-//				req.requestHeaders.push(new URLRequestHeader("userName", "YuanZhang"));
-//				var loader:URLLoader=new URLLoader(req);
-//				loader.load(req);
 			}
 			
+			/**
+			 * @private 
+			 */
+			private function saveTemplate_clickHandler(event:MouseEvent):void
+			{
+				CommandUtil.saveTemplateDate();
+			}
 			
 			/**
 			 * @private
@@ -223,8 +219,11 @@
 			 */
 			public function uptBtnBcgColor():void
 			{
-				undo.enabled = queue.undoable;
-				redo.enabled = queue.redoable;
+				if (undo && redo)
+				{
+					undo.enabled = queue.undoable;
+					redo.enabled = queue.redoable;
+				}
 			}
 			
 			private function get queue():RevocableCommandQueue
@@ -274,6 +273,7 @@
 			{
 				uptBtnBcgColor();
 			}
+			
 			
 		]]>
 	</fx:Script>

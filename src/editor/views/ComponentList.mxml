@@ -21,12 +21,12 @@
 		     <s:HGroup width="100%" mouseEnabled="false"
 				       horizontalAlign="right" verticalAlign="middle">
 
-			 <s:Button label="一键删除" visible="{isEdit}"
-			   skinClass="editor.skins.ButtonNormalSkin"
-			   click="delAll_clickHandler(event)"/> 
+			 <s:Button label="一键删除" visible="{isEdit || isTemplate}"
+					   skinClass="editor.skins.ButtonNormalSkin"
+					   click="delAll_clickHandler(event)"/> 
 				 
 		     <s:Button width="22" styleName="title" label="-" toolTip="删除组件"
-				       visible="{isEdit}"
+				       visible="{isEdit || isTemplate}"
 					   skinClass="editor.skins.ButtonNormalSkin"
 				       click="del_clickHandler(event)"/>
 			
@@ -188,7 +188,7 @@
 			 */
 			private function group_mouseDownHandler($e:MouseEvent):void
 			{
-				if (isEdit && $e.target is ComponentListItem)
+				if ((isEdit || isTemplate) && $e.target is ComponentListItem)
 				{
 					mouseMoved = dragStarted = false;
 					
@@ -279,10 +279,20 @@
 				update();
 			}
 			
-			
+			/**
+			 * @private
+			 */
 			private function get isEdit():Boolean
 			{
 				return config.mode == "edit";
+			}
+			
+			/**
+			 * @private 
+			 */
+			private function get isTemplate():Boolean
+			{
+				return config.mode == "template";
 			}
 			
 			/**

@@ -36,21 +36,6 @@ package editor.utils
 	{
 	
 		
-	
-		/**
-		 * 
-		 * 修改页面主页。
-		 * 
-		 * @param $changed:Page  被改变主页的页面。
-		 * @param $changing:Page 欲改变主页的页面。
-		 * 
-		 */
-		public static function EdtPageHome($changed:Page, $changing:Page):void
-		{
-			presenter.execute(new EdtPageHomeCommand($changed, $changing));
-		}
-		
-		
 		/**
 		 * 
 		 * 组件内容填充完毕处理。
@@ -362,6 +347,21 @@ package editor.utils
 		}
 		
 		
+		
+		/**
+		 * 
+		 * 修改页面主页。
+		 * 
+		 * @param $changed:Page  被改变主页的页面。
+		 * @param $changing:Page 欲改变主页的页面。
+		 * 
+		 */
+		public static function EdtPageHome($changed:Page, $changing:Page):void
+		{
+			presenter.execute(new EdtPageHomeCommand($changed, $changing));
+		}
+		
+		
 		/**
 		 * 
 		 * 打开版面，版面包含页面和广告。
@@ -399,6 +399,19 @@ package editor.utils
 			presenter.execute(new FullScreenCommand(true));
 			presenter.execute(new SaveDataCommand);
 		}
+		
+		
+		/**
+		 * 
+		 * 保存模版 
+		 * 
+		 */
+		public static function saveTemplateDate():void
+		{
+			presenter.execute(new FullScreenCommand(true));
+			presenter.execute(new SaveTemplateDateCommand); 
+		}
+		
 		
 		
 		/**

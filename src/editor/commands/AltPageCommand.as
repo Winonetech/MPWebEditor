@@ -22,6 +22,8 @@ package editor.commands
 		/**
 		 * 
 		 * 构造函数。
+		 * @param $page:Page 要改变层级的页面
+		 * @param $parent:Page = null (default = null) 父级页面，若为null，则意为改变页面层级至顶级。
 		 * 
 		 */
 		

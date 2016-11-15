@@ -22,36 +22,36 @@
 	
 	<s:Button buttonMode="true" id="resizeLeft"
 			  width="10" height="10"
-			  visible="{isEdit &amp;&amp; !config.dragOnly}"
+			  visible="{(isEdit || isTemplate) &amp;&amp; !config.dragOnly}"
 			  verticalCenter="0" left="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeRight"
 			  width="10" height="10"
-			  visible="{isEdit &amp;&amp; !config.dragOnly}"
+			  visible="{(isEdit || isTemplate) &amp;&amp; !config.dragOnly}"
 			  verticalCenter="0" right="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeTop"
 			  width="10" height="10"
-			  visible="{isEdit &amp;&amp; !config.dragOnly}"
+			  visible="{(isEdit || isTemplate) &amp;&amp; !config.dragOnly}"
 			  horizontalCenter="0" top="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeBottom"
 			  width="10" height="10"
-			  visible="{isEdit &amp;&amp; !config.dragOnly}"
+			  visible="{(isEdit || isTemplate) &amp;&amp; !config.dragOnly}"
 			  horizontalCenter="0" bottom="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:Button buttonMode="true" id="resizeRightBottom"
 			  width="10" height="10"
-			  visible="{isEdit &amp;&amp; !config.dragOnly}"
+			  visible="{(isEdit || isTemplate) &amp;&amp; !config.dragOnly}"
 			  right="0" bottom="0"
 			  mouseDown="resize_mouseDownHandler(event)"/>
 	
 	<s:BorderContainer horizontalCenter="0" verticalCenter="0"
-					   visible="{isEdit &amp;&amp; !config.dragOnly}"
+					   visible="{(isEdit || isTemplate) &amp;&amp; !config.dragOnly}"
 					   mouseChildren="false" mouseEnabled="false"
 					   id="btnsHodler" backgroundAlpha="0" alpha=".1">
 		
@@ -510,9 +510,20 @@
 				return config.isLayoutOpened ? viewer.content as PageContent : viewer.content as CanvasContent;
 			}
 			
+			/**
+			 * @private 
+			 */
 			private function get isEdit():Boolean
 			{
 				return config.mode == 'edit';
+			}
+			
+			/**
+			 * @private 
+			 */
+			private function get isTemplate():Boolean
+			{
+				return config.mode == 'template';
 			}
 			
 			/**

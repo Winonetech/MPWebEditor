@@ -50,7 +50,6 @@ package editor.commands
 			provider.programName   = data.programName;
 			provider.defaultWidth  = data.defaultWidth;
 			provider.defaultHeight = data.defaultHeight;
-			Debugger.log("userName -> " + data.userName);
 			provider.userName      = data.userName;
 			config.mode			   = data.mode;
 		}

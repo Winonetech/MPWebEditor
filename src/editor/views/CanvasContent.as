@@ -236,7 +236,7 @@ package editor.views
 			if (item)
 			{
 				//编辑模式下立即停止冒泡。
-				if (AppUtil.isEditMode()) $e.stopImmediatePropagation();
+				if (AppUtil.isEditMode() || AppUtil.isTemplate()) $e.stopImmediatePropagation();
 				dragging = item;
 				stat.x = dragging.x;
 				stat.y = dragging.y;
@@ -255,7 +255,7 @@ package editor.views
 		{
 			
 			var mouse:Point = new Point(mouseX, mouseY);
-			if (config.mode == "edit" && moving)
+			if ((config.mode == "edit" || "template") && moving)
 			{
 				if (dragging)
 				{
@@ -330,7 +330,7 @@ package editor.views
 			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
 			if (item)
 			{
-				if (AppUtil.isEditMode())
+				if (AppUtil.isEditMode() || AppUtil.isTemplate())
 				{
 					var rectangle:Rectangle = CanvasUtil.getMaxmizeRect(
 						CanvasUtil.getRect(item), 

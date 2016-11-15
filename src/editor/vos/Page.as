@@ -199,7 +199,7 @@ package editor.vos
 			setProperty("home", $value);
 		}
 		
-		
+
 		/**
 		 * 
 		 * 父级ID。
@@ -332,6 +332,12 @@ package editor.vos
 		public var expand:Boolean;
 		
 		public var expandable:Boolean;
+		
+		
+		/**
+		 * 是否为模版
+		 */
+		public var template:Boolean;
 		
 		/**
 		 * @private

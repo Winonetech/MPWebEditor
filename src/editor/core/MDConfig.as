@@ -134,6 +134,8 @@ package editor.core
 		}
 		
 		
+		
+		
 		/**
 		 * 
 		 * 临时记录需要修改的元素（组件，页面）。
@@ -197,7 +199,7 @@ package editor.core
 		 * @private
 		 */
 		private var lastEditingSheet:Sheet;
-
+		
 		/**
 		 * @private
 		 */

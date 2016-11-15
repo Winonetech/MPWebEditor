@@ -3,7 +3,7 @@
 				  xmlns:s ="library://ns.adobe.com/flex/spark" 
 				  xmlns:mx="library://ns.adobe.com/flex/mx"
 				  xmlns:pr="editor.views.properties.*"
-				  mouseChildren="{config.mode == 'edit'}"
+				  mouseChildren="{config.mode == 'edit' || 'template'}"
 				  xmlns:vw="editor.views.*" width="100%">
 	
 	<vw:states>
@@ -90,7 +90,7 @@
 				
 				<s:HGroup width="100%">
 					<pr:PropertyItem property="pageBackground" currentState="pageBtn"
-									 label="背景图片："
+									 label="背景图片："  mouseChildren="{config.mode != 'fill'}"
 									 change="pageBackground_changeHandler(event)"/>
 				</s:HGroup>
 				
@@ -98,11 +98,12 @@
 					
 					<pr:PropertyItem property="home" includeIn="page"
 									 currentState="bool" enabled="false" 
+									 visible="{page.parent == null}"
 									 value="{page.home}" label="是否为首页："
 									 change="property_changeHandler(event)"/>
 					
-					<pr:PropertyItem property="home" includeIn="page"
-									 currentState="index" 
+					<pr:PropertyItem property="home" includeIn="page" mouseChildren="{config.mode != 'fill'}"
+									 currentState="index" visible="{page.parent == null}"
 									 change="home_changeHandler(event)"/>
 					
 					<pr:PropertyItem property="waitTime" includeIn="ad"
@@ -128,16 +129,26 @@
 			import editor.vos.Page;
 			import editor.vos.Sheet;
 			
+			import mx.binding.utils.BindingUtils;
+			import mx.controls.Alert;
+			
 			
 			/**
 			 * @private
 			 */
 			private function home_changeHandler($e:Event):void
 			{
-				if (!(sheet as Page).home)
+				if (!(sheet as Page).parent)
 				{
-					var preHome:Page = MDProvider.instance.program.home;			
-					CommandUtil.EdtPageHome(preHome, sheet as Page);
+					if (!(sheet as Page).home)
+					{
+						var preHome:Page = MDProvider.instance.program.home;			
+						CommandUtil.EdtPageHome(preHome, sheet as Page);
+					}
+				}
+				else
+				{
+					Alert.show("子级页面无法设置首页", "提示", Alert.OK);
 				}
 			}
 			
@@ -210,7 +221,6 @@
 			 */
 			[Bindable]
 			private var page:Page;
-			
 			
 			/**
 			 * @private

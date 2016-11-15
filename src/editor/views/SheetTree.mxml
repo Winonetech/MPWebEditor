@@ -21,14 +21,14 @@
 						 mouseEnabled="false" mouseChildren="false"/>
 				
 				<s:HGroup width="100%" mouseEnabled="false"
-						  horizontalAlign="right" verticalAlign="middle" visible="{isEdit}">
+						  horizontalAlign="right" verticalAlign="middle" visible="{isEdit || isTemplate}">
 					
 					<s:Button width="22" styleName="title" label="+" toolTip="新增页面"
 							  skinClass="editor.skins.ButtonNormalSkin"
 							  click="add_clickHandler(event)"/>
 					
 					<s:Button width="22" styleName="title" label="-" toolTip="删除页面"
-							  skinClass="editor.skins.ButtonNormalSkin"
+							  skinClass="editor.skins.ButtonNormalSkin" 
 							  click="del_clickHandler(event)"/>
 					
 				</s:HGroup>
@@ -60,6 +60,8 @@
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
+			import editor.utils.ComponentUtil;
+			import editor.utils.PageUtil;
 			import editor.views.sheets.PageItem;
 			import editor.views.sheets.SheetItem;
 			import editor.views.tabs.TitleTab;
@@ -68,9 +70,15 @@
 			import editor.vos.Sheet;
 			
 			import mx.core.DragSource;
+			import mx.core.FlexGlobals;
 			import mx.core.UIComponent;
 			import mx.events.DragEvent;
 			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.Panel;
+			import spark.components.TextArea;
+			import spark.effects.interpolation.MultiValueInterpolator;
 			
 			
 			/**
@@ -202,7 +210,7 @@
 			 */
 			private function group_mouseDownHandler($e:MouseEvent):void
 			{
-				if (isEdit)
+				if (isEdit || isTemplate)
 				{
 					mouseMoved = false;
 					
@@ -282,12 +290,20 @@
 			 * @private
 			 */
 			private function add_clickHandler(event:MouseEvent):void
-			{
+			{    
 				var page:Page = config.selectedSheet ? config.selectedSheet as Page : null;
 				CommandUtil.addPage(
 					page ? page.parent : null, 
 					page ? page.order + 1 : program.children.length);
+//				var t:Panel = new Panel;
+//				t.x = 200;
+//				t.y = 100;
+//				t.height = 200;
+//				PopUpManager.addPopUp(t, MDVars.instance.application, true);
+				
+//				PageUtil.showTemplateSelector();
 			}
+			
 			
 			/**
 			 * @private
@@ -320,9 +336,20 @@
 				}
 			}
 			
+			/**
+			 * @private 
+			 */
 			private function get isEdit():Boolean
 			{
 				return config.mode == 'edit';
+			}
+			
+			/**
+			 * @private 
+			 */
+			private function get isTemplate():Boolean
+			{
+				return config.mode == 'template';
 			}
 			
 			/**
