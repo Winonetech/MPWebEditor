@@ -76,8 +76,6 @@
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
 			
-			import spark.components.Panel;
-			import spark.components.TextArea;
 			import spark.effects.interpolation.MultiValueInterpolator;
 			
 			
@@ -269,39 +267,27 @@
 				DragManager.doDrag(item, source, $e, virtual);
 			}
 			
-//			/**
-//			 * @private
-//			 */
-//			private function group_dragEnterHandler($e:DragEvent):void
-//			{
-//				if ($e.dragSource.dataForFormat("page") as Page)
-//					DragManager.acceptDragDrop($e.currentTarget as UIComponent);
-//			}
-//			
-//			/**
-//			 * @private
-//			 */
-//			private function group_dragDropHandler($e:DragEvent):void
-//			{
-//				CommandUtil.altPage($e.dragSource.dataForFormat("page") as Page);
-//			}
 			
 			/**
 			 * @private
 			 */
 			private function add_clickHandler(event:MouseEvent):void
 			{    
-				var page:Page = config.selectedSheet ? config.selectedSheet as Page : null;
-				CommandUtil.addPage(
-					page ? page.parent : null, 
-					page ? page.order + 1 : program.children.length);
-//				var t:Panel = new Panel;
-//				t.x = 200;
-//				t.y = 100;
-//				t.height = 200;
-//				PopUpManager.addPopUp(t, MDVars.instance.application, true);
+				if(config.mode == "template")
+				{
+					var page:Page = config.selectedSheet ? config.selectedSheet as Page : null;
+					CommandUtil.addPage(
+						page ? page.parent : null, 
+						page ? page.order + 1 : program.children.length);
+				}
+				else if(config.mode == "edit")
+				{
+					if (!MDVars.instance.tempSelector)
+						MDVars.instance.tempSelector = new TemplateSelector;
+					PopUpManager.addPopUp(MDVars.instance.tempSelector, MDVars.instance.application, true);
+//					PopUpManager.centerPopUp(MDVars.instance.tempSelector);
+				}
 				
-//				PageUtil.showTemplateSelector();
 			}
 			
 			

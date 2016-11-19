@@ -27,6 +27,14 @@ package editor.consts
 		public static const URL_LAYOUT_SAVETEMPLATE:String = "{domain}/page";
 		
 		
+		
+		/**
+		 * 
+		 * 获取模版地址
+		 * 
+		 */
+		public static const URL_LAYOUT_GAINTEMPLATE:String = "{domain}/page/allTemplate";
+		
 		/**
 		 * 
 		 * 获取布局地址。

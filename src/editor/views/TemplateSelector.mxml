@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 initialize="init()" title="添加模版"
+		 mouseEnabled="false" fontSize="18">
+	
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10"/>
+	</s:layout>
+	
+	<s:VGroup gap="10" mouseEnabled="false" width="100%">
+		
+		<s:Button id="close" label="关闭窗口" click="close_clickHandler(event)" fontSize="16"/>
+		
+		<s:List width="100%" height="240" id="myList"  dataProvider="{temp}" verticalScrollPolicy="auto"
+				fontSize="16" click="item_clickHandler(event)"/>
+		
+	</s:VGroup>
+	
+	<fx:Script>
+		<![CDATA[
+			import editor.core.MDConfig;
+			import editor.core.MDVars;
+			import editor.utils.CommandUtil;
+			import editor.vos.Page;
+			import editor.vos.Sheet;
+			
+			import mx.collections.ArrayList;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.Label;
+			import spark.skins.spark.DefaultItemRenderer;
+			
+			
+			private function init():void
+			{
+				initLayout();
+				getTemplateData();
+			}
+			
+			
+			private function initLayout():void
+			{
+				width = stage.width/10;
+				height = stage.height/3;
+				x = 225;
+				y = 100;
+			}
+			
+			private function getTemplateData():void
+			{
+				CommandUtil.gainTemplateData();
+			}
+			
+			
+			private function close_clickHandler(event:MouseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function item_clickHandler(event:MouseEvent):void
+			{
+				if(event.target is Label || event.target is DefaultItemRenderer)
+				{
+					var page:Page = MDConfig.instance.selectedSheet ? MDConfig.instance.selectedSheet as Page : null;
+					CommandUtil.addTemplate(
+							page ? page.parent : null,
+							page ? page.order + 1 : MDVars.instance.sheets.program.children.length);
+					PopUpManager.removePopUp(this);
+				}
+			}
+			
+			
+			/**
+			 * 
+			 * 存储已保存模版
+			 * 
+			 */
+			[Bindable]
+			public var temp:ArrayList = new ArrayList;
+			
+		]]>
+	</fx:Script>
+	
+</s:Panel>

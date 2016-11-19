@@ -57,11 +57,13 @@ package editor.views
 			
 			itemsMap.clear();
 			
-			if(findMax("width") > width || findMax("height") > height)
-			{
-				width  = findMax("width")  < 1920 ? 1920 : findMax("width");
-				height = findMax("height") < 1080 ? 1080 : findMax("height");
-			}
+			
+//			if(findMax("width") > width || findMax("height") > height)
+//			{
+				width  = findMax("width") + findMax("x")  < 1920 ? 1920 : findMax("width") + findMax("x");
+				height = findMax("height") + findMax("y") < 1080 ? 1080 : findMax("height") + findMax("y");
+//			}
+			
 			
 			
 			background.graphics.beginFill(0xffffff);

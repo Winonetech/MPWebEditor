@@ -1,0 +1,225 @@
+package editor.commands
+{
+	
+	/**
+	 * 
+	 * 添加模版。
+	 * 
+	 */
+	
+	import cn.mvc.collections.Map;
+	import cn.mvc.utils.ArrayUtil;
+	import cn.mvc.utils.RegexpUtil;
+	
+	import editor.consts.URLConsts;
+	import editor.utils.VOUtil;
+	import editor.views.Debugger;
+	import editor.vos.Page;
+	
+	public class AddTemplateCommand extends _InternalCommCommand
+	{
+		
+		/**
+		 * 
+		 * 构造函数。
+		 * 
+		 * @param $parent:Page 父级页面。
+		 * @param $order:uint 顺序。
+		 * @param $homeExist:Boolean 是否检测首页存在与否，如果检测，则在首页存在的情况下，不创建页面，如果不检测，则创建页面
+		 * 
+		 */
+		
+		public function AddTemplateCommand($parent:Page, $order:uint, $homeExist:Boolean, $revocable:Boolean = true)
+		{
+			 super();
+			 
+			 parent    = $parent;
+			 order     = $order;
+			 home      = $homeExist;
+			 revocable = $revocable;
+			 
+			 url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
+		}
+		
+
+		
+		override protected function processUndo():void
+		{
+			presenter.execute(new DelPageCommand(page, false));
+		}
+		
+		
+		override protected function processRedo():void
+		{
+			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,provider);
+			
+			method = "POST";
+			
+			var submits:Array = [];
+			ArrayUtil.push(submits, {"pageIds" : [page.id], "componentIds" : []});
+			communicate(JSON.stringify(submits));
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		
+		override protected function excuteCommand():void
+		{
+			if(!home || (home && provider.program && !provider.program.home))
+			{
+				var i:uint = vars.tempSelector.myList.selectedIndex;
+				page = VOUtil.createPage(
+					parent ? parent.id : null,
+					provider.layoutID,order, 
+					config.templateData[i]["coordX"], 
+					config.templateData[i]["coordY"],
+					config.templateData[i]["width"],
+					config.templateData[i]["height"]
+				);
+				
+				
+				if (provider.program)
+				{
+					if (!provider.program.home) page.home = true;
+				}
+				
+				var data:Object = JSON.parse(page.toJSON());
+				
+				//新页面不需要ID数据
+				delete data.id;
+				
+				communicate(JSON.stringify(data),false);
+			}
+			else
+			{
+				commandEnd();
+			}
+			
+		}
+		
+		
+		private function ordPage():void
+		{
+			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider);
+			
+			method = "POST";
+			
+			var orders:Array = config.orders;
+			
+			config.orders = null;
+			
+			var submits:Array, child:Page;
+			for each (child in orders)
+			{
+				submits = submits || [];
+				ArrayUtil.push(submits, {
+					"id"    : child.id,
+					"order" : child.order
+				});
+			}
+			
+			submits
+			? communicate(JSON.stringify(submits))
+				: commandEnd(); 
+		}
+		
+		
+		/**
+		 * @inheritDoc
+		 */
+		
+		override protected function update($result:Object=null):void
+		{
+			if(url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider))
+			{
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result && $result.result == "success")
+				{
+					
+					//update data
+					page.id = $result.id;
+					config.orders = provider.program.addPage(page, parent, true);
+					
+					map4Backups[page.id] = {"order" : page.order};
+					
+					ordPage();
+					
+					//update view
+					vars.sheets.update();
+					
+					//update layout title
+					if (vars.titleBar && config.isLayoutOpened)
+						vars.canvas.content.updatePage(page, 1);
+					
+					//set selected
+					config.selectedSheet = page;
+					
+				}
+				else
+				{
+					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+				}
+			}
+			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
+			{
+				if ($result == "ok")
+				{
+					if (vars.sheets)
+						vars.sheets.update();
+				}
+				else
+				{
+					Debugger.log("修改顺序出错");
+				}
+			}
+			else if (url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,provider))
+			{
+				if ($result is String) $result = JSON.parse($result as String);
+				if ($result.result == 2)
+				{
+					page.order = map4Backups[page.id]["order"];
+					
+					config.orders = provider.program.addPage(page, page.parent, true);
+					
+					ordPage();
+					
+					vars.sheets.update();
+					vars.canvas.content.update();
+					
+					config.selectedSheet = page;
+				}
+				else 
+				{
+					Debugger.log("添加已删除页面出错");
+				}
+			}
+		}
+		
+		
+		/**
+		 * @private
+		 */
+		private var page:Page;
+		
+		/**
+		 * @private
+		 */
+		private var parent:Page;
+		
+		/**
+		 * @private
+		 */
+		private var order:uint;
+		
+		/**
+		 * @private
+		 */
+		private var home:Boolean;
+		
+		
+		private var submits:Array;
+		
+		private var map4Backups:Map = new Map;
+	}
+}

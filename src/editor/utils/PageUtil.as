@@ -2,6 +2,7 @@ package editor.utils
 {
 	import cn.mvc.core.NoInstance;
 	
+	import editor.views.properties.PropertyItem;
 	import editor.views.sheets.Layout_PageItem;
 	import editor.views.sheets.PageItem;
 	import editor.vos.Page;
@@ -29,7 +30,6 @@ package editor.utils
 				return result ? $page : convertPageItem($page.parent);
 			else return null;
 		}
-		
 		
 		
 		/**

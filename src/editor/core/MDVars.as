@@ -18,6 +18,7 @@ package editor.core
 	import editor.views.ProgressWindow;
 	import editor.views.SheetCanvas;
 	import editor.views.SheetTree;
+	import editor.views.TemplateSelector;
 	import editor.views.tabs.TitleBar;
 	
 	import spark.components.Application;
@@ -131,6 +132,21 @@ package editor.core
 		 */
 		
 		public var adapter:AngularJSAdapter;
+		
+		
+		/**
+		 * 
+		 * 模版选择窗口。 
+		 * 
+		 */
+		
+		public var tempSelector:TemplateSelector;
+		
+		/**
+		 * 
+		 * 标题栏。
+		 * 
+		 */
 		
 		public var titleBar:TitleBar;
 		

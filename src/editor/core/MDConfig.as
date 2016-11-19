@@ -147,6 +147,13 @@ package editor.core
 		
 		/**
 		 * 
+		 * 临时记录需要加载的模版数据
+		 * 
+		 */
+		public var templateData:Array = [];
+		
+		/**
+		 * 
 		 * 调试模式。
 		 * 
 		 */

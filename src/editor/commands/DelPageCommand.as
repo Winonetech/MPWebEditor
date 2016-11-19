@@ -113,6 +113,8 @@ package editor.commands
 				{
 					getChildArr(page);
 					ArrayUtil.push(arr4Comm, {"pageIds" : arrPageId, "componentIds" : arrComponentId});
+					lastHome = isHome();
+
 					
 					//update data
 					config.orders = provider.program.delPage(page);
@@ -154,8 +156,9 @@ package editor.commands
 //					provider.program.home = provider.program.home || lastHome;
 					
 					//执行撤销后设置首页
-					if(provider.program && (provider.program.home != page))
+					if(provider.program)
 					{
+						if(lastHome)
 						presenter.execute(new EdtPageHomeCommand(provider.program.home, page, false));
 					}
 					
@@ -174,6 +177,10 @@ package editor.commands
 		}
 		
 		
+		private function isHome():Boolean
+		{
+			return page == provider.program.home;
+		}
 		
 		private function returnPage($page:Page):void
 		{
@@ -243,6 +250,7 @@ package editor.commands
 		
 		private var arrComponentId:Array = [];
 		
-		private var lastHome:Page;
+		private var lastHome:Boolean;
+		
 	}
 }

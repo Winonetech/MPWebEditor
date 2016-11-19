@@ -134,7 +134,7 @@ package editor.utils
 		public static function shotcutDel():void
 		{
 			var stage:* = vars.application.stage;
-			if (stage)
+			if (stage && (config.mode == "edit" || config.mode == "template"))
 			{
 				if(!(stage.focus is RichEditableText))
 				{
@@ -304,6 +304,21 @@ package editor.utils
 		
 		/**
 		 * 
+		 * 添加模版
+		 * 
+		 * @param $parent:Page (default = null), 父级页面。
+		 * @param $order:uint (default = uint.MAX_VALUE) 顺序
+		 * @param $homeExist:Boolean (default = false) 是否检测首页存在与否，如果检测，则在首页存在的情况下，不创建页面，如果不检测，则创建页面。
+		 * 
+		 */
+		public static function addTemplate($parent:Page = null, $order:uint = uint.MAX_VALUE, $homeExist:Boolean = false):void
+		{
+			presenter.execute(new AddTemplateCommand($parent, $order, $homeExist));
+		}
+		
+		
+		/**
+		 * 
 		 * 删除页面。
 		 * 
 		 * @param $page:Page 要删除的页面。
@@ -406,12 +421,22 @@ package editor.utils
 		 * 保存模版 
 		 * 
 		 */
-//		public static function saveTemplateDate():void
-//		{
-//			presenter.execute(new FullScreenCommand(true));
-//			presenter.execute(new SaveTemplateDateCommand); 
-//		}
+		public static function saveTemplateData():void
+		{
+			presenter.execute(new FullScreenCommand(true));
+			presenter.execute(new SaveTemplateDataCommand); 
+		}
 		
+		
+		/**
+		 * 
+		 * 加载模版
+		 * 
+		 */
+		public static function gainTemplateData():void
+		{
+			presenter.execute(new GainTamplateDataCommand);
+		}
 		
 		
 		/**
