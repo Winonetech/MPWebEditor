@@ -60,23 +60,15 @@
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
-			import editor.utils.ComponentUtil;
-			import editor.utils.PageUtil;
 			import editor.views.sheets.PageItem;
 			import editor.views.sheets.SheetItem;
-			import editor.views.tabs.TitleTab;
+			import editor.views.template.TemplateSelector;
 			import editor.vos.PLayout;
 			import editor.vos.Page;
-			import editor.vos.Sheet;
 			
 			import mx.core.DragSource;
-			import mx.core.FlexGlobals;
-			import mx.core.UIComponent;
-			import mx.events.DragEvent;
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
-			
-			import spark.effects.interpolation.MultiValueInterpolator;
 			
 			
 			/**
@@ -182,7 +174,7 @@
 								if (doubleClickCount == 1)
 								{
 									doubleClickCount = 0;
-									//解决当布局内有元素被选中时，双击页面树回导致ToolSelected显示的bug
+									//解决当布局内有元素被选中时，双击页面树会导致ToolSelected显示的bug
 									if (config.isLayoutOpened)
 										config.selectedSheet = null;
 									CommandUtil.openSheet(sheetItem.sheet);
@@ -275,17 +267,16 @@
 			{    
 				if(config.mode == "template")
 				{
-					var page:Page = config.selectedSheet ? config.selectedSheet as Page : null;
-					CommandUtil.addPage(
-						page ? page.parent : null, 
-						page ? page.order + 1 : program.children.length);
+				var page:Page = config.selectedSheet ? config.selectedSheet as Page : null;
+				CommandUtil.addPage(
+					page ? page.parent : null, 
+					page ? page.order + 1 : program.children.length);
 				}
 				else if(config.mode == "edit")
 				{
 					if (!MDVars.instance.tempSelector)
 						MDVars.instance.tempSelector = new TemplateSelector;
 					PopUpManager.addPopUp(MDVars.instance.tempSelector, MDVars.instance.application, true);
-//					PopUpManager.centerPopUp(MDVars.instance.tempSelector);
 				}
 				
 			}

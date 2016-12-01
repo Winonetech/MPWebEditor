@@ -52,6 +52,7 @@ package editor.commands
 			provider.defaultHeight = data.defaultHeight;
 			provider.userName      = data.userName;
 			config.mode			   = data.mode;
+			config.isRead          = data.mode == "view" || data.mode == "fill";
 		}
 		
 		

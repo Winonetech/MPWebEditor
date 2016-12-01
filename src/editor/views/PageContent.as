@@ -177,7 +177,7 @@ package editor.views
 		{
 			
 			var mouse:Point = new Point(mouseX, mouseY);
-			if ((config.mode == "edit" || "template") && moving)
+			if (!config.isRead && moving)
 			{
 				if (dragging)
 				{

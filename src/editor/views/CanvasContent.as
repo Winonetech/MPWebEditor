@@ -202,7 +202,27 @@ package editor.views
 			addEventListener(MouseEvent.MOUSE_DOWN, item_mouseDownHandler);
 			addEventListener(MouseEvent.CLICK, item_clickHandler);
 			addEventListener(MouseEvent.DOUBLE_CLICK, item_doubleClickHandler);
+			
+//			addEventListener(MouseEvent.MOUSE_OVER, item_mouseoverHandler);
+//			addEventListener(MouseEvent.MOUSE_OUT, item_mouseoutHandler);
 		}
+		
+		
+		
+//		private function item_mouseoverHandler($e:MouseEvent):void
+//		{
+//			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+//			if (item)
+//			{
+//				item.
+//			}
+//		}
+//		
+//		
+//		private function item_mouseoutHandler($e:MouseEvent):void
+//		{
+//			var item:CanvasItem = ComponentUtil.convertCanvasItem($e.target);
+//		}
 		
 		
 		/**
@@ -255,7 +275,7 @@ package editor.views
 		{
 			
 			var mouse:Point = new Point(mouseX, mouseY);
-			if ((config.mode == "edit" || "template") && moving)
+			if (!config.isRead && moving)
 			{
 				if (dragging)
 				{

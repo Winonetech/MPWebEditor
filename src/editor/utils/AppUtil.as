@@ -22,6 +22,18 @@ package editor.utils
 		
 		/**
 		 * 
+		 * 判断是否预览模式
+		 * 
+		 */
+		
+		public static function isViewMode():Boolean
+		{
+			return MDConfig.instance.mode == "view";
+		}
+		
+		
+		/**
+		 * 
 		 * 判断是否为编辑模式
 		 * 
 		 */

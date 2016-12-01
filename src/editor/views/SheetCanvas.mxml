@@ -36,14 +36,14 @@
 	<fx:Script>
 		<![CDATA[
 			
-			import mx.events.ResizeEvent;
-			
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.views.components.CanvasItem;
 			import editor.vos.Component;
 			import editor.vos.Page;
 			import editor.vos.Sheet;
+			
+			import mx.events.ResizeEvent;
 			
 			
 			/**
@@ -123,7 +123,7 @@
 			
 			public function updateComponent($component:Component, $type:uint = 0):CanvasItem
 			{
-				return content ? content.updateComponent($component, $type) : null;
+				return content ? (content as CanvasContent).updateComponent($component, $type) : null;
 			}
 			
 			

@@ -196,8 +196,7 @@ package editor.vos
 		private function loopTree($page:Page):void
 		{
 			var length:int = $page.pagesArr.length;
-			if (MDVars.instance.titleBar.comboBox && 
-				MDVars.instance.titleBar.comboBox.dataProvider.getItemIndex(TabUtil.sheet2Tab($page)) != -1) 
+			if (MDVars.instance.titleBar.comboBox && included($page)) 
 			{
 				comboArr.push($page);
 			}
@@ -209,6 +208,16 @@ package editor.vos
 			{
 				loopTree($page.pagesArr[i]);
 			}
+		}
+		
+		
+		private function included($page:Page):Boolean
+		{
+			for each (var tab:Object in MDVars.instance.titleBar.comboBox.dataProvider)
+			{
+				if (tab["tab"] == TabUtil.sheet2Tab($page)) return true;
+			}
+			return false;
 		}
 		
 		

@@ -7,12 +7,24 @@ package editor.commands
 	 * 
 	 */
 	
+	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.core.MDConfig;
+	import editor.core.MDProvider;
+	import editor.core.MDVars;
 	import editor.views.Debugger;
+	import editor.views.PageSelector;
 	import editor.vos.Component;
+	import editor.vos.PLayout;
 	import editor.vos.Page;
+	
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
+	
+	import mx.controls.Alert;
+	import mx.events.CloseEvent;
 	
 	public class SaveTemplateDataCommand extends _InternalCommCommand
 	{
@@ -35,33 +47,40 @@ package editor.commands
 		}
 		
 		
-		override public function execute():void
-		{
-			commandStart();
-			
-			excuteCommand();
-			
-			commandEnd();
-		}
-		
 		override protected function excuteCommand():void
 		{
-			page = config.editingSheet as Page;
+			const name:String = MDConfig.instance.templateName;
 			
-			var data:Object = JSON.parse(page.toJSON());
+//			for each (var component:Component in program.components)
+//			component.id = null;
 			
-			data["template"] = true;
+//			for each (var $page:Page in program.pages) 
+//			$page.id = null;
 
-			delete data.id;
-			delete data.layout;
+			for each (var $child:Page in program.children)
+			{
+				arr.push(JSON.parse($child.toJSON())); //解析后会有\，其为转义符
+			}
 			
-			communicate(JSON.stringify(data));
+			var submits:Array = [];
+			ArrayUtil.push(submits, {"template" : arr, "name" : name});
+			
+			submits
+			? communicate(JSON.stringify(submits))
+			: commandEnd();	
 		}
+		
 		
 		
 		/**
-		 * @private 
+		 * @private
 		 */
-		private var page:Page;
+		private var program:PLayout = MDProvider.instance.program;
+		
+		/**
+		 * @privates
+		 */
+		private var arr:Array = [];
+		
 	}
 }

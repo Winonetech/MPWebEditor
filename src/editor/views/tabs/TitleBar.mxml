@@ -19,7 +19,7 @@
 			<tabs:TitleTab id="tabLayout" width="40" label="布局" layoutCloseVisible="false"/>
 		</s:HGroup>
 		
-		<s:ComboBox id="comboBox" includeIn="much" dataProvider="{dataArrs}"
+		<s:ComboBox id="comboBox" includeIn="much" dataProvider="{dataArrs}" labelField="name"
 					skinClass="editor.skins.TitleBarComboboxSkin"
 					change="combobox1_changeHandler(event)"/>
 	</s:HGroup>
@@ -29,6 +29,7 @@
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.TabUtil;
+			import editor.views.Debugger;
 			import editor.vos.Sheet;
 			
 			import mx.collections.ArrayCollection;
@@ -69,11 +70,11 @@
 					l = dataArrs.length - 1;
 					for (var i:int = l; i >= 0; i--)
 					{
-						if (dataArrs[i].width + tempWidth < width - BUFFER)
+						if (dataArrs[i]["tab"].width + tempWidth < width - BUFFER)
 						{
-							tempNamed = dataArrs[i].named.width >= 43 ? 43 : dataArrs[i].named.width;
-							temp = HG.addElement(dataArrs[i]) as TitleTab;
-							tempWidth += dataArrs[i].width + tempNamed - 1;
+							tempNamed = dataArrs[i]["tab"].named.width >= 43 ? 43 : dataArrs[i]["tab"].named.width;
+							temp = HG.addElement(dataArrs[i]["tab"]) as TitleTab;
+							tempWidth += dataArrs[i]["tab"].width + tempNamed - 1;
 							dataArrs.removeItemAt(i);
 						}
 					}
@@ -97,7 +98,7 @@
 					if (selected == tempTab) tempTab = HG.getElementAt(HG.numElements - 2) as TitleTab;
 					tempNamed = tempTab.named.width >= 43 ? 43 : tempTab.named.width;
 					temp -= tempTab.width + tempNamed - 38;
-					dataArrs.addItem(tempTab);
+					dataArrs.addItem({"name":tempTab.named.text, "tab":tempTab});
 					HG.removeElementAt(HG.getElementIndex(tempTab));
 				}
 			}
@@ -105,14 +106,14 @@
 			protected function combobox1_changeHandler(event:IndexChangeEvent):void
 			{
 				MDConfig.instance.selectedSheet = null;
-				var temp:TitleTab = comboBox.selectedItem as TitleTab;
+				var temp:TitleTab = comboBox.selectedItem["tab"] as TitleTab;
 				var tempWidth:Number = HG.width;
 				while (HG.numElements > 1 && temp.width + tempWidth > width - BUFFER)
 				{
 					var removed:TitleTab = HG.removeElementAt(HG.numElements - 1) as TitleTab;
 					var tempNamed:Number = removed.named.width >= 43 ? 43 : removed.named.width;
 					tempWidth -= removed.width + tempNamed - 38;
-					dataArrs.addItem(removed);
+					dataArrs.addItem({"name":removed.named.text, "tab":removed});
 				}
 				dataArrs.removeItemAt(comboBox.selectedIndex);
 				HG.addElement(temp);
@@ -170,11 +171,11 @@
 						while (HG.numElements > 1 && value.width + tempWidth > width - BUFFER)
 						{
 							removed = HG.removeElementAt(HG.numElements - 1) as TitleTab;
-							dataArrs.addItem(removed);
+							dataArrs.addItem({"name" : removed.named.text, "tab" : removed});
 							tempNamed = removed.named.width >= 43 ? 43 : removed.named.width;
 							tempWidth -= removed.width + tempNamed - 38;
 						}
-						dataArrs.removeItemAt(dataArrs.getItemIndex(value));
+						dataArrs.removeItemAt(comboBox.selectedIndex == -1 ? 0 : comboBox.selectedIndex);
 						HG.addElement(value);
 					}
 					updateBackgroundColor();

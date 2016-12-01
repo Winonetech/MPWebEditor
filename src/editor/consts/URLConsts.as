@@ -24,7 +24,7 @@ package editor.consts
 		 * 保存模版地址
 		 * 
 		 */
-		public static const URL_LAYOUT_SAVETEMPLATE:String = "{domain}/page";
+		public static const URL_LAYOUT_SAVETEMPLATE:String = "{domain}/page/saveTemplate";
 		
 		
 		
@@ -33,7 +33,7 @@ package editor.consts
 		 * 获取模版地址
 		 * 
 		 */
-		public static const URL_LAYOUT_GAINTEMPLATE:String = "{domain}/page/allTemplate";
+		public static const URL_LAYOUT_GAINTEMPLATE:String = "{domain}/page/pageTemplate";
 		
 		/**
 		 * 
@@ -52,6 +52,15 @@ package editor.consts
 		 */
 		
 		public static const URL_PAGE_AMD:String = "{domain}/page";
+		
+		
+		/**
+		 * 
+		 * 添加模版地址。
+		 * 
+		 */
+		
+		public static const URL_TEMPLATE_AMD:String = "{domain}/page/applyTemplate";
 		
 		
 		/**

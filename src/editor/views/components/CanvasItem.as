@@ -20,15 +20,15 @@ package editor.views.components
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.ComponentType;
-	import editor.vos.Page;
-	import editor.vos.Sheet;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.utils.Timer;
+	import flash.utils.getQualifiedClassName;
 	
+	import mx.controls.ToolTip;
 	import mx.core.UIComponent;
 	import mx.graphics.SolidColor;
 	
@@ -54,7 +54,43 @@ package editor.views.components
 			back.fill = new SolidColor(0xCCCCCC, .3);
 			addElement(back);
 			addEventListener(MouseEvent.CLICK, component_doubleClickHandler);
+			
+			
+			if (AppUtil.isFillMode())
+			{
+				addEventListener(MouseEvent.MOUSE_OVER, item_mouseoverHandler);
+				addEventListener(MouseEvent.MOUSE_OUT,  item_mouseoutHandler);
+			}
 		}
+		
+		
+		
+		private function item_mouseoverHandler($e:MouseEvent):void
+		{
+			back.fill = new SolidColor(0xCCCCCC, .7);
+//			addToolTip();
+			toolTip = component.label + "\n双击可填充素材";
+//			styleManager.getStyleDeclaration('nx.controls.ToolTip').setStyle('fontSize',18);
+//			addElement($toolTip);
+		}
+		
+		
+		private function item_mouseoutHandler($e:MouseEvent):void
+		{
+			back.fill = new SolidColor(0xCCCCCC, .3);
+//			removeElement($toolTip);
+		}
+			
+		
+//		private function addToolTip():void
+//		{
+//			$toolTip.text = componentType.label + "组件\n双击可填充素材";
+//			$toolTip.setStyle("fontSize", 24);
+//			$toolTip.alpha = .8;
+//			$toolTip.x = mouseX;
+//			$toolTip.y = mouseY;
+//			$toolTip.setStyle("fontFamily", "Microsoft YaHei");
+//		}
 		
 		/**
 		 * 
@@ -78,6 +114,7 @@ package editor.views.components
 			y = component.y;
 			width  = component.width;
 			height = component.height;
+			
 		}
 		
 		/**
@@ -442,7 +479,7 @@ package editor.views.components
 		/**
 		 * @private
 		 */
-		private var back:Rect;
+		public var back:Rect;
 		
 		/**
 		 * @private
@@ -454,6 +491,7 @@ package editor.views.components
 		 */
 		private var timer:Timer = new Timer(250, 1);
 		
+		private var $toolTip:ToolTip = new ToolTip;
 		
 		/**
 		 * @private

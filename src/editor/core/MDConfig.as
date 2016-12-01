@@ -16,6 +16,8 @@ package editor.core
 	import editor.vos.Component;
 	import editor.vos.Sheet;
 	
+	import mx.collections.ArrayList;
+	
 	import spark.components.CheckBox;
 	
 	
@@ -134,8 +136,6 @@ package editor.core
 		}
 		
 		
-		
-		
 		/**
 		 * 
 		 * 临时记录需要修改的元素（组件，页面）。
@@ -147,10 +147,11 @@ package editor.core
 		
 		/**
 		 * 
-		 * 临时记录需要加载的模版数据
+		 * 模版字典。
 		 * 
 		 */
-		public var templateData:Array = [];
+		
+		public var templateList:ArrayList = new ArrayList;
 		
 		/**
 		 * 
@@ -168,7 +169,7 @@ package editor.core
 		
 		public var demo:Boolean = false;
 		
-		
+
 		/**
 		 * 
 		 * 对齐模式
@@ -187,7 +188,15 @@ package editor.core
 		public var dragOnly:Boolean = false;
 		
 		
+		/**
+		 * 
+		 * 模版名字 
+		 * 
+		 */
+		
+		public var templateName:String;
 				
+		
 		/**
 		 * 
 		 * 显示网格
@@ -213,7 +222,11 @@ package editor.core
 		private var lastSelectedComponent:Component;
 		
 		
-		public var mode:String = "edit";
+		public var mode:String;
+		
+		
+		public var isRead:Boolean;
+		
 		
 		/**
 		 * @private

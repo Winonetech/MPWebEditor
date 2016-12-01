@@ -3,7 +3,7 @@
 				  xmlns:s ="library://ns.adobe.com/flex/spark" 
 				  xmlns:mx="library://ns.adobe.com/flex/mx"
 				  xmlns:pr="editor.views.properties.*"
-				  mouseChildren="{config.mode == 'edit' || 'template'}"
+				  mouseChildren="{!config.isRead}"
 				  xmlns:vw="editor.views.*" width="100%">
 	
 	<vw:states>
@@ -90,8 +90,7 @@
 				
 				<s:HGroup width="100%">
 					<pr:PropertyItem property="pageBackground" currentState="pageBtn"
-									 label="背景图片："  mouseChildren="{config.mode != 'fill'}"
-									 change="pageBackground_changeHandler(event)"/>
+									 label="背景图片：" change="pageBackground_changeHandler(event)"/>
 				</s:HGroup>
 				
 				<s:HGroup width="100%">
@@ -102,7 +101,7 @@
 									 value="{page.home}" label="是否为首页："
 									 change="property_changeHandler(event)"/>
 					
-					<pr:PropertyItem property="home" includeIn="page" mouseChildren="{config.mode != 'fill'}"
+					<pr:PropertyItem property="home" includeIn="page"
 									 currentState="index" visible="{page.parent == null}"
 									 change="home_changeHandler(event)"/>
 					

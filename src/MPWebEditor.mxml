@@ -18,8 +18,11 @@
 			private function init():void
 			{
 				MDPresenter.instance.start(this, parameters.debug == "true");
-				addElement(Debugger.instance);
+				if (show) addElement(Debugger.instance);
 			}
+			
+			
+			public static const show:Boolean = true;
 			
 		]]>
 	</fx:Script>

@@ -23,7 +23,7 @@
 	
 	<!-- 标题 -->
 	<s:Label paddingLeft="10" text="{provider.programName}"
-			 styleName="programTitle"
+			 styleName="programTitle" 
 			 mouseEnabled="false" mouseChildren="false"/>
 	
 	<s:HGroup width="100%" verticalAlign="middle"
@@ -107,10 +107,14 @@
 			import editor.core.MDConfig;
 			import editor.core.MDPresenter;
 			import editor.core.MDProvider;
+			import editor.core.MDVars;
 			import editor.utils.CommandUtil;
 			import editor.views.canvas.Viewer;
+			import editor.views.template.TemplateTextInupt;
 			
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.http.HTTPService;
 			
 			
@@ -173,7 +177,11 @@
 			 */
 			private function saveTemplate_clickHandler(event:MouseEvent):void
 			{
-				CommandUtil.saveTemplateData();
+				if (!MDVars.instance.tempTextInput)
+					MDVars.instance.tempTextInput = new TemplateTextInupt;
+				PopUpManager.addPopUp(MDVars.instance.tempTextInput, MDVars.instance.application, true);
+//				PopUpManager.centerPopUp(MDVars.instance.tempTextInput);
+//				CommandUtil.saveTemplateData();
 			}
 			
 			/**
@@ -273,6 +281,7 @@
 			{
 				uptBtnBcgColor();
 			}
+			
 			
 			
 		]]>

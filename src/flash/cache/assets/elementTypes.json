@@ -73,6 +73,15 @@
 		"name": "good"
 	},
 	{
+	   "id": "9",
+	   "order": "9",
+	   "image": "flash/cache/assets/images/party_big.png",
+	   "icon": "flash/cache/assets/images/party.png",
+	   "code": "image",
+	   "label": "政策宣传",
+	   "name": "party"
+	},
+	{
 		"id": "10",
 		"order": "10",
 		"image": "flash/cache/assets/images/click_big.png",

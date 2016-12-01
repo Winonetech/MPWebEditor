@@ -18,8 +18,9 @@ package editor.core
 	import editor.views.ProgressWindow;
 	import editor.views.SheetCanvas;
 	import editor.views.SheetTree;
-	import editor.views.TemplateSelector;
 	import editor.views.tabs.TitleBar;
+	import editor.views.template.TemplateSelector;
+	import editor.views.template.TemplateTextInupt;
 	
 	import spark.components.Application;
 	
@@ -141,6 +142,14 @@ package editor.core
 		 */
 		
 		public var tempSelector:TemplateSelector;
+		
+		/**
+		 * 
+		 * 模版保存窗口
+		 * 
+		 */
+		
+		public var tempTextInput:TemplateTextInupt;
 		
 		/**
 		 * 

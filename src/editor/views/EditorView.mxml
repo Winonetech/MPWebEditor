@@ -4,8 +4,13 @@
 				  xmlns:mx="library://ns.adobe.com/flex/mx"
 				  xmlns:vw="editor.views.*"
 				  xmlns:cs="editor.views.canvas.*"
-				  currentState="{config.mode == 'edit' || config.mode == 'template' ? 'edit' : 'view'}"
+				  currentState="{AppUtil.isFillMode() ? 'fill' : (AppUtil.isViewMode() ? 'view' : 'edit')}"
 				  width="100%" height="100%" mouseEnabled="false" xmlns:tabs="editor.views.tabs.*">
+	<fx:Script>
+		<![CDATA[
+			import editor.utils.AppUtil;
+		]]>
+	</fx:Script>
 	
 	<vw:layout>
 		<s:VerticalLayout paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10"/>
@@ -14,6 +19,7 @@
 	<vw:states>
 		<s:State name="edit"/>
 		<s:State name="view"/>
+		<s:State name="fill"/>
 	</vw:states>
 	
 	<!-- 顶部，工具栏 -->
@@ -39,7 +45,7 @@
 			</mx:VDividedBox>
 		
 			<s:VGroup width="100%" height="100%" mouseEnabled="false" id="canvasGroup"
-					  creationComplete="canvasGroup.addElement(Debugger.instance);">
+					  creationComplete="if (MPWebEditor.show) canvasGroup.addElement(Debugger.instance);">
 				<!-- 标签栏 -->
 				<tabs:TitleBar id="titleBar" width="100%"/>   
 				<!-- 画布 -->
@@ -49,14 +55,14 @@
 		</mx:HDividedBox>
 		<!-- 右侧，包含版面元素添加组，版面属性面板，元素属性面板 -->
 		
-		<s:Group width="250" height="100%" mouseEnabled="false">
+		<s:Group width="250" height="100%" mouseEnabled="false" excludeFrom="fill">
 			
 			<s:Scroller width="100%" height="100%">
 				
 				<s:VGroup width="100%" mouseEnabled="false">
 					
 					<!-- 组件类型列表 -->
-					<vw:ComponentsAddone includeIn="edit" id="addone"/>
+					<vw:ComponentsAddone id="addone" includeIn="edit"/>
 					<!-- 页面属性面板 -->
 					
 					<vw:SheetProperty id="sheetProperty" sheet="{config.editingSheet || config.selectedSheet}"/>

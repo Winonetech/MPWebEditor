@@ -11,10 +11,12 @@ package editor.commands
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.core.MDConfig;
 	import editor.views.Debugger;
 	import editor.vos.Component;
 	import editor.vos.Page;
 	
+	import mx.collections.ArrayList;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	
@@ -49,11 +51,9 @@ package editor.commands
 			if ($result is String) $result = JSON.parse($result as String);
 			if ($result.result == "success")
 			{
-				for each (var page:Object in $result.dataObjs)
+				for each (var obj:Object in $result.dataObjs)
 				{
-					vars.tempSelector.myList.dataProvider.addItem(page);
-//					ArrayUtil.push(config.templateData, page);
-					config.templateData.push(page);
+					templateList.addItem({"name":obj["name"], "id":obj["id"]});
 				}
 			}
 			else
@@ -62,5 +62,9 @@ package editor.commands
 			}
 		}
 		
+		private function get templateList():ArrayList
+		{
+			return config.templateList;
+		}
 	}
 }

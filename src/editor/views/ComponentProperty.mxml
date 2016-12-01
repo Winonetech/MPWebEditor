@@ -3,7 +3,7 @@
 				  xmlns:s ="library://ns.adobe.com/flex/spark" 
 				  xmlns:mx="library://ns.adobe.com/flex/mx"
 				  xmlns:pr="editor.views.properties.*"
-				  mouseChildren="{config.mode == 'edit' || 'template'}"
+				  mouseChildren="{!config.isRead}"
 				  xmlns:vw="editor.views.*" width="100%">
 	
 	<vw:states>

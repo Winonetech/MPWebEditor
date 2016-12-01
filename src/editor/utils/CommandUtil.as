@@ -68,6 +68,24 @@ package editor.utils
 		}
 		
 		
+		public static function openTemplate($scope:Object):void
+		{
+			if ($scope)
+			{
+				var templateId:String = $scope.templateId;
+			}
+		}
+		
+		
+		public static function openPresetTemplate($scope:Object):void
+		{
+			if ($scope)
+			{
+				var templateId:String = $scope.presetTemplateId;
+			}
+		}
+		
+		
 		/**
 		 * 
 		 * 填充背景。
@@ -134,7 +152,7 @@ package editor.utils
 		public static function shotcutDel():void
 		{
 			var stage:* = vars.application.stage;
-			if (stage && (config.mode == "edit" || config.mode == "template"))
+			if (stage && !config.isRead)
 			{
 				if(!(stage.focus is RichEditableText))
 				{
@@ -305,15 +323,14 @@ package editor.utils
 		/**
 		 * 
 		 * 添加模版
-		 * 
-		 * @param $parent:Page (default = null), 父级页面。
-		 * @param $order:uint (default = uint.MAX_VALUE) 顺序
-		 * @param $homeExist:Boolean (default = false) 是否检测首页存在与否，如果检测，则在首页存在的情况下，不创建页面，如果不检测，则创建页面。
+		 * @param $id:String 当被选择页面为空时，$id是布局id;否则，$id是被选页面的父级id。
+		 * @param $templateID:String 模版id。
+		 * @param $order:uint 顺序增量。
 		 * 
 		 */
-		public static function addTemplate($parent:Page = null, $order:uint = uint.MAX_VALUE, $homeExist:Boolean = false):void
+		public static function addTemplate($id:String, $templateID:String, $order:uint = 0):void
 		{
-			presenter.execute(new AddTemplateCommand($parent, $order, $homeExist));
+			presenter.execute(new AddTemplateCommand($id, $templateID, $order));
 		}
 		
 		

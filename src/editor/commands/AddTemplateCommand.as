@@ -7,14 +7,18 @@ package editor.commands
 	 * 
 	 */
 	
-	import cn.mvc.collections.Map;
 	import cn.mvc.utils.ArrayUtil;
 	import cn.mvc.utils.RegexpUtil;
 	
 	import editor.consts.URLConsts;
+	import editor.core.MDConfig;
+	import editor.core.MDVars;
+	import editor.utils.ComponentUtil;
 	import editor.utils.VOUtil;
 	import editor.views.Debugger;
+	import editor.vos.Component;
 	import editor.vos.Page;
+	import editor.vos.Sheet;
 	
 	public class AddTemplateCommand extends _InternalCommCommand
 	{
@@ -22,84 +26,40 @@ package editor.commands
 		/**
 		 * 
 		 * 构造函数。
-		 * 
-		 * @param $parent:Page 父级页面。
-		 * @param $order:uint 顺序。
-		 * @param $homeExist:Boolean 是否检测首页存在与否，如果检测，则在首页存在的情况下，不创建页面，如果不检测，则创建页面
+		 * @param $id:String 当被选择页面为空时，$id是布局id;否则，$id是被选页面的父级id。
+		 * @param $templateID:String 模版id。
+		 * @param $order:uint 顺序增量。
 		 * 
 		 */
 		
-		public function AddTemplateCommand($parent:Page, $order:uint, $homeExist:Boolean, $revocable:Boolean = true)
+		public function AddTemplateCommand($id:String, $templateID:String, $order:uint = 0, $revocable:Boolean = false)
 		{
 			 super();
 			 
-			 parent    = $parent;
+			 id        = $id;
 			 order     = $order;
-			 home      = $homeExist;
+			 templateID= $templateID;
 			 revocable = $revocable;
 			 
-			 url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider);
+			 url = RegexpUtil.replaceTag(URLConsts.URL_TEMPLATE_AMD, provider);
 		}
 		
 
 		
-		override protected function processUndo():void
-		{
-			presenter.execute(new DelPageCommand(page, false));
-		}
-		
-		
-		override protected function processRedo():void
-		{
-			url = RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,provider);
-			
-			method = "POST";
-			
-			var submits:Array = [];
-			ArrayUtil.push(submits, {"pageIds" : [page.id], "componentIds" : []});
-			communicate(JSON.stringify(submits));
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		
 		override protected function excuteCommand():void
 		{
-			if(!home || (home && provider.program && !provider.program.home))
+			if (selectedPage && selectedPage.parent)
 			{
-				var i:uint = vars.tempSelector.myList.selectedIndex;
-				page = VOUtil.createPage(
-					parent ? parent.id : null,
-					provider.layoutID,order, 
-					config.templateData[i]["coordX"], 
-					config.templateData[i]["coordY"],
-					config.templateData[i]["width"],
-					config.templateData[i]["height"]
-				);
-				
-				
-				if (provider.program)
-				{
-					if (!provider.program.home) page.home = true;
-				}
-				
-				var data:Object = JSON.parse(page.toJSON());
-				
-				//新页面不需要ID数据
-				delete data.id;
-				
-				communicate(JSON.stringify(data),false);
+				communicate(JSON.stringify({"pageId" : id, "templateId" : templateID, "order" : order}), false);
 			}
 			else
 			{
-				commandEnd();
+				communicate(JSON.stringify({"layoutId" : id, "templateId" : templateID, "order" : order}), false);
 			}
-			
 		}
 		
 		
-		private function ordPage():void
+		private function addPage():void
 		{
 			url = RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider);
 			
@@ -125,43 +85,27 @@ package editor.commands
 		}
 		
 		
-		/**
-		 * @inheritDoc
-		 */
-		
 		override protected function update($result:Object=null):void
 		{
-			if(url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_AMD, provider))
+			if (url == RegexpUtil.replaceTag(URLConsts.URL_TEMPLATE_AMD, provider))
 			{
 				if ($result is String) $result = JSON.parse($result as String);
-				if ($result && $result.result == "success")
+				if ($result.result == "success")
 				{
+					for each (var $children:Object in $result.dataObjs)
+					{
+						returnPage($children);
+					}
 					
-					//update data
-					page.id = $result.id;
-					config.orders = provider.program.addPage(page, parent, true);
-					
-					map4Backups[page.id] = {"order" : page.order};
-					
-					ordPage();
-					
-					//update view
 					vars.sheets.update();
-					
-					//update layout title
-					if (vars.titleBar && config.isLayoutOpened)
-						vars.canvas.content.updatePage(page, 1);
-					
-					//set selected
-					config.selectedSheet = page;
-					
+					vars.canvas.content.update();
 				}
 				else
 				{
-					Debugger.log("添加页面数据出错，此原因可能是服务端问题，请联系服务端管理员！");
+					Debugger.log("添加模版数据出错，此原因可能是服务端问题，请联系服务端管理员！");
 				}
 			}
-			else if(url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
+			else if (url == RegexpUtil.replaceTag(RegexpUtil.replaceTag(URLConsts.URL_PAGE_ORD), provider))
 			{
 				if ($result == "ok")
 				{
@@ -173,25 +117,87 @@ package editor.commands
 					Debugger.log("修改顺序出错");
 				}
 			}
-			else if (url == RegexpUtil.replaceTag(URLConsts.URL_PAGE_DEL_UNDO,provider))
+		}
+		
+		
+		/**
+		 * @private
+		 */
+		private function returnPage($page:Object):void
+		{
+			var page:Page = VOUtil.createPage(
+				selectedPage ? (selectedPage.parent ? selectedPage.parent.id : null) : null, 
+				provider.layoutID, $page["order"], 
+				$page["coordX"], $page["coordY"], 
+				$page["width"], $page["height"], $page["label"]
+			);
+			
+			page.id = $page["id"];
+
+			if (!provider.program.home && $page["home"] == true) page.home = true;
+			
+			
+			config.orders = provider.program.addPage(page, page.parent, true);
+			
+			addPage();
+			
+			recoverComponents($page, page);
+			
+			for each (var child:Object in $page["pages"])
 			{
-				if ($result is String) $result = JSON.parse($result as String);
-				if ($result.result == 2)
+				returnChild(child, page);
+			}
+		}
+		
+		
+		/**
+		 * @private
+		 */
+		private function returnChild($page:Object, $parent:Page):void
+		{
+			var page:Page = VOUtil.createPage(
+				$parent.id, provider.layoutID, 
+				$page["order"], $page["coordX"], $page["coordY"], 
+				$page["width"], $page["height"], $page["label"]
+				
+			);
+				
+			page.id = $page["id"];
+			
+			config.orders = provider.program.addPage(page, $parent, true);
+			
+			addPage();
+			
+			recoverComponents($page, page);
+			
+			for each (var child:Object in $page["pages"])
+			{
+				returnChild(child, page);
+			}
+		}
+		
+		
+		/**
+		 * @private
+		 */
+		private function recoverComponents($page:Object, page:Page):void
+		{
+			for each (var data:Object in $page["components"])
+			{
+				component = VOUtil.createComponent(page.id, data["componentTypeId"], data["order"], 
+					ComponentUtil.reviseComponent(data["coordX"] - 45, page.width - 45),
+					ComponentUtil.reviseComponent(data["coordY"] - 30, page.height - 30), 
+					data["width"], data["height"], data["label"]);
+				component.componentType = provider.program.componentTypesArr[data["componentTypeId"] - 1];
+				component.id = data["id"];
+				
+				provider.program.addComponent(page as Sheet, component, true);
+				
+				//update view
+				if (!config.isLayoutOpened)
 				{
-					page.order = map4Backups[page.id]["order"];
-					
-					config.orders = provider.program.addPage(page, page.parent, true);
-					
-					ordPage();
-					
-					vars.sheets.update();
-					vars.canvas.content.update();
-					
-					config.selectedSheet = page;
-				}
-				else 
-				{
-					Debugger.log("添加已删除页面出错");
+					vars.canvas.updateComponent(component, 1);
+					vars.components.update();
 				}
 			}
 		}
@@ -200,12 +206,22 @@ package editor.commands
 		/**
 		 * @private
 		 */
-		private var page:Page;
+		private var selectedPage:Page = MDConfig.instance.selectedSheet as Page;
 		
 		/**
 		 * @private
 		 */
-		private var parent:Page;
+		private var component:Component;
+		
+		/**
+		 * @private
+		 */
+		private var children:Page;
+		
+		/**
+		 * @private
+		 */
+		private var id:String;
 		
 		/**
 		 * @private
@@ -215,11 +231,8 @@ package editor.commands
 		/**
 		 * @private
 		 */
-		private var home:Boolean;
+		private var templateID:String;
 		
 		
-		private var submits:Array;
-		
-		private var map4Backups:Map = new Map;
 	}
 }

@@ -64,6 +64,7 @@ package editor.utils
 		 * @param $y:Number (default = 0) 页面Y坐标。
 		 * @param $w:Number (default = 1920) 页面宽度。
 		 * @param $h:Number (default = 1080) 页面高度。
+		 * @param $label:String (default = null) 页面名字。
 		 * 
 		 */
 		
@@ -74,11 +75,12 @@ package editor.utils
 			$x:Number = 0, 
 			$y:Number = 0, 
 			$w:Number = 1920, 
-			$h:Number = 1080):Page
+			$h:Number = 1080,
+			$label:String = null):Page
 		{
 			var id:uint = IDUtil.generateID("page");
 			var page:Page = new Page({
-				"label": "新建页面" + id, 
+				"label": $label || "新建页面" + id, 
 				"order": $order, 
 				"coordX": $x, 
 				"coordY": $y, 
@@ -105,6 +107,7 @@ package editor.utils
 		 * @param $y:Number (default = 0) 组件Y坐标。
 		 * @param $w:Number (default = 1920) 组件宽度。
 		 * @param $h:Number (default = 1080) 组件高度。
+		 * @param $label:String (default = null) 组件名字。
 		 * 
 		 */
 		
@@ -115,7 +118,8 @@ package editor.utils
 			$x:Number = 0,
 			$y:Number = 0,
 			$w:Number = 90,
-			$h:Number = 60
+			$h:Number = 60,
+			$label:String = null
 		):Component
 		{
 			var id:uint = IDUtil.generateID("component");
@@ -123,7 +127,7 @@ package editor.utils
 			
 			var componenet:Component = new Component({
 				"id": id, 
-				"label": "新建" + getComponentTypeName($componentTypeID) + id, 
+				"label": $label || "新建" + getComponentTypeName($componentTypeID) + id, 
 				"order" : $order, 
 				"coordX": $x, 
 				"coordY": $y, 

@@ -334,10 +334,10 @@ package editor.vos
 		public var expandable:Boolean;
 		
 		
-		/**
-		 * 是否为模版
-		 */
-		public var template:Boolean;
+//		/**
+//		 * 是否为模版
+//		 */
+//		public var template:Boolean;
 		
 		/**
 		 * @private

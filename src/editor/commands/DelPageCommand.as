@@ -153,7 +153,6 @@ package editor.commands
 				{
 					
 					returnPage(page);
-//					provider.program.home = provider.program.home || lastHome;
 					
 					//执行撤销后设置首页
 					if(provider.program)
@@ -177,10 +176,9 @@ package editor.commands
 		}
 		
 		
-		private function isHome():Boolean
-		{
-			return page == provider.program.home;
-		}
+		/**
+		 * @private
+		 */
 		
 		private function returnPage($page:Page):void
 		{
@@ -194,27 +192,6 @@ package editor.commands
 			for (var i:int = 0; i < map4Backups[$page.id]["arr"].length; i++)
 			{
 				returnPage(map4Backups[$page.id]["arr"][i]); 
-			}
-		}
-		
-		/**
-		 * @private
-		 */
-		private function clearComponentsLinkID($id:String):void
-		{
-			if (provider.program)
-			{
-				for each (var component:Component in provider.program.components)
-					if (component.linkID == $id) component.link = null;
-			}
-		}
-		
-		
-		private function recoverComponentsLinkID($page:Page):void
-		{
-			for each (var component:Component in $page.componentsMap)
-			{
-				component.link   = $page;
 			}
 		}
 		
@@ -235,6 +212,41 @@ package editor.commands
 			{
 				getChildArr($page.pagesArr[i]); 
 			}
+		}
+		
+		/**
+		 * @private
+		 */
+		
+		private function clearComponentsLinkID($id:String):void
+		{
+			if (provider.program)
+			{
+				for each (var component:Component in provider.program.components)
+					if (component.linkID == $id) component.link = null;
+			}
+		}
+		
+		/**
+		 * @private
+		 */
+		
+		private function recoverComponentsLinkID($page:Page):void
+		{
+			for each (var component:Component in $page.componentsMap)
+			{
+				component.link   = $page;
+			}
+		}
+		
+		
+		/**
+		 * @private
+		 */
+		
+		private function isHome():Boolean
+		{
+			return page == provider.program.home;
 		}
 		
 		/**

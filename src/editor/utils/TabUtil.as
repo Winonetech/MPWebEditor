@@ -1,9 +1,5 @@
 package editor.utils
 {
-	import mx.collections.ArrayCollection;
-	
-	import spark.components.HGroup;
-	
 	import cn.mvc.core.NoInstance;
 	
 	import editor.core.MDProvider;
@@ -12,6 +8,10 @@ package editor.utils
 	import editor.views.tabs.TitleBar;
 	import editor.views.tabs.TitleTab;
 	import editor.vos.Sheet;
+	
+	import mx.collections.ArrayCollection;
+	
+	import spark.components.HGroup;
 	
 	public final class TabUtil extends NoInstance
 	{
@@ -36,7 +36,7 @@ package editor.utils
 			
 			for (var j:int; j < dataArrs.length; j++)
 			{
-				temp = dataArrs[j];
+				temp = dataArrs[j]["tab"];
 				if ($sheet.id == idObj[temp.uid])
 				{
 					return temp;
@@ -93,8 +93,8 @@ package editor.utils
 		 */
 		public static function repeatByTab($tab:TitleTab):Boolean
 		{
-			for each (var tab:TitleTab in dataArrs)
-			if (tab == $tab) return false;
+			for each (var tab:Object in dataArrs)
+			if (tab["tab"] == $tab) return false;
 			return true;	
 		}
 		
