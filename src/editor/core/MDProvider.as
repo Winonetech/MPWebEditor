@@ -80,6 +80,15 @@ package editor.core
 		
 		/**
 		 * 
+		 * 模版ID。
+		 * 
+		 */
+		
+		public var templateID:String;
+		
+		
+		/**
+		 * 
 		 * 默认宽度。
 		 * 
 		 */

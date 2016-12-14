@@ -17,23 +17,13 @@ package editor.consts
 		
 		public static const URL_LAYOUT_APPLY:String = "{domain}/layout/apply/{programID}/{layoutID}/{userName}";
 		
-		
-		
-		/**
-		 * 
-		 * 保存模版地址
-		 * 
-		 */
-		public static const URL_LAYOUT_SAVETEMPLATE:String = "{domain}/page/saveTemplate";
-		
-		
-		
+
 		/**
 		 * 
 		 * 获取模版地址
 		 * 
 		 */
-		public static const URL_LAYOUT_GAINTEMPLATE:String = "{domain}/page/pageTemplate";
+		public static const URL_LAYOUT_GETTEMPLATE:String = "{domain}/template/all";
 		
 		/**
 		 * 
@@ -56,11 +46,11 @@ package editor.consts
 		
 		/**
 		 * 
-		 * 添加模版地址。
+		 * 应用模版地址。
 		 * 
 		 */
 		
-		public static const URL_TEMPLATE_AMD:String = "{domain}/page/applyTemplate";
+		public static const URL_TEMPLATE_AMD:String = "{domain}/template/apply";
 		
 		
 		/**

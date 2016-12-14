@@ -43,15 +43,16 @@ package editor.commands
 		{
 			if (data is String) data = JSON.parse(data as String);
 			
+			config.mode			   = data.mode;
 			provider.domain        = data.domain;
 			provider.programID     = data.programId;
-			provider.layoutID      = data.layoutId;
 			provider.publishID     = data.publishId;
-			provider.programName   = data.programName;
-			provider.defaultWidth  = data.defaultWidth;
-			provider.defaultHeight = data.defaultHeight;
+			provider.templateID    = data.templateId;
 			provider.userName      = data.userName;
-			config.mode			   = data.mode;
+			provider.defaultWidth  = data.defaultWidth   || 1920;
+			provider.defaultHeight = data.defaultHeight  || 1080;
+			provider.layoutID      = data.layoutId       || data.templateId;
+			provider.programName   = data.programName    || data.templateName;
 			config.isRead          = data.mode == "view" || data.mode == "fill";
 		}
 		

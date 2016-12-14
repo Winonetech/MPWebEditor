@@ -83,13 +83,11 @@
 					  click="full_clickHandler(event)"/>
 			
 			<!-- 保存按钮 -->
-			<s:Button height="30" styleName="title" 
-					  label.edit="应用" label.template="保存"
-					  id="saveBtn" toolTip.edit="应用发布" toolTip.template="保存为模版"
-					  includeIn="edit,template"
-					  skinClass="editor.skins.ButtonNormalSkin"
+			<s:Button height="30" styleName="title" label.edit="应用" label.template="退出"
+					  id="saveBtn" toolTip.edit="应用发布" toolTip.template="退出模版编辑"
+					  includeIn="edit,template" skinClass="editor.skins.ButtonNormalSkin"
 					  click.edit="save_clickHandler(event)"
-					  click.template="saveTemplate_clickHandler(event)"/>
+					  click.template="exitTemplateMode_clickHandler(event)"/>
 			
 		</s:HGroup>
 		
@@ -110,7 +108,6 @@
 			import editor.core.MDVars;
 			import editor.utils.CommandUtil;
 			import editor.views.canvas.Viewer;
-			import editor.views.template.TemplateTextInupt;
 			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
@@ -172,18 +169,15 @@
 				CommandUtil.saveData();
 			}
 			
-			/**
-			 * @private 
-			 */
-			private function saveTemplate_clickHandler(event:MouseEvent):void
-			{
-				if (!MDVars.instance.tempTextInput)
-					MDVars.instance.tempTextInput = new TemplateTextInupt;
-				PopUpManager.addPopUp(MDVars.instance.tempTextInput, MDVars.instance.application, true);
-//				PopUpManager.centerPopUp(MDVars.instance.tempTextInput);
-//				CommandUtil.saveTemplateData();
-			}
 			
+			/**
+			 * @private
+			 */
+			private function exitTemplateMode_clickHandler(event:MouseEvent):void
+			{
+				CommandUtil.exitTemplateMode();
+			}
+
 			/**
 			 * @private
 			 */
@@ -281,8 +275,6 @@
 			{
 				uptBtnBcgColor();
 			}
-			
-			
 			
 		]]>
 	</fx:Script>

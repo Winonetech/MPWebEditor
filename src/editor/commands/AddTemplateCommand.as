@@ -99,6 +99,7 @@ package editor.commands
 					
 					vars.sheets.update();
 					vars.canvas.content.update();
+					
 				}
 				else
 				{
@@ -135,7 +136,6 @@ package editor.commands
 			page.id = $page["id"];
 
 			if (!provider.program.home && $page["home"] == true) page.home = true;
-			
 			
 			config.orders = provider.program.addPage(page, page.parent, true);
 			

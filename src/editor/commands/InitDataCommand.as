@@ -97,7 +97,7 @@ package editor.commands
 		private function initAD($ad:Object):void
 		{
 			$ad = ($ad is Array && $ad.length) ? $ad[0] : $ad;
-			if ($ad)
+			if ($ad.length > 0)
 			{
 				var ad:AD = new AD($ad);
 				if (ad.width == 0 || ad.height == 0)
@@ -108,13 +108,16 @@ package editor.commands
 				ad.label = ad.label || "广告";
 				initComponents(ad, $ad.components);
 			}
-			else
+			else if (config.mode != "template")
 			{
 				ad = VOUtil.createAD(0, 0, provider.defaultWidth, provider.defaultHeight);
 			}
 			
-			layout.ad = ad;
-			layout.sheets[ad.id] = ad;
+			if (ad)
+			{
+				layout.ad = ad;
+				layout.sheets[ad.id] = ad;
+			}
 		}
 		
 		/**

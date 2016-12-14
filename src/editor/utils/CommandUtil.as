@@ -68,24 +68,6 @@ package editor.utils
 		}
 		
 		
-		public static function openTemplate($scope:Object):void
-		{
-			if ($scope)
-			{
-				var templateId:String = $scope.templateId;
-			}
-		}
-		
-		
-		public static function openPresetTemplate($scope:Object):void
-		{
-			if ($scope)
-			{
-				var templateId:String = $scope.presetTemplateId;
-			}
-		}
-		
-		
 		/**
 		 * 
 		 * 填充背景。
@@ -152,7 +134,7 @@ package editor.utils
 		public static function shotcutDel():void
 		{
 			var stage:* = vars.application.stage;
-			if (stage && !config.isRead)
+			if (stage && (config.mode == "edit" || config.mode == "tmeplate"))
 			{
 				if(!(stage.focus is RichEditableText))
 				{
@@ -322,20 +304,6 @@ package editor.utils
 		
 		/**
 		 * 
-		 * 添加模版
-		 * @param $id:String 当被选择页面为空时，$id是布局id;否则，$id是被选页面的父级id。
-		 * @param $templateID:String 模版id。
-		 * @param $order:uint 顺序增量。
-		 * 
-		 */
-		public static function addTemplate($id:String, $templateID:String, $order:uint = 0):void
-		{
-			presenter.execute(new AddTemplateCommand($id, $templateID, $order));
-		}
-		
-		
-		/**
-		 * 
 		 * 删除页面。
 		 * 
 		 * @param $page:Page 要删除的页面。
@@ -396,6 +364,32 @@ package editor.utils
 		
 		/**
 		 * 
+		 * 获取模版数据。
+		 * 
+		 */
+		public static function getTemplateData():void
+		{
+			presenter.execute(new GetTemplateDataCommand);
+		}
+		
+		
+		/**
+		 * 
+		 * 添加模版
+		 * @param $id:String 当被选择页面为空时，$id是布局id;否则，$id是被选页面的父级id。
+		 * @param $templateID:String 模版id。
+		 * @param $order:uint 顺序增量。
+		 * 
+		 */
+		public static function addTemplate($id:String, $templateID:String, $order:uint = 0):void
+		{
+			presenter.execute(new AddTemplateCommand($id, $templateID, $order));
+		}
+
+		
+		
+		/**
+		 * 
 		 * 打开版面，版面包含页面和广告。
 		 * 
 		 * @param $sheet:Sheet 要打开的版面。
@@ -435,26 +429,15 @@ package editor.utils
 		
 		/**
 		 * 
-		 * 保存模版 
+		 * 退出模版模式。
 		 * 
 		 */
-		public static function saveTemplateData():void
+		
+		public static function exitTemplateMode():void
 		{
 			presenter.execute(new FullScreenCommand(true));
-			presenter.execute(new SaveTemplateDataCommand); 
+			presenter.execute(new ExitTemplateModeCommand());
 		}
-		
-		
-		/**
-		 * 
-		 * 加载模版
-		 * 
-		 */
-		public static function gainTemplateData():void
-		{
-			presenter.execute(new GainTamplateDataCommand);
-		}
-		
 		
 		/**
 		 * @private

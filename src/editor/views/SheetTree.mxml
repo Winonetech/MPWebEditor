@@ -4,8 +4,17 @@
 				  xmlns:mx="library://ns.adobe.com/flex/mx"
 				  xmlns:vw="editor.views.*"
 				  xmlns:sh="editor.views.sheets.*"
+				  currentState="{config.mode}"
+				  creationComplete="_internalview1_creationCompleteHandler(event)"
 				  width="100%" height="100%" mouseEnabled="false">
 
+	<vw:states>
+		<s:State name="edit"/>
+		<s:State name="fill"/>
+		<s:State name="view"/>
+		<s:State name="template"/>
+	</vw:states>
+	
 	<s:BorderContainer left="0" right="0" height="100%" id="container"
 					   backgroundAlpha="0" mouseEnabled="false">
 		
@@ -23,9 +32,11 @@
 				<s:HGroup width="100%" mouseEnabled="false"
 						  horizontalAlign="right" verticalAlign="middle" visible="{isEdit || isTemplate}">
 					
-					<s:Button width="22" styleName="title" label="+" toolTip="新增页面"
+					<s:Button width="22" styleName="title" label="+" 
+							  toolTip.template="新增页面" toolTip.edit="新增模版"
 							  skinClass="editor.skins.ButtonNormalSkin"
-							  click="add_clickHandler(event)"/>
+							  click.template="add_clickHandler(event)"
+							  click.edit="addTemplate_clickHandler(event)"/>
 					
 					<s:Button width="22" styleName="title" label="-" toolTip="删除页面"
 							  skinClass="editor.skins.ButtonNormalSkin" 
@@ -42,7 +53,7 @@
 				<s:VGroup id="group" gap="0" paddingBottom="10" click="item_clickHandler(event)"
 						  mouseDown="group_mouseDownHandler(event)">
 					
-					<sh:ADItem sheet="{program.ad}"/>
+					<sh:ADItem id="ad" sheet="{program.ad}"/>
 					
 					<sh:PageGroup id="pageGroup" dataProvider="{program.children}"/>
 					
@@ -57,16 +68,17 @@
 	<fx:Script>
 		<![CDATA[
 			import editor.controls.Virtual;
+			import editor.core.MDProvider;
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
 			import editor.views.sheets.PageItem;
 			import editor.views.sheets.SheetItem;
-			import editor.views.template.TemplateSelector;
 			import editor.vos.PLayout;
 			import editor.vos.Page;
 			
 			import mx.core.DragSource;
+			import mx.events.FlexEvent;
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
 			
@@ -265,20 +277,21 @@
 			 */
 			private function add_clickHandler(event:MouseEvent):void
 			{    
-				if(config.mode == "template")
-				{
 				var page:Page = config.selectedSheet ? config.selectedSheet as Page : null;
 				CommandUtil.addPage(
 					page ? page.parent : null, 
 					page ? page.order + 1 : program.children.length);
-				}
-				else if(config.mode == "edit")
-				{
-					if (!MDVars.instance.tempSelector)
-						MDVars.instance.tempSelector = new TemplateSelector;
-					PopUpManager.addPopUp(MDVars.instance.tempSelector, MDVars.instance.application, true);
-				}
-				
+			}
+			
+			
+			/**
+			 * @private 
+			 */
+			private function addTemplate_clickHandler(event:MouseEvent):void
+			{
+				if (!MDVars.instance.tempSelector)
+					MDVars.instance.tempSelector = new TemplateSelected;
+				PopUpManager.addPopUp(MDVars.instance.tempSelector, MDVars.instance.application, true);
 			}
 			
 			
@@ -310,6 +323,17 @@
 				{
 					scroller.viewport.horizontalScrollPosition += scrollX;
 					scroller.viewport.verticalScrollPosition   += scrollY;
+				}
+			}
+			
+			/**
+			 * @private
+			 */
+			private function _internalview1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if (ad && group.contains(ad) && (provider.templateID || config.mode == "template"))
+				{
+					group.removeElement(ad);
 				}
 			}
 			
@@ -349,6 +373,14 @@
 				ed::pageset = $value;
 				
 				update();
+			}
+			
+			/**
+			 * @private 
+			 */
+			private function get provider():MDProvider
+			{
+				return MDProvider.instance
 			}
 			
 			/**

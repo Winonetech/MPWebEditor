@@ -145,13 +145,6 @@ package editor.core
 		public var orders:Array;
 		
 		
-		/**
-		 * 
-		 * 模版字典。
-		 * 
-		 */
-		
-		public var templateList:ArrayList = new ArrayList;
 		
 		/**
 		 * 
@@ -204,6 +197,15 @@ package editor.core
 		 */
 		
 		public var showGrid:Boolean = true;
+		
+		
+		/**
+		 * 
+		 * 模版数据临时存储器。
+		 * 
+		 */
+		
+		public var templateData:Array = [];
 		
 		
 		/**

@@ -22,7 +22,7 @@
 			}
 			
 			
-			public static const show:Boolean = true;
+			public static const show:Boolean = false;
 			
 		]]>
 	</fx:Script>

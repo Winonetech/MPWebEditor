@@ -50,8 +50,6 @@ package editor.commands
 			var adapter:AngularJSAdapter = AngularJSAdapter.getInstance();
 			vars.adapter = adapter;
 			
-			adapter.expose("templateId", CommandUtil.openTemplate);
-			adapter.expose("presetTemplateId", CommandUtil.openPresetTemplate);
 			adapter.expose("transmitData", CommandUtil.transmitData);
 			adapter.expose("fillComplete", CommandUtil.fillComplete);
 			adapter.expose("getSheetBackground", CommandUtil.getSheetBackground);
