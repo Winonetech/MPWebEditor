@@ -13,6 +13,7 @@ package editor.commands
 	import editor.consts.URLConsts;
 	import editor.core.MDConfig;
 	import editor.core.MDVars;
+	import editor.utils.CommandUtil;
 	import editor.utils.ComponentUtil;
 	import editor.utils.VOUtil;
 	import editor.views.Debugger;
@@ -94,12 +95,10 @@ package editor.commands
 				{
 					for each (var $children:Object in $result.dataObjs)
 					{
-						returnPage($children);
+						returnPage($children, selectedPage ? selectedPage.parent : null);
 					}
 					
 					vars.sheets.update();
-					vars.canvas.content.update();
-					
 				}
 				else
 				{
@@ -122,47 +121,24 @@ package editor.commands
 		
 		
 		/**
-		 * @private
+		 * 
+		 * @param $page:Object 欲构建页面的数据。
+		 * @param $parent:Page (default = null)
+		 * 
 		 */
-		private function returnPage($page:Object):void
+		private function returnPage($page:Object, $parent:Page = null):void
 		{
 			var page:Page = VOUtil.createPage(
-				selectedPage ? (selectedPage.parent ? selectedPage.parent.id : null) : null, 
+				$parent ? $parent.id : null,
 				provider.layoutID, $page["order"], 
 				$page["coordX"], $page["coordY"], 
 				$page["width"], $page["height"], $page["label"]
 			);
 			
 			page.id = $page["id"];
+			page.background = $page["background"];
 
 			if (!provider.program.home && $page["home"] == true) page.home = true;
-			
-			config.orders = provider.program.addPage(page, page.parent, true);
-			
-			addPage();
-			
-			recoverComponents($page, page);
-			
-			for each (var child:Object in $page["pages"])
-			{
-				returnChild(child, page);
-			}
-		}
-		
-		
-		/**
-		 * @private
-		 */
-		private function returnChild($page:Object, $parent:Page):void
-		{
-			var page:Page = VOUtil.createPage(
-				$parent.id, provider.layoutID, 
-				$page["order"], $page["coordX"], $page["coordY"], 
-				$page["width"], $page["height"], $page["label"]
-				
-			);
-				
-			page.id = $page["id"];
 			
 			config.orders = provider.program.addPage(page, $parent, true);
 			
@@ -172,7 +148,7 @@ package editor.commands
 			
 			for each (var child:Object in $page["pages"])
 			{
-				returnChild(child, page);
+				returnPage(child, page);
 			}
 		}
 		
@@ -188,17 +164,15 @@ package editor.commands
 					ComponentUtil.reviseComponent(data["coordX"] - 45, page.width - 45),
 					ComponentUtil.reviseComponent(data["coordY"] - 30, page.height - 30), 
 					data["width"], data["height"], data["label"]);
-				component.componentType = provider.program.componentTypesArr[data["componentTypeId"] - 1];
+				
+				component.componentType = data["componentTypeId"] > 8    //特别处理的原因是删除了党政组件，导致其后面组件类型id与数组索引不匹配。
+					? provider.program.componentTypesArr[data["componentTypeId"] - 2]
+				    : provider.program.componentTypesArr[data["componentTypeId"] - 1];
+				
 				component.id = data["id"];
 				
 				provider.program.addComponent(page as Sheet, component, true);
 				
-				//update view
-				if (!config.isLayoutOpened)
-				{
-					vars.canvas.updateComponent(component, 1);
-					vars.components.update();
-				}
 			}
 		}
 		

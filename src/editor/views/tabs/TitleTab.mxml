@@ -15,7 +15,8 @@
 		<s:State name="mouseOut"/>
 		<s:State name="mouseOver"/>
 	</s:states>
-	<s:Label id="named" left="5" verticalCenter="0" color="0xFFFFFF" text="{label || selectedSheet.label}"/>
+	<s:Label id="named" left="5" verticalCenter="0" color="0xFFFFFF" 
+			 styleName="normal" text="{label || selectedSheet.label}"/>
 	<s:Button left="{named.x + named.width + 20}" right="5" verticalCenter="0"  id="button" 
 			  visible="{layoutCloseVisible &amp;&amp; closeVisible}" skinClass="editor.skins.ButtonCloseSkin"/>
 	<fx:Script>

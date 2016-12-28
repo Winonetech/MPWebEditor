@@ -78,7 +78,6 @@ package editor.views
 				
 				if (!(!sheet.background))
 				{
-					Debugger.log(sheet.background);
 					backgroundImg.source = sheet.background;
 					container.addElementAt(backgroundImg, 0);
 				}

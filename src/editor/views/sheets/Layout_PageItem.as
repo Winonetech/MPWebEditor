@@ -132,8 +132,7 @@ package editor.views.sheets
 				contentLabel = new Label;
 				addElement(contentLabel);
 				contentLabel.toolTip = contentLabel.text = page.label;
-				contentLabel.setStyle("color", 0);
-				contentLabel.setStyle("fontSize", 30);
+				contentLabel.styleName = "layout";
 				contentLabel.maxWidth = width;
 				contentLabel.maxHeight = height;
 				resizeLabel();

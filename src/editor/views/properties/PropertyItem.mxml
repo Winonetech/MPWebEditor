@@ -30,7 +30,7 @@
 				change="check_changeHandler(event)"/>
 	
 	<s:ComboBox id="combo" includeIn="combo" labelField="label" 
-				width="100%" verticalCenter="-2" 
+				width="100%" verticalCenter="-2" styleName="normal"
 				dataProvider="{comboProvider}"
 				selectedIndex="{comboChange(value as String)}"
 				skinClass="editor.skins.EditorComboBoxSkin"
@@ -41,20 +41,24 @@
 					change="picker_changeHandler(event)"/>
 	
 	<s:Button includeIn="link" verticalCenter="-2"
+			  styleName="normal"
 			  label="{value ? value.label : '选择'}"
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="page_selectHandler(event)"/>
 	
 	<s:Button includeIn="link" verticalCenter="-2"
 			  label="清除" visible="{Boolean(value)}"
+			  styleName="normal"
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="page_clearHandler(event)"/>
 	
 	<s:Button includeIn="index" verticalCenter="-2" label="设为首页"
+			  styleName="normal"
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="page_setIndexHandler(event)"/>
 	
 	<s:Button includeIn="pageBtn" verticalCenter="-2" label="填充"
+			  styleName="normal"
 			  skinClass="editor.skins.ButtonNormalSkin"
 			  click="pageBtn_clickHandler(event)"/>
 	

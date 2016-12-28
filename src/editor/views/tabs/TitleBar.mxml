@@ -20,7 +20,7 @@
 		</s:HGroup>
 		
 		<s:ComboBox id="comboBox" includeIn="much" dataProvider="{dataArrs}" labelField="name"
-					skinClass="editor.skins.TitleBarComboboxSkin"
+					skinClass="editor.skins.TitleBarComboboxSkin" styleName="normal"
 					change="combobox1_changeHandler(event)"/>
 	</s:HGroup>
 	<fx:Script>

@@ -68,29 +68,15 @@ package editor.views.components
 		private function item_mouseoverHandler($e:MouseEvent):void
 		{
 			back.fill = new SolidColor(0xCCCCCC, .7);
-//			addToolTip();
 			toolTip = component.label + "\n双击可填充素材";
-//			styleManager.getStyleDeclaration('nx.controls.ToolTip').setStyle('fontSize',18);
-//			addElement($toolTip);
 		}
 		
 		
 		private function item_mouseoutHandler($e:MouseEvent):void
 		{
 			back.fill = new SolidColor(0xCCCCCC, .3);
-//			removeElement($toolTip);
 		}
 			
-		
-//		private function addToolTip():void
-//		{
-//			$toolTip.text = componentType.label + "组件\n双击可填充素材";
-//			$toolTip.setStyle("fontSize", 24);
-//			$toolTip.alpha = .8;
-//			$toolTip.x = mouseX;
-//			$toolTip.y = mouseY;
-//			$toolTip.setStyle("fontFamily", "Microsoft YaHei");
-//		}
 		
 		/**
 		 * 

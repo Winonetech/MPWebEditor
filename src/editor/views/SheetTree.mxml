@@ -32,11 +32,13 @@
 				<s:HGroup width="100%" mouseEnabled="false"
 						  horizontalAlign="right" verticalAlign="middle" visible="{isEdit || isTemplate}">
 					
-					<s:Button width="22" styleName="title" label="+" 
-							  toolTip.template="新增页面" toolTip.edit="新增模版"
+					<s:Button styleName="title" label="添加模版" includeIn="edit"
 							  skinClass="editor.skins.ButtonNormalSkin"
-							  click.template="add_clickHandler(event)"
-							  click.edit="addTemplate_clickHandler(event)"/>
+							  click="addTemplate_clickHandler(event)"/>
+					
+					<s:Button width="22" styleName="title" label="+" toolTip="新增页面"
+							  skinClass="editor.skins.ButtonNormalSkin"
+							  click="add_clickHandler(event)"/>
 					
 					<s:Button width="22" styleName="title" label="-" toolTip="删除页面"
 							  skinClass="editor.skins.ButtonNormalSkin" 
@@ -290,8 +292,9 @@
 			private function addTemplate_clickHandler(event:MouseEvent):void
 			{
 				if (!MDVars.instance.tempSelector)
-					MDVars.instance.tempSelector = new TemplateSelected;
+					 MDVars.instance.tempSelector = new TemplateSelected;
 				PopUpManager.addPopUp(MDVars.instance.tempSelector, MDVars.instance.application, true);
+				MDVars.instance.tempSelector.initLayout();
 			}
 			
 			

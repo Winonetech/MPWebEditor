@@ -17,6 +17,8 @@ package editor.commands
 	import editor.views.Debugger;
 	import editor.vos.*;
 	
+	import flash.utils.getQualifiedClassName;
+	
 	
 	public final class InitDataCommand extends _InternalCommand
 	{
@@ -96,8 +98,9 @@ package editor.commands
 		 */
 		private function initAD($ad:Object):void
 		{
+			var limit:uint = $ad.length;
 			$ad = ($ad is Array && $ad.length) ? $ad[0] : $ad;
-			if ($ad.length > 0)
+			if (limit)
 			{
 				var ad:AD = new AD($ad);
 				if (ad.width == 0 || ad.height == 0)

@@ -86,7 +86,7 @@
 			{
 				container.removeAllElements();
 				var i:int;
-				var arrLength:int =sheet.componentsArr.length;
+				var arrLength:int = sheet.componentsArr.length;
 				for (i = arrLength - 1; i >= 0; i--)
 				{
 					var item:ComponentListItem = new ComponentListItem;
@@ -95,6 +95,21 @@
 				}
 			}
 			
+			
+			
+//			public function updateView($component:Component = null, $index:uint = 0):void
+//			{
+//				if ($component)
+//				{
+//					var item:ComponentListItem = new ComponentListItem;
+//					item.component = $component;
+//					container.addElementAt(item, $index);
+//				}
+//				else
+//				{
+//					container.removeElementAt($index);
+//				}
+//			}
 			
 			/**
 			 * 
