@@ -113,7 +113,6 @@ package editor.commands
 		{
 			if ($result == "ok")
 			{
-
 				if (vars.components)
 					vars.components.update();
 				if (vars.canvas)

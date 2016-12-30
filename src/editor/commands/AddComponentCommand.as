@@ -104,7 +104,8 @@ package editor.commands
 					
 					//update view
 					vars.canvas.updateComponent(component, 1);
-					vars.components.update();
+//					vars.components.update();
+					vars.components.updateView(component);
 					
 					//set selected
 					config.selectedComponent = component;
@@ -122,7 +123,8 @@ package editor.commands
 				{
 					provider.program.addComponent(sheet, component, true);
 					vars.canvas.updateComponent(component, 1);
-					vars.components.update();
+//					vars.components.update();
+					vars.components.updateView(component);
 				}
 				else
 				{

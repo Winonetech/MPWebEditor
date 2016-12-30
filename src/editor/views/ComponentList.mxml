@@ -96,20 +96,26 @@
 			}
 			
 			
+			/**
+			 * 
+			 * 更新视图。
+			 * 
+			 */
+			public function updateView($component:Component = null, $index:uint = 0):void
+			{
+				if ($component)
+				{
+					var item:ComponentListItem = new ComponentListItem;
+					item.component = $component;
+					container.addElementAt(item, $index);
+				}
+				else
+				{
+					container.removeElementAt($index);
+				}
+			}
 			
-//			public function updateView($component:Component = null, $index:uint = 0):void
-//			{
-//				if ($component)
-//				{
-//					var item:ComponentListItem = new ComponentListItem;
-//					item.component = $component;
-//					container.addElementAt(item, $index);
-//				}
-//				else
-//				{
-//					container.removeElementAt($index);
-//				}
-//			}
+			
 			
 			/**
 			 * 

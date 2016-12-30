@@ -32,6 +32,32 @@ package editor.utils
 		}
 		
 		
+		
+		/**
+		 * 
+		 * Page数组的排序。排序规则为order从小至大。
+		 * @param $arr:Array 元素必须含有order字段。
+		 * @return 排序后的数组。
+		 * 
+		 */
+		
+		public static function sortByOrder($arr:Object):Array
+		{
+			var result:Array = [];
+			if ($arr is Array) 
+			{
+				var compare:Function = function(a:Object, b:Object):int
+				{
+					return a.order > b.order ? 1 : (a.order < b.order ? -1 : 0);
+				};
+				
+				result = $arr as Array;
+				result = result.sort(compare);
+			}
+			return result;
+		}
+		
+		
 		/**
 		 * 
 		 * 判定$selected是否允许添加到$container中。

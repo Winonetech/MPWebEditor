@@ -121,7 +121,8 @@ package editor.commands
 					ordComponent();
 					//update view
 					vars.canvas.updateComponent(component, 2);
-					vars.components.update();
+//					vars.components.update();
+					vars.components.updateView(null, sheet.componentsArr.length - component.order);
 					
 					//clear selected
 					if (config.selectedComponent == component)
@@ -158,7 +159,8 @@ package editor.commands
 					ordComponent();
 					//update view
 					vars.canvas.updateComponent(component, 1);
-					vars.components.update();
+//					vars.components.update();
+					vars.components.updateView(component, sheet.componentsArr.length - component.order - 1);
 					
 					//clear selected
 					if (config.selectedComponent == component)

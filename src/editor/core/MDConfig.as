@@ -12,6 +12,7 @@ package editor.core
 	import cn.mvc.errors.SingleTonError;
 	
 	import editor.views.Debugger;
+	import editor.views.PageContent;
 	import editor.views.tabs.TitleTab;
 	import editor.vos.Component;
 	import editor.vos.Sheet;
@@ -143,7 +144,6 @@ package editor.core
 		 */
 		
 		public var orders:Array;
-		
 		
 		
 		/**

@@ -121,9 +121,10 @@ package editor.commands
 					for (var i:uint = 0; i < l; i++)
 					{
 						provider.program.addComponent(sheet, arr4backup[i], true);
+						vars.components.updateView(arr4backup[i]);
 					}
 						vars.canvas.update();
-						vars.components.update();
+//						vars.components.update();
 					
 				}
 			}

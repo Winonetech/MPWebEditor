@@ -114,7 +114,6 @@ package editor.commands
 					getChildArr(page);
 					ArrayUtil.push(arr4Comm, {"pageIds" : arrPageId, "componentIds" : arrComponentId});
 					lastHome = isHome();
-
 					
 					//update data
 					config.orders = provider.program.delPage(page);
@@ -161,6 +160,26 @@ package editor.commands
 						presenter.execute(new EdtPageHomeCommand(provider.program.home, page, false));
 					}
 					
+					
+					if (provider.program)
+					{
+						for each (var component:Component in provider.program.components)
+						{
+							if (component.linkID)
+							{
+								component.link = provider.program.pages[component.linkID];
+							}
+							else
+							{
+								for (var i:uint = 0; i < componentList.length; i++)
+								{
+									component.linkID = componentList[i];
+									component.link = provider.program.pages[component.linkID];
+								}
+							}
+						}
+					}
+					
 					vars.sheets.update();
 					vars.canvas.content.update();
 					//clear select, editing
@@ -188,7 +207,7 @@ package editor.commands
 			
 			addPage();
 			
-			recoverComponentsLinkID($page);
+//			recoverComponentsLinkID($page);
 			for (var i:int = 0; i < map4Backups[$page.id]["arr"].length; i++)
 			{
 				returnPage(map4Backups[$page.id]["arr"][i]); 
@@ -223,7 +242,13 @@ package editor.commands
 			if (provider.program)
 			{
 				for each (var component:Component in provider.program.components)
-					if (component.linkID == $id) component.link = null;
+				{
+					if (component.linkID == $id) 
+					{
+						componentList.push($id);
+						component.link = null;
+					}
+				}
 			}
 		}
 		
@@ -231,13 +256,13 @@ package editor.commands
 		 * @private
 		 */
 		
-		private function recoverComponentsLinkID($page:Page):void
-		{
-			for each (var component:Component in $page.componentsMap)
-			{
-				component.link   = $page;
-			}
-		}
+//		private function recoverComponentsLinkID($page:Page):void
+//		{
+//			for each (var component:Component in $page.componentsMap)
+//			{
+//				if (component.linkID) componentList.push(component);
+//			}
+//		}
 		
 		
 		/**
@@ -253,6 +278,8 @@ package editor.commands
 		 * @private
 		 */
 		private var page:Page;
+		
+		private var componentList:Array = [];
 		
 		private var map4Backups:Map = new Map;
 		

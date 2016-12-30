@@ -15,11 +15,16 @@ package editor.commands
 	import editor.core.MDVars;
 	import editor.utils.CommandUtil;
 	import editor.utils.ComponentUtil;
+	import editor.utils.PageUtil;
 	import editor.utils.VOUtil;
 	import editor.views.Debugger;
 	import editor.vos.Component;
+	import editor.vos.PLayout;
 	import editor.vos.Page;
 	import editor.vos.Sheet;
+	
+	import mx.controls.Button;
+	import mx.utils.object_proxy;
 	
 	public class AddTemplateCommand extends _InternalCommCommand
 	{
@@ -93,12 +98,20 @@ package editor.commands
 				if ($result is String) $result = JSON.parse($result as String);
 				if ($result.result == "success")
 				{
-					for each (var $children:Object in $result.dataObjs)
+					var arr:Array = PageUtil.sortByOrder($result.dataObjs);
+					
+					for each (var $children:Object in arr)
 					{
 						returnPage($children, selectedPage ? selectedPage.parent : null);
 					}
 					
+					for each (var temp:Component in componentList)
+					{
+						temp.link = provider.program.pages[temp.linkID];
+					}
+					
 					vars.sheets.update();
+					vars.canvas.content.update();
 				}
 				else
 				{
@@ -148,7 +161,9 @@ package editor.commands
 			
 			for each (var child:Object in $page["pages"])
 			{
-				returnPage(child, page);
+				var list:Array = PageUtil.sortByOrder(child);
+				
+				if (child) returnPage(child, page);
 			}
 		}
 		
@@ -165,17 +180,29 @@ package editor.commands
 					ComponentUtil.reviseComponent(data["coordY"] - 30, page.height - 30), 
 					data["width"], data["height"], data["label"]);
 				
+				component.id = data["id"];
+				
 				component.componentType = data["componentTypeId"] > 8    //特别处理的原因是删除了党政组件，导致其后面组件类型id与数组索引不匹配。
 					? provider.program.componentTypesArr[data["componentTypeId"] - 2]
 				    : provider.program.componentTypesArr[data["componentTypeId"] - 1];
 				
-				component.id = data["id"];
-				
 				provider.program.addComponent(page as Sheet, component, true);
 				
+				component.linkID = data["linkId"];
+				
+				if (component.linkID) componentList.push(component);
 			}
 		}
 		
+		
+		
+		
+		private var layout:PLayout;
+		
+		/**
+		 * @private
+		 */
+		private var componentList:Array = [];
 		
 		/**
 		 * @private
