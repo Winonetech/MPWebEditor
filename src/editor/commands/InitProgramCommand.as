@@ -49,6 +49,7 @@ package editor.commands
 			provider.publishID     = data.publishId;
 			provider.templateID    = data.templateId;
 			provider.userName      = data.userName;
+			provider.userId        = data.userId;
 			provider.defaultWidth  = data.defaultWidth   || 1920;
 			provider.defaultHeight = data.defaultHeight  || 1080;
 			provider.layoutID      = data.layoutId       || data.templateId;

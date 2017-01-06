@@ -120,6 +120,15 @@ package editor.core
 		 */
 		public var userName:String;
 		
+		
+		/**
+		 * 
+		 * 用户id。
+		 * 
+		 */
+		public var userId:String;
+		
+		
 		/**
 		 * 
 		 * 元素集合。

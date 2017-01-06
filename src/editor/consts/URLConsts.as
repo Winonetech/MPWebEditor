@@ -23,7 +23,7 @@ package editor.consts
 		 * 获取模版地址
 		 * 
 		 */
-		public static const URL_LAYOUT_GETTEMPLATE:String = "{domain}/template/all";
+		public static const URL_LAYOUT_GETTEMPLATE:String = "{domain}/template/all?userId={userId}";
 		
 		/**
 		 * 
