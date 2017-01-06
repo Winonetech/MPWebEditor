@@ -21,7 +21,7 @@
 		     <s:HGroup width="100%" mouseEnabled="false"
 				       horizontalAlign="right" verticalAlign="middle">
 
-			 <s:Button label="一键删除" visible="{isEdit || isTemplate}"
+			 <s:Button label="一键删除" visible="{isEdit || isTemplate}" styleName="title"
 					   skinClass="editor.skins.ButtonNormalSkin"
 					   click="delAll_clickHandler(event)"/> 
 				 
