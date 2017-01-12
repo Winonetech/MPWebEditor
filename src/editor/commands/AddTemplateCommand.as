@@ -145,7 +145,7 @@ package editor.commands
 				$parent ? $parent.id : null,
 				provider.layoutID, $page["order"], 
 				$page["coordX"], $page["coordY"], 
-				$page["width"], $page["height"], $page["label"]
+				$page["width"], $page["height"], $page["backgroundColor"], $page["label"]
 			);
 			
 			page.id = $page["id"];
@@ -176,9 +176,7 @@ package editor.commands
 			for each (var data:Object in $page["components"])
 			{
 				component = VOUtil.createComponent(page.id, data["componentTypeId"], data["order"], 
-					ComponentUtil.reviseComponent(data["coordX"] - 45, page.width - 45),
-					ComponentUtil.reviseComponent(data["coordY"] - 30, page.height - 30), 
-					data["width"], data["height"], data["label"]);
+					data["coordX"], data["coordY"], data["width"], data["height"], data["label"]);
 				
 				component.id = data["id"];
 				

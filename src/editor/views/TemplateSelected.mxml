@@ -3,14 +3,14 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 title="应用模版" mouseEnabled="false" cornerRadius="5"
-		 fontSize="18" initialize="init()">
+		 fontSize="18" initialize="init()" skinClass="editor.skins.PanelCloseSkin"
+		 click="close_clickHandler(event)">
 	
 	<s:layout>
-		<s:VerticalLayout paddingTop="10" paddingRight="10" paddingLeft="10" paddingBottom="10"/>
+		<s:VerticalLayout paddingTop="5" paddingRight="5" paddingLeft="5" paddingBottom="5"/>
 	</s:layout>
 	
 	<s:VGroup mouseEnabled="false" gap="10" width="100%">
-		<s:Button label="关闭窗口" click="close_clickHandler(event)" fontSize="16"/>
 		
 		<s:List id="list" width="100%" height="150" dataProvider="{temp}" verticalScrollPolicy="auto"
 				fontSize="16" labelField="name" click="item_clickHandler(event)"/>
@@ -22,13 +22,12 @@
 			import editor.core.MDProvider;
 			import editor.core.MDVars;
 			import editor.utils.CommandUtil;
-			import editor.vos.AD;
 			import editor.vos.Page;
 			
 			import mx.collections.ArrayList;
-			import mx.events.ResizeEvent;
 			import mx.managers.PopUpManager;
 			
+			import spark.components.Button;
 			import spark.components.Label;
 			import spark.skins.spark.DefaultItemRenderer;
 			
@@ -66,7 +65,8 @@
 			 */
 			private function close_clickHandler(event:MouseEvent):void
 			{
-				PopUpManager.removePopUp(this);
+				if (event.target is Button)
+					PopUpManager.removePopUp(this);
 			}
 			
 			

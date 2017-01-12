@@ -76,6 +76,7 @@ package editor.utils
 			$y:Number = 0, 
 			$w:Number = 1920, 
 			$h:Number = 1080,
+			$bcg:String = null,
 			$label:String = null):Page
 		{
 			var id:uint = IDUtil.generateID("page");
@@ -86,7 +87,7 @@ package editor.utils
 				"coordY": $y, 
 				"width" : $w, 
 				"height": $h, 
-				"backgroundColor": "#FFFFFF",
+				"backgroundColor": $bcg || "#FFFFFF",
 				"tweenEnabled": true
 			});
 			StringUtil.empty($parentID)
