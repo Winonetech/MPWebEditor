@@ -134,7 +134,7 @@ package editor.utils
 		public static function shotcutDel():void
 		{
 			var stage:* = vars.application.stage;
-			if (stage && (config.mode == "edit" || config.mode == "tmeplate"))
+			if (stage && (config.mode == "edit" || config.mode == "template"))
 			{
 				if(!(stage.focus is RichEditableText))
 				{
