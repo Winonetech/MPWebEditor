@@ -84,6 +84,8 @@ package editor.commands
 				{
 					provider.raw["layout"] = temp.dataObj;
 					
+					provider.raw["Helena"] = temp.componentIds;
+					
 					Debugger.log("加载布局数据完毕！");
 				}
 				else

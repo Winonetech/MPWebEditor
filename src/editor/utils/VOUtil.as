@@ -127,7 +127,6 @@ package editor.utils
 			var code:String = getComponentCode($componentTypeID);
 			
 			var componenet:Component = new Component({
-				"id": id, 
 				"label": $label || "新建" + getComponentTypeName($componentTypeID) + id, 
 				"order" : $order, 
 				"coordX": $x, 

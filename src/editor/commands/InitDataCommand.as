@@ -213,6 +213,22 @@ package editor.commands
 						component.link = layout.pages[component.linkID];
 				}
 			}
+			
+			//添加拒绝填充权限。
+			
+			var forbidden:Array = provider.raw["Helena"] as Array;
+			
+			var l:uint;
+			
+			if (forbidden && (l = forbidden.length))
+			{
+				for (var j:uint = 0; j < l; j++)
+				{
+					var temp:Component = provider.program.components[forbidden[j]] as Component;
+					
+					if (temp) temp.fillPermission = false;
+				}
+			}
 		}
 		
 		

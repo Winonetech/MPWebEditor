@@ -338,6 +338,14 @@ package editor.vos
 		
 		/**
 		 * 
+		 * 是否有填充权限。
+		 * 
+		 */
+		
+		public var fillPermission:Boolean = true;
+		
+		/**
+		 * 
 		 * 元素类别引用。
 		 * 
 		 */

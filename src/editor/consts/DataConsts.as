@@ -17,26 +17,26 @@ package editor.consts
 		
 		public static const PROGRAM:Object = 
 		{
-//			domain:"http://172.16.0.60:9000/layout",
-			domain:"http://192.168.7.3:9000/layout", 
+			domain:"http://172.16.0.5:9000/layout",
+//			domain:"http://192.168.7.3:9000/layout", 
 //			domain:"http://172.16.1.4:9002/layout",   
 //			domain:"http://172.16.1.4:9000/layout",
 //			domain:"http://172.16.0.55:9000/layout",
 //			domain:"http://172.16.0.17:9000/layout",  
 //			domain:"http://192.168.6.22:9000/content/publish",
-//			domain:"http://172.16.0.17:9000/content/publish",   
+//			domain:"http://172.16.0.5:9000/content/publish",   
 //			domain:"http://172.16.1.4:9000/content/publish",   
-			programId: 2,
-			layoutId:  2,
+			programId: 87,
+			layoutId:  79,
 //			templateId:66,
-			publishId: 18,
+			publishId: 3,
 			programName: "滑稽",
 			defaultWidth: "1920",
 			defaultHeight: "1080",
 			userName:"YuanZhang",
-			userId:"1",
-			mode:"template"
-//			mode:"edit"
+			userId:"29",
+//			mode:"template"
+			mode:"edit"
 //			mode:"fill"
 //			mode:"view"
 		};

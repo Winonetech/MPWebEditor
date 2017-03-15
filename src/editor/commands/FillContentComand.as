@@ -17,12 +17,13 @@ package editor.commands
 		 * 
 		 */
 		
-		public function FillContentComand($componentId:String, $componentCode:String)
+		public function FillContentComand($componentId:String, $componentCode:String, $fillPermission:Boolean)
 		{
 			super();
 			
-			component["componentCode"] = $componentCode;
-			component["componentId"]   = $componentId;
+			component["componentCode" ] = $componentCode;
+			component["componentId"   ] = $componentId;
+			component["fillPermission"] = $fillPermission;
 		}
 		
 		

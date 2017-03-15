@@ -89,9 +89,9 @@ package editor.utils
 		 * 
 		 */
 		
-		public static function fillComponent($componentId:String, $componentCode:String):void
+		public static function fillComponent($componentId:String, $componentCode:String, $fillPermission:Boolean):void
 		{
-			presenter.execute(new FillContentComand($componentId, $componentCode));
+			presenter.execute(new FillContentComand($componentId, $componentCode, $fillPermission));
 		}
 		
 		

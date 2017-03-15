@@ -32,7 +32,7 @@ package editor.consts
 		 */
 		
 		public static const URL_LAYOUT:String = MDConfig.instance.mode == "fill" 
-			? "{domain}/layout/{publishID}/{layoutID}" : "{domain}/layout/{layoutID}";
+			? "{domain}/layout/{publishID}/{layoutID}/{programID}/{userID}" : "{domain}/layout/{layoutID}";
 		
 		
 		/**

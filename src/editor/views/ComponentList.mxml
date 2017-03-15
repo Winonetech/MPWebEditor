@@ -50,12 +50,9 @@
 	<fx:Script>
 		<![CDATA[
 			import editor.controls.Virtual;
-			import editor.core.MDConfig;
-			import editor.core.MDProvider;
 			import editor.core.MDVars;
 			import editor.core.ed;
 			import editor.utils.CommandUtil;
-			import editor.views.canvas.Viewer;
 			import editor.views.components.ComponentListItem;
 			import editor.vos.Component;
 			import editor.vos.Sheet;
@@ -202,6 +199,8 @@
 				{
 					config.selectedComponent = item.component;
 				}
+				
+				Debugger.log(item.component.id + " -> " + item.component.fillPermission);
 			}
 			
 			/**

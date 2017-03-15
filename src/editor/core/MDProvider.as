@@ -126,7 +126,7 @@ package editor.core
 		 * 用户id。
 		 * 
 		 */
-		public var userId:String;
+		public var userID:String;
 		
 		
 		/**

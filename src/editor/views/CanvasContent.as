@@ -367,8 +367,12 @@ package editor.views
 				}
 				else if (AppUtil.isFillMode())
 				{
-					CommandUtil.fillComponent(item.component.id, item.component.componentTypeCode);
-					Debugger.log("填充内容：组件ID = " + item.component.id + "，组件编码 = " + item.component.componentTypeCode);
+					CommandUtil.fillComponent(item.component.id, 
+						item.component.componentTypeCode, 
+						item.component.fillPermission);
+					Debugger.log("填充内容：组件ID -> " + item.component.id +
+								 "，组件编码 -> " + item.component.componentTypeCode + 
+								 "，是否可填充 -> " + item.component.fillPermission);
 				}
 			}
 		}
